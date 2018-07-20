@@ -1,18 +1,20 @@
 DeckParser: Um leitor de dados do NEWAVE, DECOMP and DESSEM
 =============================================
 
+![GitHub Release](https://img.shields.io/badge/release-v0.0.1-blue.svg)
+![GitHub license](https://img.shields.io/badge/license-Apachev2-yellow.svg)
+
 DeckParser fornece programas para abrir e ler os dados dos programas NEWAVE, DECOMP e DESSEM
 
 * Projeto em desenvolvimento - não aberto ainda para contribuições da comunidade (pull requests)
 
-## Licença
+## Dependências
 
-http://www.apache.org/licenses/LICENSE-2.0
+* Python > 3.6.x
 
 ## Leitura de arquivos validada:
 
 * SISTEMA.DAT: ok
-
 
 ## Uso
 
@@ -42,3 +44,14 @@ Usando pip:
 ```bash
 pip install git+ssh://git@github.com:venidera/deckparser.git
 ```
+
+## Time de desenvolvimento
+
+* [André Toscano](https://github.com/aemitos)
+* [João Borsói Soares](https://github.com/joaoborsoi)
+* [Renan]()
+
+## Licença
+
+http://www.apache.org/licenses/LICENSE-2.0
+
