@@ -1,1 +1,1 @@
-from deckparser.deck2dicts import deck2dicts
+from deckparser.newave2dicts import newave2dicts
