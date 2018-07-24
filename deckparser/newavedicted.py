@@ -27,7 +27,7 @@ from logging import info
 # VMINP    : nao tratado
 # VAZMINT  : ok
 
-class DeckDicted(object):
+class NewaveDicted(object):
     def __init__(self):
         self.DGER = None
         self.SISTEMA = None

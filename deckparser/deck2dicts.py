@@ -1,25 +1,25 @@
 
 from deckparser.deckzipped import DeckZipped
-from deckparser.deckdicted import DeckDicted
+from deckparser.newavedicted import NewaveDicted
 
-from deckparser.importers.importDGER import importDGER
-from deckparser.importers.importSISTEMA import importSISTEMA
-from deckparser.importers.importCAR import importCAR
-from deckparser.importers.importTERM import importTERM
-from deckparser.importers.importEXPT import importEXPT
-from deckparser.importers.importCONFT import importCONFT
-from deckparser.importers.importCLAST import importCLAST
-from deckparser.importers.importMANUTT import importMANUTT
-from deckparser.importers.importHIDR import importHIDR
-from deckparser.importers.importCONFHD import importCONFHD
-from deckparser.importers.importMODIF import importMODIF
-from deckparser.importers.importDSVAGUA import importDSVAGUA
-from deckparser.importers.importVAZOES import importVAZOES
-from deckparser.importers.importCADIC import importCADIC
-from deckparser.importers.importEXPH import importEXPH
-from deckparser.importers.importPATAMAR import importPATAMAR
-from deckparser.importers.importCADTERM import importCADTERM
-from deckparser.importers.importSHIST import importSHIST
+from deckparser.importers.newave.importDGER import importDGER
+from deckparser.importers.newave.importSISTEMA import importSISTEMA
+from deckparser.importers.newave.importCAR import importCAR
+from deckparser.importers.newave.importTERM import importTERM
+from deckparser.importers.newave.importEXPT import importEXPT
+from deckparser.importers.newave.importCONFT import importCONFT
+from deckparser.importers.newave.importCLAST import importCLAST
+from deckparser.importers.newave.importMANUTT import importMANUTT
+from deckparser.importers.newave.importHIDR import importHIDR
+from deckparser.importers.newave.importCONFHD import importCONFHD
+from deckparser.importers.newave.importMODIF import importMODIF
+from deckparser.importers.newave.importDSVAGUA import importDSVAGUA
+from deckparser.importers.newave.importVAZOES import importVAZOES
+from deckparser.importers.newave.importCADIC import importCADIC
+from deckparser.importers.newave.importEXPH import importEXPH
+from deckparser.importers.newave.importPATAMAR import importPATAMAR
+from deckparser.importers.newave.importCADTERM import importCADTERM
+from deckparser.importers.newave.importSHIST import importSHIST
 
 def deck2dicts(fn):
     """
@@ -27,7 +27,7 @@ def deck2dicts(fn):
     """
     dz = DeckZipped(fn=fn)
     if dz.zipLoaded():
-        dd = DeckDicted()
+        dd = NewaveDicted()
         dd.dirname = dz.dirname
         dd.filename = dz.filename
         dd.fhash = dz.fhash
