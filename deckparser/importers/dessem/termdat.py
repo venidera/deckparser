@@ -1,0 +1,31 @@
+'''
+Created on 5 de jul de 2018
+
+@author: Renan
+'''
+from core.dsFile import dsFile
+from core.record import record
+
+
+class termdat(dsFile):
+    def __init__(self, cfg=None):
+        dsFile.__init__(self, cfg)
+    
+    def readLine(self, line):
+        r = self.getRec('Campo').parse(line)
+        
+        if r['nomeCampo'] == 'CADUSIT':
+            self.getTable('CADUSIT').parseLine(line)
+        elif r['nomeCampo'] == 'CADUNIDT':
+            self.getTable('CADUNIDT').parseLine(line)
+    
+    def readDSFile(self, fileName):
+        nRec = 0
+        with open(fileName, 'r') as f:
+            for line in f:
+                nRec = nRec + 1
+                
+                if record.isComment(line) or record.isBlankLine(line):
+                    continue
+                self.readLine(line)
+        f.close()

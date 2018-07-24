@@ -1,0 +1,1 @@
+<dsFile name="cotasr11"><table name="Cotas"><field c="1" cf="2" name="dia" type="d" /><field c="4" cf="5" name="hora" type="h" /><field c="7" name="meiaHora" type="bin" /><field c="17" cf="26" name="cota" type="real"><validate min="0.0" /></field></table></dsFile>
