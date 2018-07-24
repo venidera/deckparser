@@ -21,7 +21,7 @@ from deckparser.importers.newave.importPATAMAR import importPATAMAR
 from deckparser.importers.newave.importCADTERM import importCADTERM
 from deckparser.importers.newave.importSHIST import importSHIST
 
-def deck2dicts(fn):
+def newave2dicts(fn):
     """
     Open the zipped file and start to import data into python dicts and lists
     """

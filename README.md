@@ -31,19 +31,19 @@ DeckParser fornece programas para abrir e ler os dados dos programas NEWAVE, DEC
 
 ```python
 from deckparser.deckzipped import DeckZipped
-from deckparser.importers.importDGER import importDGER
-from deckparser.importers.importSISTEMA import importSISTEMA
+from deckparser.importers.newave.importDGER import importDGER
+from deckparser.importers.newave.importSISTEMA import importSISTEMA
 
 dz = DeckZipped('/Users/andre/git/deckparser/test/NW201305.zip')
 dger = importDGER(dz.openFile(fnp='dger'))
 SISTEMA = importSISTEMA(dz.openFileExtData(fnp='sistema'), dger)
 ```
 
-* Example 2: ler deck dentro de um `dict`:
+* Example 2: ler deck do newave dentro de um `dict`:
 
 ```python
-from deckparser.deck2dicts import deck2dicts
-deck = deck2dicts('/Users/andre/git/deckparser/test/NW201305.zip')
+from deckparser.newave2dicts import newave2dicts
+deck = newave2dicts('/Users/andre/git/deckparser/test/NW201305.zip')
 ```
 
 ## Instalação
