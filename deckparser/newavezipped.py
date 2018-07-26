@@ -4,7 +4,7 @@ from datetime import datetime
 from logging import info
 from os.path import realpath,dirname
 
-class DeckZipped(object):
+class NewaveZipped(object):
     def __init__(self, fn=None):
         # arquivo zipado que sera aberto
         self.z = None
