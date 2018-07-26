@@ -67,11 +67,9 @@ class record:
         r = dict()
         mt = dict()
         
-        cps = False
         for key in m:
             f = m[key]
-            if 'composed' in f:
-                cps = f['composed']
+            cps = f['composed'] if 'composed' in f else False
             try:
                 if cps:
                     pos = f['position']
@@ -192,14 +190,11 @@ class record:
     
     def showLine(self, line, metadata):
         ls = ''
-        cps = False
         pos = 1
         
         for key in self.recMap:
             f = self.recMap[key]
-            if 'composed' in f:
-                cps = f['composed']
-            
+            cps = f['composed'] if 'composed' in f else False
             if cps:
                 cpsPos = f['position']
                 refKey = line[f['refField']]

@@ -1,5 +1,4 @@
-
-from deckparser.deckzipped import DeckZipped
+from deckparser.newavezipped import NewaveZipped
 from deckparser.newavedicted import NewaveDicted
 
 from deckparser.importers.newave.importDGER import importDGER
@@ -25,7 +24,7 @@ def newave2dicts(fn):
     """
     Open the zipped file and start to import data into python dicts and lists
     """
-    dz = DeckZipped(fn=fn)
+    dz = NewaveZipped(fn=fn)
     if dz.zipLoaded():
         dd = NewaveDicted()
         dd.dirname = dz.dirname
