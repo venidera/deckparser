@@ -96,7 +96,7 @@ class record:
                     r[key] = v
                     mt[key] = mtd
             except (ValueError, KeyError):
-                print('Line: {:s}'.format(line), end='')
+                print('Line: {:s}'.format(line))
                 print('Field: {:s}'.format(key))
                 raise
         self.data = r
