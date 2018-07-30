@@ -1,6 +1,7 @@
 from deckparser.importers.imputils import line2list
 
-def importCADIC(fdata,dger):
+
+def importCADIC(fdata, dger):
     CADIC = dict()
     # Indexador de linha em leitura
     liner = 2
@@ -24,9 +25,9 @@ def importCADIC(fdata,dger):
             else:
                 mesini = 1
             # Leitura dos valores
-            valores = line2list(dline=fdata[liner][7:103],mi=mesini,ar=ano,mf=12,bloco=8,vlista=valores,dger=dger)
+            valores = line2list(dline=fdata[liner][7:103], mi=mesini, ar=ano, mf=12, bloco=8, vlista=valores, dger=dger)
             if subsis not in CADIC.keys():
                 CADIC[subsis] = dict()
-            CADIC[subsis][impc] = {'pt1':pt1, 'pt2': pt2, 'valores': valores}
+            CADIC[subsis][impc] = {'pt1': pt1, 'pt2': pt2, 'valores': valores}
         liner = liner + 1
     return CADIC

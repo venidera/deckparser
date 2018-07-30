@@ -1,23 +1,29 @@
 def importCONFHD(fobj):
     CONFHD = dict()
-    for i,v in enumerate(fobj):
-        if v[0:5].strip() != 'NUM' and v[0:5].strip() != 'XXXX' and v.strip() != '':
-            CodUHE = v[0:5].strip()
-            nome = v[5:19].strip()
+    for i, v in enumerate(fobj):
+        vline = v.decode('utf-8')
+        if vline.strip() and vline[0:5].strip() != 'NUM' and 'XXXX' not in vline:
+            cols = vline.split()
+            coduhe = cols[0].strip()
+            nome = cols[1].strip()
             if nome == 'BELO MONTE C':
                 nome = 'B.MONTE COMP'
-            posto = v[19:24].strip()
-            jus = v[25:31].strip()
-            ssis = v[31:35].strip()
-            vinic = v[35:43].strip()
-            uexis = v[44:48].strip()
-            modif = v[49:55].strip()
-            inihist = v[55:64].strip()
-            fimhist = v[65:72].strip()
-            # Nao inclui UHE marcada com Existencia = NC
-            if uexis is 'NC':
-                info('UHE ignored - CodUHE: '+str(CodUHE)+'  Name: '+str(nome))
-                info('-------------------------------')
-            else:
-                CONFHD[CodUHE]={'nome':nome,'posto':posto,'jus':jus,'ssis':ssis, 'vinic':vinic,'uexis':uexis,'modif':modif,'inihist':inihist,'fimhist':fimhist}
+            posto = cols[2].strip()
+            jus = cols[3].strip()
+            ssis = cols[4].strip()
+            vinic = cols[5].strip()
+            uexis = cols[6].strip()
+            modif = cols[7].strip()
+            inihist = cols[8].strip()
+            fimhist = cols[9].strip()
+            CONFHD[coduhe] = {
+                'nome': nome,
+                'posto': posto,
+                'jus': jus,
+                'ssis': ssis,
+                'vinic': vinic,
+                'uexis': uexis,
+                'modif': modif,
+                'inihist': inihist,
+                'fimhist': fimhist}
     return CONFHD
