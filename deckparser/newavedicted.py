@@ -1,12 +1,6 @@
-#from uhe import UHE
-##from ute import UTE
-#from extdata import loadCodANEEL,loadPMinRest,loadRendGer
-#from imputils import getUpdateIndexes
-#import datetime, calendar
-#import networkx as nx
 from logging import info
 
-# Chaves do MODIF: Processada?
+# Chaves do MODIF Processadas:
 # VOLMIN   : ok
 # VOLMAX   : ok
 # VAZMIN   : ok
@@ -29,6 +23,7 @@ from logging import info
 
 class NewaveDicted(object):
     def __init__(self):
+        # Dados de sistema e problema
         self.DGER = None
         self.SISTEMA = None
         self.CAR = None
@@ -37,7 +32,7 @@ class NewaveDicted(object):
         self.PATCARGA = None
         self.PATINTER = None
 
-        # Thermal Generation Data
+        # Dados do parque termelétrico
         self.TERM = None
         self.CONFT = None
         self.CADTERM = None
@@ -46,7 +41,7 @@ class NewaveDicted(object):
         self.MODIFCLAST = None
         self.MANUTT = None
 
-        # Hydro Generation Data
+        # Dados do parque hidrelétrico
         self.CONFHD = None
         self.HIDR = None
         self.HIDRcount = None
@@ -130,8 +125,8 @@ class NewaveDicted(object):
                 self.nss = len(sss)
                 sss.sort()
                 ssfict.sort()
-                self.sss = map(str, sss)
-                self.ssfict = map(str, ssfict)
+                self.sss = list(map(str, sss))
+                self.ssfict = list(map(str, ssfict))
                 self.ssname = list()
                 for idss in self.sss:
                     self.ssname.append(self.SISTEMA['sss'][idss]['name'])
