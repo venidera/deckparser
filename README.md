@@ -51,7 +51,7 @@ deck = newave2dicts('/Users/andre/git/deckparser/test/NW201305.zip')
 Usando pip:
 
 ```bash
-$ pip install git+ssh://git@github.com:venidera/deckparser.git
+$ pip install git+https://git@github.com/venidera/deckparser.git
 ```
 
 ## Time de desenvolvimento
