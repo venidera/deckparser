@@ -64,9 +64,11 @@ $ pip install git+https://git@github.com/venidera/deckparser.git
 
 ## Time de desenvolvimento
 
+O time de desenvolvimento é formado por membros da equipe Venidera:
+
 * [André Toscano](https://github.com/aemitos)
 * [João Borsói Soares](https://github.com/joaoborsoi)
-* [Renan]()
+* [Renan de Paula Maciel]()
 
 ## Licença
 
