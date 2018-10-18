@@ -5,14 +5,14 @@ from deckparser.importers.decomp.importDADGER import importDADGER
 
 from pprint import pprint
 
-def decomp2dicts(fn):
+def decomp2dicts(fn,reg=None):
     """
     Open the zipped file and start to import data into python dicts and lists
     """
     dz = DecompZipped(fn=fn)
     if dz.zipLoaded():
         dd = DecompDicted()
-        dd.DADGETR = importDADGER(dz.openFileExtData(1,'DADGER'))
+        dd.DADGER = importDADGER(dz.openFileExtData(1,'DADGER'),reg)
 
         #dz.closeSemana(1)
         #dd = DecompDicted()
@@ -23,7 +23,9 @@ def decomp2dicts(fn):
         #dd.DGER = importDGER(dz.openFile(fnp='dger'))
         #dd.SISTEMA = importSISTEMA(dz.openFileExtData(fnp='sistema'),dd.DGER)
         #dd.process_ss()
-
-        return dd
+        if reg!= None and reg!="VAZOES":
+            return dd.DADGER
+        else:
+            return dd
     else:
         return None

@@ -1,69 +1,75 @@
 from deckparser.importers.imputils import searchInList, getUpdateIndexes
 from logging import info,debug
 
-def importDADGER(data):
+def importDADGER(data, reg):
+    NumPatamares = 3
     DADGER = {
-        'UH': [], 'CT': [], 'UE': [], 'DP': []
+        'UH': [], 'CT': [], 'UE': [], 'DP': [], 'PQ': [], 'IT': [], 'IA': [],
+        'MP': [], 'VE': [], 'VM': [], 'DF': [], 'TI': [], 'MT': [], 'VI': [],
+        'RE': dict(), 'AC': []
     }
 
+    lineNum = 0
     for line in data:
+        lineNum += 1
         if line[0]=='&':
             continue
 
         id = line[0:2].strip()
-        if id == "UH":
-            DADGER["UH"].append(importUH(line))
-        elif id == "CT":
-            DADGER["CT"].append(importCT(line))
-        elif id == "UE":
-            DADGER["UE"].append(importUE(line))
-        elif id == "DP":
-            DADGER["DP"].append(importDP(line))
 
-    return DADGER
+        if reg != None and id != reg and \
+           (reg == "RE" and id != "LU" and \
+            id != "FU" and id != 'FT' and id!='FI'):
+            continue
+       
+        try:
+            if id == "UH":
+                DADGER["UH"].append(importUH(line))
+            elif id == "CT":
+                DADGER["CT"].append(importCT(line))
+            elif id == "UE":
+                DADGER["UE"].append(importUE(line))
+            elif id == "DP":
+                DADGER["DP"].append(importDP(line))
+            elif id == "PQ":
+                DADGER["PQ"].append(importPQ(line))
+            elif id == "IT":
+                DADGER["IT"].append(importIT(line,NumPatamares))
+            elif id == "IA":
+                DADGER["IA"].append(importIA(line,NumPatamares))
+            elif id == "TX":
+                DADGER["TX"] = importTX(line)
+            elif id == "DT":
+                DADGER["DT"] = importDT(line)
+            elif id == "MP" or id == "VE" or id == "VM" or id == "DF" or id == "TI":
+                DADGER[id].append(importMPVEVMDFTI(id, line))
+            elif id == "MT":
+                DADGER["MT"].append(importMT(line))
+            elif id == "VI":
+                DADGER["VI"].append(importVI(line))
+            elif id == "RE":
+                importRE(line,DADGER["RE"])
+            elif id == "LU":
+                importLU(line,DADGER["RE"],NumPatamares)
+            elif id == "FU":
+                importFU(line,DADGER["RE"])
+            elif id == "FT":
+                importFT(line,DADGER["RE"])
+            elif id == "FI":
+                importFI(line,DADGER["RE"])
+            elif id == "AC":
+                DADGER['AC'].append(importAC(line))
+        except ValueError as e:
+            info(str(e)+" linha: "+str(lineNum))
+            
+    if reg != None:
+        return DADGER[reg]
+    else:
+        return DADGER
 
-#      else if(id == "PQ")
-#        ContaDadosGerPQ(Data->Strings[i],GeracaoPCH);
-#      else if(id == "IT")
-#        ImportDadosGerIT(Data->Strings[i]);
-#      else if(id == "IA")
-#        ImportDadosGerIA(Data->Strings[i]);
-#      else if(id == "TX")
-#        TxDesconto = Data->Strings[i].SubString(5,5).Trim().ToDouble();
-#      else if(id == "DT")
-#        IniDecomp = TDateTime(Data->Strings[i].SubString(15,4).Trim().ToInt(),
-#                              Data->Strings[i].SubString(10,2).Trim().ToInt(),
-#                              Data->Strings[i].SubString(5,2).Trim().ToInt());
-#      else if(id == "MP" || id == "VE" || id == "VM" || id == "DF" || id == "TI")
-#        ImportDadosGerMPVEVMDFTI(id, Data->Strings[i]);
-#      else if(id == "MT")
-#	      ImportDadosGerMT(Data->Strings[i]);
-#      else if(id == "VI")
-#        ImportDadosGerVI(Data->Strings[i],PrimeiroVI);
-#      else if(id == "RE")
-#	      ImportDadosGerRE(Data->Strings[i]);
-#      else if(id == "LU")
-#	      ImportDadosGerLU(Data->Strings[i]);
-#      else if(id == "FU")
-#	      ImportDadosGerFU(Data->Strings[i]);
-#      else if(id == "FT")
-#	      ImportDadosGerFT(Data->Strings[i]);
-#      else if(id == "FI")
-#	      ImportDadosGerFI(Data->Strings[i]);
-#      else if(id == "AC")
-#        ImportDadosGerAC(Data->Strings[i]);
-#      else
-#        // pula registros desconhecidos
-#        continue;
-
-#    ImportDadosGerPQ(GeracaoPCH);
 
 
-def ConvCodUteFromDecomp(CodUte):
-    if CodUte==6:
-        CodUte = 66
-    return CodUte
-    
+   
 def importUH(line):
     return {
         'CodUhe': int(line[4:7].strip()),
@@ -72,30 +78,19 @@ def importUH(line):
 
 def importCT(line):
     return {
-        'CodUte': ConvCodUteFromDecomp(int(line[4:7].strip())),
+        'CodUte': int(line[4:7].strip()),
         'Estagio': int(line[24:26].strip()),
-        'GTMIN': [float(line[29:34].strip()),
+        'GtMin': [float(line[29:34].strip()),
                   float(line[49:54].strip()),
                   float(line[69:74].strip())],
-        'POTEF': [float(line[34:39].strip()),
+        'PotEf': [float(line[34:39].strip()),
                   float(line[54:59].strip()),
                   float(line[74:79].strip())],
-        'CUSTO': [float(line[39:49].strip()),
+        'Custo': [float(line[39:49].strip()),
                   float(line[59:69].strip()),
                   float(line[79:89].strip())],
     }
 
-#  ImportUteDados(CodUte,UGT_ID,"TEIF",1,Ini,Fim,0,Estagio);
-#  ImportUteDados(CodUte,UGT_ID,"TEIF",2,Ini,Fim,0,Estagio);
-#  ImportUteDados(CodUte,UGT_ID,"TEIF",3,Ini,Fim,0,Estagio);
-
-#  ImportUteDados(CodUte,UGT_ID,"IPTER",1,Ini,Fim,0,Estagio);
-#  ImportUteDados(CodUte,UGT_ID,"IPTER",2,Ini,Fim,0,Estagio);
-#  ImportUteDados(CodUte,UGT_ID,"IPTER",3,Ini,Fim,0,Estagio);
-
-#  ImportUteDados(CodUte,UGT_ID,"FCMAX",1,Ini,Fim,100,Estagio);
-#  ImportUteDados(CodUte,UGT_ID,"FCMAX",2,Ini,Fim,100,Estagio);
-#  ImportUteDados(CodUte,UGT_ID,"FCMAX",3,Ini,Fim,100,Estagio);
 
 def importUE(line):
     return {
@@ -107,43 +102,6 @@ def importUE(line):
         'Consumo': float(line[59:69].strip())
     }
 
-#  Query->SQL->Clear();
-#  Query->SQL->Add("SELECT CodUsina FROM Desvio ");
-#  Query->SQL->Add("WHERE CodUsina=:CodUsina AND CodJus=:CodJus");
-#  Query->ParamByName("CodUsina")->AsInteger = ConvTab[Montante-1];
-#  Query->ParamByName("CodJus")->AsInteger = ConvTab[Jusante-1];
-#  if(!Query->Prepared)
-#    Query->Prepare();
-#  Query->Open();
-
-#  bool found = (Query->RecordCount>0);
-
-#  Query->Close();
-#  Query->SQL->Clear();
-
-#  if(found)
-#  {
-#    Query->SQL->Add("UPDATE Desvio ");
-#    Query->SQL->Add("SET DefMin=:DefMin,DefMax=:DefMax,ConsEsp=:ConsEsp,Nome=:Nome ");
-#    Query->SQL->Add("WHERE CodUsina=:CodUsina AND CodJus=:CodJus ");
-
-#  }
-#  else
-#  {
-#    Query->SQL->Add("INSERT INTO Desvio ");
-#    Query->SQL->Add("(CODUSINA,CODJUS,DEFMIN,DEFMAX,CONSESP,NOME) ");
-#    Query->SQL->Add("VALUES (:CodUsina,:CodJus,:DefMin,:DefMax,:ConsEsp,:Nome)");
-#  }
-
-#  Query->ParamByName("CodUsina")->AsInteger = ConvTab[Montante-1];
-#  Query->ParamByName("CodJus")->AsInteger = ConvTab[Jusante-1];
-#  Query->ParamByName("DefMin")->AsFloat = VazMin;
-#  Query->ParamByName("DefMax")->AsFloat = VazMax;
-#  Query->ParamByName("ConsEsp")->AsFloat = Consumo;
-#  Query->ParamByName("Nome")->AsString = Nome;
-#  if(!Query->Prepared)
-#    Query->Prepare();
-#  Query->ExecSQL();
 
 def importDP(line):
     DP = {
@@ -169,82 +127,200 @@ def importDP(line):
         DP['MMED'] = mercado
 
     return DP
-#  int TPD_ID = GetTpdId("MMED");
-#  double Carga, Duracao[3], DuracaoTotal = 0;
+
+def importPQ(line):
+    return {
+        'CodSubsistema': int(line[14:16].strip()),
+        'Estagio': int(line[19:21].strip()),
+        'Valor': [float(line[24:29].strip()),
+                  float(line[29:34].strip()),
+                  float(line[34:39].strip())]
+    }
+
+def importIT(line,numPatamares):
+    IT = {
+        'Estagio': int(line[4:6].strip()),
+        'GerIt50': [],
+        'Mande': []
+    }
+    for patamar in range(1,numPatamares+1):
+        gerItInit = patamar*10
+        mandeInit = patamar*10
+        IT['GerIt50'].append(float(line[gerItInit:gerItInit+5].strip()))
+        IT['Mande'].append(float(line[mandeInit:mandeInit+5].strip()))
+        
+    return IT
+        
+def importIA(line,numPatamares):
+    IA = {
+        'Estagio': int(line[4:6].strip()),
+        'S1': line[9:11].strip(),
+        'S2': line[14:16].strip(),
+        'Valores': []
+    }
+
+    for patamar in range(1,numPatamares+1):
+        imedInit = patamar*20-1
+        IA['Valores'].append({
+            'S1S2': int(line[imedInit:imedInit+10].strip()),
+            'S2S1': int(line[imedInit+10:imedInit+20].strip())
+        })
+        
+    return IA
+
+def importTX(line):
+    return float(line[4:9].strip())
+
+def importDT(line):
+    return {
+        "Ano": int(line[14:18].strip()),
+        "Mes": int(line[9:11].strip()),
+        "Dia": int(line[4:6].strip())
+    }
+
+def importMPVEVMDFTI(id,line):
+    Reg = {
+        "CodUhe": int(line[4:7].strip()),
+        "Unidade": "m3/s",
+        "Valores": []
+    }
+
+    if id == "VE":
+        Reg["Unidade"] = "%"
+    elif id =="MP":
+        Reg["Unidade"] = ""
+       
+    i = 0;
+    while True:
+        Valor = line[9+i*5:9+i*5+5].strip()
+        if i == 17 or Valor == "":
+            break
+        Reg["Valores"].append(float(Valor))
+        i += 1
+
+    return Reg
+
+def importMT(line):
+    MT = {
+	"CodUte": int(line[4:7].strip()),
+        "Valores": []
+    }
+
+    i = 0
+    while True:
+        Valor = line[14+i*5:14+i*5+5].strip()
+        if i == 17 or Valor == "":
+            break
+        MT["Valores"].append(float(Valor))
+        i+=1
+    return MT
+            
+def importVI(line):
+    VI = {
+        "CodUhe": int(line[4:7].strip()),
+        "Duracao": int(line[9:12].strip()),
+        "VazDef": []
+    }
+
+    for i in range(0,5):
+        VI["VazDef"].append(float(line[14+i*5:14+i*5+5].strip()))
+    return VI
+
+def importRE(line,RE):
+    id = int(line[4:7].strip())
+    RE[id] = {
+        "EstagioIni": int(line[9:11].strip()),
+        "EstagioFim": int(line[14:16].strip()),
+        "LU": [],
+        "FU": [],
+        "FT": [],
+        "FI": [],
+        "FE": []
+    }
+
+def importLU(line,RE,numPatamares):
+    id = int(line[4:7].strip())
+
+    LU = {
+        "Estagio": int(line[9:11].strip()),
+        "Valores": []
+    }
+
+    for patamar in range(1,numPatamares+1):
+        init = 14+(patamar-1)*20
+        inferior =  line[init:init+10].strip()
+        limite = {}
+        if inferior != "":
+            limite["Inferior"] = float(inferior)
+
+        init = 24+(patamar-1)*20
+        superior = line[init:init+10].strip()
+        if superior != "":
+            limite["Superior"] = float(superior)
+
+        LU["Valores"].append(limite)
+        
+    RE[id]["LU"].append(LU)
+
+def importFU(line, RE):
+    id = int(line[4:7].strip())
+    RE[id]["FU"].append({
+        "Estagio": int(line[9:11].strip()),
+        "CodUhe": int(line[14:17].strip()),
+        "Valor": float(line[19:29].strip())
+    })
+
+def importFT(line, RE):
+    id = int(line[4:7].strip())
+    RE[id]["FT"].append({
+        "Estagio": int(line[9:11].strip()),
+        "CodUte": int(line[14:17].strip()),
+        "Valor": float(line[24:34].strip())
+    })
+
+def importFI(line, RE):
+    id = int(line[4:7].strip())
+    RE[id]["FI"].append({
+        "Estagio": int(line[9:11].strip()),
+        "SSOrigem": line[14:16].strip(),
+        "SSDestino": line[19:21].strip(),
+        "Valor": float(line[24:34].strip())
+    })
+
+def importAC(line):
+    AC = {
+        "CodUhe": int(line[4:7].strip()),
+        "Mnemonico": line[9:15].strip(),
+        "Mes": line[69:72].strip()
+    }
+
+    estagio = line[74:75].strip()
+    if estagio != "":
+        AC["Estagio"] = int(estagio)
 
 
+    if AC["Mnemonico"] == "NOMEUH":
+        AC["Valor"] = line[19:31].strip()
+    if AC["Mnemonico"] == "NUMPOS" or AC["Mnemonico"] == "NUMJUS" or \
+       AC["Mnemonico"] == "NUMCON" or AC["Mnemonico"] == "VERTJU" or \
+       AC["Mnemonico"] == "VAZMIN" or AC["Mnemonico"] == "NUMBAS" or \
+       AC["Mnemonico"] == "TIPTUR" or AC["Mnemonico"] == "TIPERH" or \
+       AC["Mnemonico"] == "JUSENA":
+        AC["Valor"] = int(line[19:24].strip())
+    elif AC["Mnemonico"] == "DESVIO" or AC["Mnemonico"] == "POTEFE" or \
+         AC["Mnemonico"] == "ALTEFE" or AC["Mnemonico"] == "NCHAVE":
+        AC["Indice"] = int(line[19:24].strip())
+        AC["Valor"] = float(line[24:34].strip())
+    elif AC["Mnemonico"] == "VOLMIN" or AC["Mnemonico"] == "VOLMAX" or \
+         AC["Mnemonico"] == "PROESP" or AC["Mnemonico"] == "PERHID" or \
+         AC["Mnemonico"] == "JUSMED":
+        AC["Valor"] = float(line[19:29].strip())
+    elif AC["Mnemonico"] == "COTVOL" or AC["Mnemonico"] == "COTARE":
+        AC["Indice"] = int(line[19:24].strip())
+        AC["Valor"] = float(line[24:39].strip())
+    elif AC["Mnemonico"] == "COFEVA" or AC["Mnemonico"] == "NUMMAQ" or \
+         AC["Mnemonico"] == "VAZEFE":
+        AC["Indice"] = int(line[19:24].strip())
+        AC["Valor"] = int(line[24:29].strip())
 
-#  if(EstagioList->IndexOf((void *)Estagio)==-1)
-#  {
-#    EstagioList->Add((void *)Estagio);
-#    for(int Patamar=1; Patamar <= NumPatamares; Patamar++)
-#      ImportPatamarDuracao(Patamar,Ini,Duracao[Patamar-1]/DuracaoTotal,Estagio);
-#  }
-#}
-#//---------------------------------------------------------------------------
-#void __fastcall
-#TFormDlgImportNewave::ContaDadosGerPQ(const AnsiString Line, TList *GeracaoPCH)
-#{
-#  int CodSubsistema = Line.SubString(15,2).Trim().ToInt();
-#  int Estagio = Line.SubString(20,2).Trim().ToInt();
-#  double Valor[3] = {Line.SubString(25,5).Trim().ToDouble(),
-#                    Line.SubString(30,5).Trim().ToDouble(),
-#                    Line.SubString(35,5).Trim().ToDouble()};
-#  GeracaoPCHItem *Item;
-
-#  for(int i=0; i<GeracaoPCH->Count; i++)
-#  {
-#    Item = (GeracaoPCHItem *) GeracaoPCH->Items[i];
-#    if(Item->CodSubsistema == CodSubsistema &&
-#       Item->Estagio == Estagio)
-#    {
-#      for(int j=0; j < 3; j++)
-#        Item->Valor[j] += Valor[j];
-#      return;
-#    }
-#  }
-
-#  Item = new GeracaoPCHItem;
-#  Item->CodSubsistema = CodSubsistema;
-#  Item->Estagio = Estagio;
-#  for(int j=0; j < 3; j++)
-#    Item->Valor[j] = Valor[j];
-#  GeracaoPCH->Add((void *)Item);
-#}
-#//---------------------------------------------------------------------------
-#void __fastcall
-#TFormDlgImportNewave::ImportDadosGerPQ(TList *GeracaoPCH)
-#{
-#  GeracaoPCHItem *Item;
-
-#  for(int i=0; i<GeracaoPCH->Count; i++)
-#  {
-#    Item = (GeracaoPCHItem *) GeracaoPCH->Items[i];
-#    for(int j=0; j < 3; j++)
-#      ImportDadoGeracaoPCH(Item->CodSubsistema,Ini,Item->Valor[j],j+1,Item->Estagio);
-#    delete Item;
-#  }
-#}
-#//---------------------------------------------------------------------------
-#void __fastcall
-#TFormDlgImportNewave::ImportDadosGerIT(const AnsiString Line)
-#{
-#  int Patamar;
-#  double Mande, GerIt50;
-
-#  // importa carga Ande na tabela MERCADO
-#  int TPD_MANDE = GetTpdId("MANDE");
-#  int TPD_IMED = GetTpdId("IMED");
-#  int Estagio = Line.SubString(5,2).Trim().ToInt();
-#  for(Patamar=1; Patamar<=3; Patamar++)
-#  {
-#    GerIt50 = Line.SubString(10+Patamar*10,5).Trim().ToDouble();
-#    Mande = Line.SubString(15+Patamar*10,5).Trim().ToDouble();
-#    ImportDadoMercado(sstITAIPU,TPD_MANDE,Patamar,Ini,Fim,Mande,Estagio);
-#    ImportDadoIntercambio(Patamar,TPD_IMED,sstITAIPU,sstFicSul,Ini,Fim,GerIt50,Estagio);
-#    ImportDadoIntercambio(Patamar,TPD_IMED,sstFicSul,sstITAIPU,Ini,Fim,0,Estagio);
-#    ImportDadoIntercambio(Patamar,TPD_IMED,sstITAIPU,sstSECO,Ini,Fim,99999,Estagio);
-#    ImportDadoIntercambio(Patamar,TPD_IMED,sstSECO,sstITAIPU,Ini,Fim,0,Estagio);
-#  }
-#}
-
+    return AC
