@@ -58,9 +58,9 @@ $ pip install git+https://git@github.com/venidera/deckparser.git
 
 ![](./imgs/logo_ped_aneel.jpg?raw=true)
 
-"Este trabalho faz parte do projeto intitulado 'Análise de Portfólio de Usinas de Geração para Atendimento da Carga Futura do Sistema Interligado Nacional - Matriz Robusta’, financiado pela EDP no âmbito do Programa de P&D da Anel (PD-07267-0012/2018).”
+"Este trabalho faz parte do projeto intitulado 'Análise de Portfólio de Usinas de Geração para Atendimento da Carga Futura do Sistema Interligado Nacional - Matriz Robusta’, financiado pela EDP no âmbito do Programa de P&D da ANEEL (PD-07267-0012/2018).”
 
-“This research is part of the project entitled 'Portfolio Analysis of Generation Plants to Meet Future Load of the National Interconnected System - Robust Energy Matrix', financed by EDP under the Aneel R&D Program (PD-07267-0012/2018).”
+“This research is part of the project entitled 'Portfolio Analysis of Generation Plants to Meet Future Load of the National Interconnected System - Robust Energy Matrix', financed by EDP under the ANEEL R&D Program (PD-07267-0012/2018).”
 
 ## Time de desenvolvimento
 
