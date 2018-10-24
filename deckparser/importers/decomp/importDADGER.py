@@ -1,7 +1,6 @@
-from deckparser.importers.imputils import searchInList, getUpdateIndexes
 from logging import info,debug
 
-def importDADGER(data, reg):
+def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
         'UH': [], 'CT': [], 'UE': [], 'DP': [], 'PQ': [], 'IT': [], 'IA': [],

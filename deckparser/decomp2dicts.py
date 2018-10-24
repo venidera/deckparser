@@ -1,31 +1,42 @@
+from logging import info,debug
+
 from deckparser.decompzipped import DecompZipped
-from deckparser.decompdicted import DecompDicted
+#from deckparser.decompdicted import DecompDicted
 
+from deckparser.importers.newave.importHIDR import importHIDR
 from deckparser.importers.decomp.importDADGER import importDADGER
+from deckparser.importers.decomp.importVAZOES import importVAZOES
 
-from pprint import pprint
-
-def decomp2dicts(fn,reg=None):
+def decomp2dicts(fn,sem: int = None,reg = None):
     """
     Open the zipped file and start to import data into python dicts and lists
     """
     dz = DecompZipped(fn=fn)
     if dz.zipLoaded():
-        dd = DecompDicted()
-        dd.DADGER = importDADGER(dz.openFileExtData(1,'DADGER'),reg)
 
-        #dz.closeSemana(1)
-        #dd = DecompDicted()
-        #dd.dirname = dz.dirname
-        #dd.filename = dz.filename
-        #dd.fhash = dz.fhash
-
-        #dd.DGER = importDGER(dz.openFile(fnp='dger'))
-        #dd.SISTEMA = importSISTEMA(dz.openFileExtData(fnp='sistema'),dd.DGER)
-        #dd.process_ss()
-        if reg!= None and reg!="VAZOES":
-            return dd.DADGER
-        else:
+        if sem==None:
+            dd = []
+            for i in range(1,dz.numSemanas()+1):
+                HIDR, HIDRcount = importHIDR(fn=dz.extractFile(i,'HIDR'))
+                dd.append({
+                    "DADGER": importDADGER(dz.openFileExtData(i,'DADGER')),
+                    "VAZOES": importVAZOES(fn=dz.extractFile(i,'VAZOES'),blockSize=HIDRcount)
+                })
             return dd
+        else:
+            if reg==None:
+                if sem >= 1 and sem <= dz.numSemanas():
+                    HIDR, HIDRcount = importHIDR(fn=dz.extractFile(sem,'HIDR'))
+                    return {
+                        "DADGER": importDADGER(dz.openFileExtData(sem,'DADGER')),
+                        "VAZOES": importVAZOES(fn=dz.extractFile(sem,'VAZOES'),blockSize=HIDRcount)
+                    }
+                raise ValueError("Semana inválida")
+            elif reg=="VAZOES":
+                HIDR, HIDRcount = importHIDR(fn=dz.extractFile(sem,'HIDR'))
+                return importVAZOES(fn=dz.extractFile(sem,'VAZOES'),blockSize=HIDRcount)
+            else:
+                return importDADGER(dz.openFileExtData(sem,'DADGER'),reg)
+            
     else:
         return None

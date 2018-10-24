@@ -57,6 +57,9 @@ class DecompZipped(object):
         else:
             info(self.fn + " is not a zip file")
 
+    def numSemanas(self):
+        return len(self.sem)
+
     def openSemana(self,num_sem):
         try:
             if num_sem not in self.sem:
@@ -122,13 +125,14 @@ class DecompZipped(object):
             info('Erro ao extrair arquivo ',num_sem,tag)
             raise
 
-    def extractFile(self,fnp):
+    def extractFile(self,num_sem,tag):
         try:
-            fname = self.fns_set[fnp.upper()]
-            e = self.z.extract(fname, self.dirname)
-            destfile = self.dirname + "/" + self.fhash + '_' + fname
-            os.rename(self.dirname + "/" + fname,destfile)
-            return destfile
+            if self.sem[num_sem]['zip'] is None:
+                self.openSemana(num_sem)
+            fname = self.sem[num_sem]['filelist'][tag]
+            z = self.sem[num_sem]['zip']
+            e = z.extract(fname, self.sem[num_sem]['tmpdir'])
+            return self.sem[num_sem]['tmpdir']+'/'+fname
         except:
-            info('Fail to extract ',fnp)
-            return False
+            info('Erro ao extrair arquivo ',num_sem,tag)
+            raise
