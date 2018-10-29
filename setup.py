@@ -33,4 +33,5 @@ if __name__ == '__main__':
             "Topic :: Utilities",
         ],
         test_suite=project_name + '.tests',
+        scripts=['bin/importa-decomp']
     )

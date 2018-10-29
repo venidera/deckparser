@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+import sys,logging,json
+from deckparser.decomp2dicts import decomp2dicts
+
+def usage():
+    print('Conversor do deck de dados do DECOMP para formato JSON')
+    print('Sintaxe: decomp2json <deck-file-path> [semana [registro]]')
+    print('Semana: Número da semana (revisões), começando por 1')
+    print('Registros: UH, CT, UE, DP, PQ, IT, IA, TX, DT, MP, VE, VM, DF, TI, MT, VI, RE, AC')
+    print('Exemplos:')
+    print('decomp2json DC201805.zip')
+    print('decomp2json DC201805.zip 2')
+    print('decomp2json DC201805.zip 1 UE')
+    print('decomp2json DC201805.zip > DC201805.json')
+
+def main():
+    logging.basicConfig(level=logging.DEBUG)
+    if len(sys.argv) == 2:
+        deck = decomp2dicts(fn=sys.argv[1])
+        print(json.dumps(deck,indent=1))
+    elif len(sys.argv) == 3:
+        try:
+            sem = int(sys.argv[2])
+            deck = decomp2dicts(fn=sys.argv[1],sem=sem)
+            print(json.dumps(deck,indent=1))
+        except ValueError as error:
+            logging.info(error)
+            usage()
+            return False
+    elif len(sys.argv) == 4:
+        try:
+            sem = int(sys.argv[2])
+            deck = decomp2dicts(fn=sys.argv[1],sem=sem,reg=sys.argv[3].upper())
+            print(json.dumps(deck,indent=1))
+        except ValueError as error:
+            logging.info(error)
+            usage()
+            return False
+    else:
+        usage()
+        return False
+
+if __name__ == '__main__':
+  main()
