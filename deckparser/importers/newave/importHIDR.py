@@ -197,6 +197,8 @@ def importHIDR(fn):
     if HIDRcount not in [320, 600, 601]:
         print("O arquivo HIDR.DAT importado é inválido.")
         return False
+    if HIDRcount == 601:
+        HIDRcount = 600
     HIDR = dict()
     for reg in bdhdata:
         chave = reg['Nome'].decode('utf-8').strip()
