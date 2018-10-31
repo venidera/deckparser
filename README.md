@@ -16,8 +16,9 @@ DeckParser fornece programas para abrir e ler os dados dos programas NEWAVE, DEC
 
 ## Referências
 
-![Importação de Decks NEWAVE](docs/Processo_de_importacao_de_um_deck_NEWAVE.md)
-![Importação de Decks DECOMP](docs/Processo_de_importacao_de_um_deck_DECOMP.md)
+[Importação de Decks NEWAVE](docs/Processo_de_importacao_de_um_deck_NEWAVE.md)
+
+[Importação de Decks DECOMP](docs/Processo_de_importacao_de_um_deck_DECOMP.md)
 
 
 ## Instalação
