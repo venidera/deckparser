@@ -23,12 +23,13 @@ consiste do deck do CMO de Maio/2018;
 
 ## Instalação do módulo Python
 
-A principal dependência para a instalação é o Python 3.6.x
-instalado. Também será necessário o comando *git* para a instalação
-facilitada do módulo Python. No exemplo apresentado neste documento
-foi utilizado o sistema operacional Linux mas o Windows também é
-suportado. Ao executar o comando *python3.6* no terminal teremos o
-apresentado abaixo, variando com a versão instalada no seu sistema.
+A principal dependência para a instalação é o Python 3.6.x instalado
+(no Ubuntu/Linux pacotes python3 e python3-venv). Também será
+necessário o comando *git* para a instalação facilitada do módulo
+Python. No exemplo apresentado neste documento foi utilizado o sistema
+operacional Linux mas o Windows também é suportado. Ao executar o
+comando *python3.6* no terminal teremos o apresentado abaixo, variando
+com a versão instalada no seu sistema.
 
 ```
 $ python3.6
