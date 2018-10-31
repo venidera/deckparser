@@ -170,33 +170,33 @@ realizam atividades específicas. São elas:
 
 * Importadores: os importadores são as funções específicas para cada
   arquivo importado de uma revisão do deck DECOMP::
-    + importDADGER: Importa arquivo DADGER.XXX, de dados gerais de
-      planejamento, composto por blocos de dados, onde cada bloco é
-      composto por registros formatados. O importador permite extrair
-      os seguintes registros:
-		  - UH (usinas hidrelétricas), 
-		  - CT (usinas termoelétricas), 
-		  - UE (estações de bombeamento), 
-		  - DP (carga dos subsistemas), 
-		  - PQ (geração em pequenas usinas), 
-		  - IT (restrição de geração de itaipu 50Hz e carga da ANDE),
-		  - IA (limite de fluxo entre subsistemas)
-		  - TX (taxa de desconto anual)
-		  - DT (data de referência do estudo)
-		  - MP e MT (manutenção programada)
-		  - VE (volume de espera)
-		  - VM e DF (enchimento de volume morto)
-		  - TI (taxa de irrigação)
-		  - VI (tempo de viagem)
-		  - RE, LU, FU, FT e FI (restrições elétricas)
-		  - AC (modificação de cadastro)
-	  + importVAZOES: Importa arquivo VAZOES.XXX, de dados de
-        afluência (vazão incremental para cada aproveitamento) que
-        compões a previsão do mês inicial e os cenários de vazões para
-        cada estágio do planejamento (gerado pelo GEVAZP). O arquivo
-        possui um cenário para cada estágio (semana) do primeiro mês,
-        e diversos cenários para o segundo mês. São extraídos os dados
-        de vazão para cada estágio do mês inicial.
+  + importDADGER: Importa arquivo DADGER.XXX, de dados gerais de
+    planejamento, composto por blocos de dados, onde cada bloco é
+    composto por registros formatados. O importador permite extrair os
+    seguintes registros:
+	- UH (usinas hidrelétricas), 
+	- CT (usinas termoelétricas), 
+	- UE (estações de bombeamento), 
+	- DP (carga dos subsistemas), 
+	- PQ (geração em pequenas usinas), 
+	- IT (restrição de geração de itaipu 50Hz e carga da ANDE),
+	- IA (limite de fluxo entre subsistemas)
+	- TX (taxa de desconto anual)
+	- DT (data de referência do estudo)
+	- MP e MT (manutenção programada)
+	- VE (volume de espera)
+	- VM e DF (enchimento de volume morto)
+	- TI (taxa de irrigação)
+	- VI (tempo de viagem)
+	- RE, LU, FU, FT e FI (restrições elétricas)
+	- AC (modificação de cadastro)
+  + importVAZOES: Importa arquivo VAZOES.XXX, de dados de afluência
+    (vazão incremental para cada aproveitamento) que compões a
+    previsão do mês inicial e os cenários de vazões para cada estágio
+    do planejamento (gerado pelo GEVAZP). O arquivo possui um cenário
+    para cada estágio (semana) do primeiro mês, e diversos cenários
+    para o segundo mês. São extraídos os dados de vazão para cada
+    estágio do mês inicial.
 	  	
 Todo o código do importador é aberto e está disponível no endereço
 [https://github.com/venidera/deckparser](https://github.com/venidera/deckparser)
