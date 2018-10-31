@@ -14,37 +14,11 @@ DeckParser fornece programas para abrir e ler os dados dos programas NEWAVE, DEC
 * numpy > 1.15.x (Instalado automaticamente)
 * unidecode > 1.0.x (Instalado automaticamente)
 
-## Validações
+## Referências
 
-### Leituras
+![Importação de Decks NEWAVE](docs/Processo_de_importacao_de_um_deck_NEWAVE.md)
+![Importação de Decks DECOMP](docs/Processo_de_importacao_de_um_deck_DECOMP.md)
 
-* DGER.DAT: validado para todos os decks NEWAVE da CCEE;
-* SISTEMA.DAT: validado para todos os decks NEWAVE da CCEE.
-
-### Considerações
-
-* Quando um deck é um arquivo zipado com mais de um deck dentro, o arquivo mais novo de deck encontrado no arquivo comprimido é o utilizado para a importação.
-
-## Uso
-
-* Exemplo 1: ler arquivo `SISTEMA.DAT`:
-
-```python
-from deckparser.deckzipped import DeckZipped
-from deckparser.importers.newave.importDGER import importDGER
-from deckparser.importers.newave.importSISTEMA import importSISTEMA
-
-dz = DeckZipped('/Users/andre/git/deckparser/test/NW201305.zip')
-dger = importDGER(dz.openFile(fnp='dger'))
-SISTEMA = importSISTEMA(dz.openFileExtData(fnp='sistema'), dger)
-```
-
-* Example 2: ler deck do newave dentro de um `dict`:
-
-```python
-from deckparser.newave2dicts import newave2dicts
-deck = newave2dicts('/Users/andre/git/deckparser/test/NW201305.zip')
-```
 
 ## Instalação
 
