@@ -3,13 +3,21 @@ Created on 4 de jul de 2018
 
 @author: Renan
 '''
-dirDS = 'C:\\Users\\Renan\\Documents\\Doutorado\\P&D\\Leitura de dados\\Decks de referencia\\DES_CCEE_20180525_ComRede\\'
 
-from deckparser.importers.dessem.util import listCases, dsFileTest
-for cs in listCases():
-    dsFileTest(dirDS, cs)
+from datetime import date
+from deckparser.dessem2dicts import dessem2dicts
+from deckparser.importers.dessem.util import printDict
+
+fn = '<Caminho para o arquivo compactado que contem os decks>'
+dias = [date(2018,5,25)]
+r = False
+dc = dessem2dicts(fn, dias, r)
+for d in dias:
+    printDict(dc[d][r]['entdados']['UH'], 0)
 
 '''
+dirDS = <Caminho para o diretorio que contem o deck>
+
 from deckparser.importers.dessem.util import showHeader
 showHeader('entdados')
 

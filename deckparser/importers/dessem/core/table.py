@@ -16,13 +16,18 @@ class table:
         return len(self.dataSet) == 0
      
     def toDict(self, df=True):
-        fl = self.rec.listFields()
+        fl = self.rec.recMap
         lst = []
-        ds = self.getData(df)
-        for ln in ds:
+        lines = self.getData(df)
+        for ln in lines:
             ds = {}
             for k in fl:
-                ds[k] = ln.get(k)
+                f = fl[k]
+                if f.get('composed'):
+                    for kd in record.composedToDict(f, ln):
+                        ds[kd] = ln.get(kd)
+                else:
+                    ds[k] = ln.get(k)
             lst.append(ds)
         return lst
     

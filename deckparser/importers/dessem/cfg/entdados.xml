@@ -412,7 +412,7 @@
 					<field name="valor" size="15" type="real" />
 				</case>
 				<case value="DESVIO">
-					<field name="idUsina" size="5" type="int">
+					<field name="idUsinaDesvio" size="5" type="int">
 						<validate min="0" />
 					</field>
 				</case>
@@ -427,7 +427,7 @@
 					</field>
 				</case>
 				<case value="NUMJUS">
-					<field name="idUsina" size="5" type="int">
+					<field name="idUsinaJus" size="5" type="int">
 						<validate min="0" />
 					</field>
 				</case>

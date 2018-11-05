@@ -4,9 +4,7 @@ Created on 4 de jul de 2018
 @author: Renan
 '''
 import re
-
 from deckparser.importers.dessem.core.dataType import parseDataType, validateDataType
-
 
 class record:
     
@@ -20,12 +18,27 @@ class record:
      
     def toDict(self, df=True):
         ds = {}
-        if self.data is None:
+        r = self.data
+        if r is None:
             return ds
         if df:
-            return self.applyDefault(self.data)
+            return self.applyDefault(r)
         for k in self.recMap:
-            ds[k] = self.data.get(k)
+            f = self.recMap[k]
+            if f['composed']:
+                for kd in record.composedToDict(f, r):
+                    ds[kd] = r.get(kd)
+            else:
+                ds[k] = r.get(k)
+        return ds
+    
+    @staticmethod
+    def composedToDict(f, r):
+        refKey = r.get(f['refField'])
+        fields = f['set'][refKey]
+        ds = {}
+        for kd in fields:
+            ds[kd] = r.get(kd)
         return ds
     
     def clear(self):
