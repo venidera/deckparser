@@ -3,8 +3,8 @@ Created on 4 de jul de 2018
 
 @author: Renan
 '''
-from core.dsFile import dsFile
-from core.record import record
+from deckparser.importers.dessem.core.dsFile import dsFile
+from deckparser.importers.dessem.core.record import record
 
 
 class operut(dsFile):
@@ -13,17 +13,20 @@ class operut(dsFile):
         self.ucterm = False
         self.flgucterm = False
     
+    def isEndOfBlock(self, line):
+        return record.assertString(line, 'FIM')
+    
     def readDSFile(self, fileName):
         nRec = 0
         modo = None
-        with open(fileName, 'r') as f:
+        with self.openDSFile(fileName) as f:
             for line in f:
                 nRec = nRec + 1
                 
                 if record.isComment(line) or record.isBlankLine(line):
                     continue
-                if record.isEOF(line):
-                    break
+                if self.isEndOfBlock(line):
+                    modo = None
                 
                 if record.assertString(line, 'UCTERM'):
                     self.ucterm = True

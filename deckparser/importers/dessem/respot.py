@@ -3,8 +3,8 @@ Created on 4 de jul de 2018
 
 @author: Renan
 '''
-from core.dsFile import dsFile
-from core.record import record
+from deckparser.importers.dessem.core.dsFile import dsFile
+from deckparser.importers.dessem.core.record import record
 
 
 class respot(dsFile):
@@ -15,21 +15,35 @@ class respot(dsFile):
     def isEOF(self, line):
         return record.assertString(line, '9999')
     
+    def isEndOfBlock(self, line):
+        return record.assertString(line, 'FIM')
+    
     def readDSFile(self, fileName):
         nRec = 0
-        with open(fileName, 'r') as f:
+        modo = None
+        with self.openDSFile(fileName) as f:
             for line in f:
                 nRec = nRec + 1
                 
                 if record.isComment(line) or record.isBlankLine(line):
                     continue
+                if self.isEndOfBlock(line):
+                    modo = None
+                    continue
                 if self.isEOF(line):
                     break
                 
-                r = self.getRec('Geral').parse(line)
-                if r['nomeCampo'] == 'RP':
-                    self.getTable('RP').parseLine(line)
-                elif r['nomeCampo'] == 'LM':
-                    self.getTable('LM').parseLine(line)
+                if modo == 'USI':
+                    self.getTable('USI').parseLine(line)
+                else:
+                    ls = line.strip()
+                    nc = ls[0:2]
+                    if nc == 'RP':
+                        self.getTable('RP').parseLine(line)
+                    elif nc == 'LM':
+                        self.getTable('LM').parseLine(line)
+                    elif ls[0:3] == 'USI':
+                        self.modo = 'USI'
+                    
         f.close()
     

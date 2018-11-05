@@ -1,1 +1,32 @@
-<dsFile name="operut"><table name="INIT"><field c="1" cf="3" name="idUsina" type="int" /><field c="5" cf="16" name="nomeUsina" type="string" /><field c="20" cf="21" name="idUnidade" type="int" /><field c="25" cf="26" name="statusUnidade" type="bin" /><field c="30" cf="39" name="geracaoUnidade" type="real"><validate min="0.0" /></field><field c="42" cf="43" name="tempoPerm" type="int" /></table><table name="OPER"><field c="1" cf="3" name="idUsina" type="int" /><field c="5" cf="16" name="nomeUsina" type="string" /><field c="18" cf="19" name="idUnidade" type="int" /><field c="21" cf="22" name="diaIni" type="d" /><field c="24" cf="25" name="horaIni" type="h" /><field c="27" name="meiaHoraIni" type="bin" /><field c="29" cf="30" name="diaFim" special="F" type="d" /><field c="32" cf="33" name="horaFim" type="h" /><field c="35" name="meiaHoraFim" type="bin" /><field c="37" cf="46" name="limInf" type="real"><validate min="0.0" /></field><field c="47" cf="56" name="limSup" type="real"><validate min="0.0" /></field><field c="57" cf="66" name="custoIncr" type="real"><validate min="0.0" /></field></table></dsFile>
+<dsFile name="operut">
+	<table name="INIT">
+		<field c="1" cf="3" name="idUsina" type="int" />
+		<field c="5" cf="16" name="nomeUsina" type="string" />
+		<field c="20" cf="21" name="idUnidade" type="int" />
+		<field c="25" cf="26" name="statusUnidade" type="bin" />
+		<field c="30" cf="39" name="geracaoUnidade" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="42" cf="43" name="tempoPerm" type="int" />
+	</table>
+	<table name="OPER">
+		<field c="1" cf="3" name="idUsina" type="int" />
+		<field c="5" cf="16" name="nomeUsina" type="string" />
+		<field c="18" cf="19" name="idUnidade" type="int" />
+		<field c="21" cf="22" name="diaIni" type="d" />
+		<field c="24" cf="25" name="horaIni" type="h" />
+		<field c="27" name="meiaHoraIni" type="bin" />
+		<field c="29" cf="30" name="diaFim" special="F" type="d" />
+		<field c="32" cf="33" name="horaFim" type="h" />
+		<field c="35" name="meiaHoraFim" type="bin" />
+		<field c="37" cf="46" name="limInf" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="47" cf="56" name="limSup" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="57" cf="66" name="custoIncr" type="real">
+			<validate min="0.0" />
+		</field>
+	</table>
+</dsFile>

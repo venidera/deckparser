@@ -1,1 +1,65 @@
-<dsFile name="infofcf"><record name="Geral"><field c="1" cf="6" name="nomeCampo" type="string" /></record><record name="MAPFCF"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="MAPFCF" /></field><field c="9" cf="14" name="nomeDado" type="string" /></record><table name="SISGNL"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="MAPFCF" /></field><field c="9" cf="14" name="nomeDado" type="string"><validate value="SISGNL" /></field><field c="20" cf="22" name="idSubsistema" type="int" /><field c="24" cf="26" name="numLags" type="int" /><field c="24" cf="26" name="numPat" type="int" /></table><table name="DURPAT"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="MAPFCF" /></field><field c="9" cf="14" name="nomeDado" type="string"><validate value="DURPAT" /></field><field c="16" cf="18" name="idLag" type="int" /><field c="20" cf="22" name="idPat" type="int" /><field c="25" cf="34" name="duracao" type="real" /></table><table name="FCFFIX"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="FCFFIX" /></field><field c="8" cf="13" name="nomeDado" type="string"><validate value="USIT" /></field><field c="15" cf="17" name="idEntidade" type="int" /><field c="19" cf="24" name="variavel" type="string" /><field c="26" cf="28" name="idLag" type="int" /><field c="30" cf="32" name="idPat" type="int" /><field c="34" cf="43" name="valorAbatido" type="real" /><field c="45" cf="64" name="comentario" type="string" /></table><table name="TVIAG"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="MAPFCF" /></field><field c="9" cf="14" name="nomeDado" type="string"><validate value="TVIAG" /></field><field c="21" cf="23" name="idUsina" type="int" /></table><table name="CGTMIN"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="MAPFCF" /></field><field c="9" cf="14" name="nomeDado" type="string"><validate value="CGTMIN" /></field><field c="17" cf="31" name="custoGT" type="int" /></table></dsFile>
+<dsFile name="infofcf">
+	<record name="Geral">
+		<field c="1" cf="6" name="nomeCampo" type="string" />
+	</record>
+	<record name="MAPFCF">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="MAPFCF" />
+		</field>
+		<field c="9" cf="14" name="nomeDado" type="string" />
+	</record>
+	<table name="SISGNL">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="MAPFCF" />
+		</field>
+		<field c="9" cf="14" name="nomeDado" type="string">
+			<validate value="SISGNL" />
+		</field>
+		<field c="20" cf="22" name="idSubsistema" type="int" />
+		<field c="24" cf="26" name="numLags" type="int" />
+		<field c="24" cf="26" name="numPat" type="int" />
+	</table>
+	<table name="DURPAT">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="MAPFCF" />
+		</field>
+		<field c="9" cf="14" name="nomeDado" type="string">
+			<validate value="DURPAT" />
+		</field>
+		<field c="16" cf="18" name="idLag" type="int" />
+		<field c="20" cf="22" name="idPat" type="int" />
+		<field c="25" cf="34" name="duracao" type="real" />
+	</table>
+	<table name="FCFFIX">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="FCFFIX" />
+		</field>
+		<field c="8" cf="13" name="nomeDado" type="string">
+			<validate value="USIT" />
+		</field>
+		<field c="15" cf="17" name="idEntidade" type="int" />
+		<field c="19" cf="24" name="variavel" type="string" />
+		<field c="26" cf="28" name="idLag" type="int" />
+		<field c="30" cf="32" name="idPat" type="int" />
+		<field c="34" cf="43" name="valorAbatido" type="real" />
+		<field c="45" cf="64" name="comentario" type="string" />
+	</table>
+	<table name="TVIAG">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="MAPFCF" />
+		</field>
+		<field c="9" cf="14" name="nomeDado" type="string">
+			<validate value="TVIAG" />
+		</field>
+		<field c="21" cf="23" name="idUsina" type="int" />
+	</table>
+	<table name="CGTMIN">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="MAPFCF" />
+		</field>
+		<field c="9" cf="14" name="nomeDado" type="string">
+			<validate value="CGTMIN" />
+		</field>
+		<field c="17" cf="31" name="custoGT" type="int" />
+	</table>
+</dsFile>

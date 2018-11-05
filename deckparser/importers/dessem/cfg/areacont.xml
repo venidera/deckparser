@@ -1,1 +1,17 @@
-<dsFile name="areacont"><table name="AREA"><field c="1" cf="3" name="idArea" type="int" /><field c="10" cf="49" name="nomeArea" type="string" /></table><table name="USINA"><field c="1" cf="3" name="idArea" type="int" /><field c="5" name="cjUG" type="int"><validate list="1;2" /></field><field c="8" name="tipoUsina" type="string"><validate list="H;T;S" /></field><field c="10" cf="12" name="idUsina" type="string" /><field c="15" cf="54" name="nomeUsina" type="string" /></table></dsFile>
+<dsFile name="areacont">
+	<table name="AREA">
+		<field c="1" cf="3" name="idArea" type="int" />
+		<field c="10" cf="49" name="nomeArea" type="string" />
+	</table>
+	<table name="USINA">
+		<field c="1" cf="3" name="idArea" type="int" />
+		<field c="5" name="cjUG" type="int">
+			<validate list="1;2" />
+		</field>
+		<field c="8" name="tipoUsina" type="string">
+			<validate list="H;T;S" />
+		</field>
+		<field c="10" cf="12" name="idUsina" type="string" />
+		<field c="15" cf="54" name="nomeUsina" type="string" />
+	</table>
+</dsFile>

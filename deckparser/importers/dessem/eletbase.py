@@ -3,8 +3,8 @@ Created on 5 de jul de 2018
 
 @author: Renan
 '''
-from core.dsFile import dsFile
-from core.record import record
+from deckparser.importers.dessem.core.dsFile import dsFile
+from deckparser.importers.dessem.core.record import record
 
 
 class eletbase(dsFile):
@@ -84,12 +84,12 @@ class eletbase(dsFile):
         
     def readLine(self, line, mode):
         if mode == 'DREF':
-            nc4 = line[0:3]
+            nc4 = line[0:4]
             if nc4 == 'RESP':
-                self.getTable('DREF_head').parseLine(line)
-            elif nc4.split() == '':
+                self.getTable('DREF').parseLine(line)
+            elif nc4.strip() == '':
                 self.getTable('DREF_comp').parseLine(line)
-                self.getTable('recDREF_comp').setField('idRestr', self.getTable('DREF_head').getField('idRestr'))
+                self.getTable('DREF_comp').setField('idRestr', self.getTable('DREF').getField('idRestr'))
         elif mode in self.records:
             self.getRec(mode).parse(line)
         elif mode in self.tables:
@@ -109,7 +109,7 @@ class eletbase(dsFile):
         self.newVersionDGBT()
         self.newVersionDUSI()
         
-        with open(fileName, 'r') as f:
+        with self.openDSFile(fileName) as f:
             for line in f:
                 nRec = nRec + 1
                 

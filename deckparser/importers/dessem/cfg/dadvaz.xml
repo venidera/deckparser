@@ -1,1 +1,30 @@
-<dsFile name="dadvaz"><record name="DataHora"><field c="1" cf="2" name="horaIni" type="h" /><field c="5" cf="6" name="diaIni" type="d" /><field c="9" cf="10" name="mesIni" type="m" /><field c="13" cf="16" name="anoIni" type="a" /></record><record name="Cabecalho"><field c="1" name="diaSemana" type="ds" /><field c="3" name="semanaFCF" type="int"><validate range="1;6" /></field><field c="5" name="numSemanas" type="int" /><field c="7" default="0" name="preInteresse" type="bin" /></record><table name="Vazoes"><field c="1" cf="3" name="idUsina" type="int" /><field c="5" cf="16" name="nomeUsina" type="string" /><field c="20" name="tipoVazao" type="int"><validate range="1;3" /></field><field c="25" cf="26" name="diaIni" type="d" /><field c="28" cf="29" default="0" name="horaIni" type="h" /><field c="31" default="0" name="meiaHoraIni" type="bin" /><field c="33" cf="34" name="diaFim" special="F" type="d" /><field c="36" cf="37" default="0" name="horaFim" type="h" /><field c="39" default="0" name="meiaHoraFim" type="bin" /><field c="45" cf="53" name="vazao" type="real" /></table></dsFile>
+<dsFile name="dadvaz">
+	<record name="DataHora">
+		<field c="1" cf="2" name="horaIni" type="h" />
+		<field c="5" cf="6" name="diaIni" type="d" />
+		<field c="9" cf="10" name="mesIni" type="m" />
+		<field c="13" cf="16" name="anoIni" type="a" />
+	</record>
+	<record name="Cabecalho">
+		<field c="1" name="diaSemana" type="ds" />
+		<field c="3" name="semanaFCF" type="int">
+			<validate range="1;6" />
+		</field>
+		<field c="5" name="numSemanas" type="int" />
+		<field c="7" default="0" name="preInteresse" type="bin" />
+	</record>
+	<table name="Vazoes">
+		<field c="1" cf="3" name="idUsina" type="int" />
+		<field c="5" cf="16" name="nomeUsina" type="string" />
+		<field c="20" name="tipoVazao" type="int">
+			<validate range="1;3" />
+		</field>
+		<field c="25" cf="26" name="diaIni" type="d" />
+		<field c="28" cf="29" default="0" name="horaIni" type="h" />
+		<field c="31" default="0" name="meiaHoraIni" type="bin" />
+		<field c="33" cf="34" name="diaFim" special="F" type="d" />
+		<field c="36" cf="37" default="0" name="horaFim" type="h" />
+		<field c="39" default="0" name="meiaHoraFim" type="bin" />
+		<field c="45" cf="53" name="vazao" type="real" />
+	</table>
+</dsFile>

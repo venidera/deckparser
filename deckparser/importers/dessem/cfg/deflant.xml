@@ -1,1 +1,21 @@
-<dsFile name="deflant"><table name="DEFANT"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="DEFANT" /></field><field c="10" cf="12" name="idUsinaMont" type="int" /><field c="15" cf="17" name="idUsinaJus" type="int" /><field c="20" name="tipoJus" type="string"><validate list="H;S" /></field><field c="25" cf="26" name="diaIni" type="d" /><field c="28" cf="30" name="horaIni" type="h" /><field c="31" name="meiaHoraIni" type="bin" /><field c="33" cf="34" name="diaFim" special="F" type="d" /><field c="36" cf="37" name="horaFim" type="h" /><field c="39" name="meiaHoraFim" type="bin" /><field c="45" cf="54" name="defluencia" type="real"><validate min="0.0" /></field></table></dsFile>
+<dsFile name="deflant">
+	<table name="DEFANT">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="DEFANT" />
+		</field>
+		<field c="10" cf="12" name="idUsinaMont" type="int" />
+		<field c="15" cf="17" name="idUsinaJus" type="int" />
+		<field c="20" name="tipoJus" type="string">
+			<validate list="H;S" />
+		</field>
+		<field c="25" cf="26" name="diaIni" type="d" />
+		<field c="28" cf="30" name="horaIni" type="h" />
+		<field c="31" name="meiaHoraIni" type="bin" />
+		<field c="33" cf="34" name="diaFim" special="F" type="d" />
+		<field c="36" cf="37" name="horaFim" type="h" />
+		<field c="39" name="meiaHoraFim" type="bin" />
+		<field c="45" cf="54" name="defluencia" type="real">
+			<validate min="0.0" />
+		</field>
+	</table>
+</dsFile>

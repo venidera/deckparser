@@ -15,7 +15,29 @@ class dsFile:
             self.loadConfig(cfg['xml'])
         else:
             raise ValueError('Need xml config file')
-            
+    
+    def isEmpty(self):
+        for k in self.records:
+            if not self.records[k].isEmpty():
+                return False
+        for k in self.tables:
+            if not self.tables[k].isEmpty():
+                return False
+        return True
+    
+    def openDSFile(self, fn):
+        return open(fn, 'r')#, encoding='latin_1')
+    
+    def toDict(self, df=True):
+        ds = {}
+        for k in self.records:
+            r = self.records[k]
+            ds[k] = r.toDict(df)
+        for k in self.tables:
+            t = self.tables[k]
+            ds[k] = t.toDict(df)
+        return ds
+    
     def loadConfig(self, fileName):
         xmlReader().decodeDsFile(self, fileName)
         
@@ -30,6 +52,12 @@ class dsFile:
         
     def getTable(self, name):
         return self.tables[name]
+    
+    def clearData(self):
+        for n in self.records:
+            self.records[n].clear()
+        for n in self.tables:
+            self.tables[n].clear()
     
     def showData(self, showRaw=False, maxLines=None):
         for n in self.records:

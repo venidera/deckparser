@@ -1,0 +1,46 @@
+<dsFile name="simul">
+	<record name="Cabecalho">
+		<field c="5" cf="6" name="diaIni" type="d" />
+		<field c="8" cf="9" default="0" name="horaIni" type="h" />
+		<field c="11" default="0" name="meiaHoraIni" type="bin" />
+		<field c="14" cf="15" name="mesIni" type="m" />
+		<field c="18" cf="21" name="anoIni" type="a" />
+		<field c="23" name="flagOperuh" type="bin" />
+	</record>
+	<table name="DISC">
+		<field c="5" cf="6" name="diaIni" type="d" />
+		<field c="8" cf="9" default="0" name="horaIni" type="h" />
+		<field c="11" default="0" name="meiaHoraIni" type="bin" />
+		<field c="15" cf="19" default="0.0" name="duracao" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="21" name="flagOperuh" type="bin" />
+	</table>
+	<table name="VOLI">
+		<field c="5" cf="7" name="idUsina" type="int" />
+		<field c="10" cf="21" name="nomeUsina" type="string" />
+		<field c="25" cf="34" name="volume" type="real" />
+	</table>
+	<table name="OPER">
+		<field c="5" cf="7" name="idUsina" type="int" />
+		<field c="8" default="H" name="tipoUsina" type="string">
+			<validate list="H;E" />
+		</field>
+		<field c="10" cf="22" name="nomeUsina" type="string" />
+		<field c="24" cf="25" name="diaIni" type="d" />
+		<field c="27" cf="28" default="0" name="horaIni" type="h" />
+		<field c="30" default="0" name="meiaHoraIni" type="bin" />
+		<field c="32" cf="33" name="diaFim" special="F" type="d" />
+		<field c="35" cf="36" default="0" name="horaFim" type="h" />
+		<field c="38" default="0" name="meiaHoraFim" type="bin" />
+		<field c="40" name="tipoVazao" type="int">
+			<validate list="1;2" />
+		</field>
+		<field c="42" cf="51" name="vazao" type="real" />
+		<field c="53" name="tipoVazaoRet" type="int">
+			<validate list="1;2" />
+		</field>
+		<field c="55" cf="64" name="vazaoRet" type="real" />
+		<field c="65" cf="74" name="geracao" type="real" />
+	</table>
+</dsFile>

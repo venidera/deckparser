@@ -1,1 +1,48 @@
-<dsFile name="respot"><record name="Geral"><field c="1" cf="2" name="nomeCampo" type="string" /></record><table name="RP"><field c="1" cf="2" name="nomeCampo" type="string"><validate value="RP" /></field><field c="5" cf="7" name="idArea" type="int" /><field c="10" cf="11" name="diaIni" type="d" /><field c="13" cf="14" name="horaIni" type="h" /><field c="16" name="meiaHoraIni" type="bin" /><field c="18" cf="19" name="diaFim" special="F" type="d" /><field c="21" cf="22" name="horaFim" type="h" /><field c="24" name="meiaHoraFim" type="bin" /><field c="31" cf="70" name="comentario" type="string" /></table><table name="LM"><field c="1" cf="2" name="nomeCampo" type="string"><validate value="LM" /></field><field c="5" cf="7" name="idUsina" type="int" /><field c="10" cf="11" name="diaIni" type="d" /><field c="13" cf="14" name="horaIni" type="h" /><field c="16" name="meiaHoraIni" type="bin" /><field c="18" cf="19" name="diaFim" special="F" type="d" /><field c="21" cf="22" name="horaFim" type="h" /><field c="24" name="meiaHoraFim" type="bin" /><field c="26" cf="35" name="resPot" type="real" /></table></dsFile>
+<dsFile name="respot">
+	<table name="RP">
+		<field c="1" cf="2" name="nomeCampo" type="string">
+			<validate value="RP" />
+		</field>
+		<field c="5" cf="7" name="idArea" type="int" />
+		<field c="10" cf="11" name="diaIni" type="d" />
+		<field c="13" cf="14" name="horaIni" type="h" />
+		<field c="16" name="meiaHoraIni" type="bin" />
+		<field c="18" cf="19" name="diaFim" special="F" type="d" />
+		<field c="21" cf="22" name="horaFim" type="h" />
+		<field c="24" name="meiaHoraFim" type="bin" />
+		<field c="31" cf="70" name="comentario" type="string" />
+	</table>
+	<table name="LM">
+		<field c="1" cf="2" name="nomeCampo" type="string">
+			<validate value="LM" />
+		</field>
+		<field c="5" cf="7" name="idArea" type="int" />
+		<field c="10" cf="11" name="diaIni" type="d" />
+		<field c="13" cf="14" name="horaIni" type="h" />
+		<field c="16" name="meiaHoraIni" type="bin" />
+		<field c="18" cf="19" name="diaFim" special="F" type="d" />
+		<field c="21" cf="22" name="horaFim" type="h" />
+		<field c="24" name="meiaHoraFim" type="bin" />
+		<field c="26" cf="35" name="resPot" type="real" />
+	</table>
+	<table name="USI">
+		<field c="1" cf="3" name="idElem" type="string" />
+		<field c="5" cf="7" name="idArea" type="int" />
+		<field c="10" name="cjUG" type="int">
+			<validate list="1;2" />
+		</field>
+		<field c="13" name="tipoElem" type="string">
+			<validate list="H;T;S" />
+		</field>
+		<field c="15" cf="16" name="diaIni" type="d" />
+		<field c="18" cf="19" name="horaIni" type="h" />
+		<field c="21" name="meiaHoraIni" type="bin" />
+		<field c="23" cf="24" name="diaFim" special="F" type="d" />
+		<field c="26" cf="27" name="horaFim" type="h" />
+		<field c="29" name="meiaHoraFim" type="bin" />
+		<field c="31" name="statusPart" type="int">
+			<validate list="0;1;2" />
+		</field>
+		<field c="33" cf="42" name="resPot" type="real" />
+	</table>
+</dsFile>

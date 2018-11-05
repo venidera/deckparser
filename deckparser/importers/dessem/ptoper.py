@@ -3,8 +3,8 @@ Created on 5 de jul de 2018
 
 @author: Renan
 '''
-from core.dsFile import dsFile
-from core.record import record
+from deckparser.importers.dessem.core.dsFile import dsFile
+from deckparser.importers.dessem.core.record import record
 
 
 class ptoper(dsFile):
@@ -13,7 +13,7 @@ class ptoper(dsFile):
     
     def readDSFile(self, fileName):
         nRec = 0
-        with open(fileName, 'r') as f:
+        with self.openDSFile(fileName) as f:
             for line in f:
                 nRec = nRec + 1
                 

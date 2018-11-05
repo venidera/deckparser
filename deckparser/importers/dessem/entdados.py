@@ -3,8 +3,8 @@ Created on 6 de jul de 2018
 
 @author: Renan
 '''
-from core.dsFile import dsFile
-from core.record import record
+from deckparser.importers.dessem.core.dsFile import dsFile
+from deckparser.importers.dessem.core.record import record
 
 
 class entdados(dsFile):
@@ -14,7 +14,7 @@ class entdados(dsFile):
     def readLine(self, line):
         ls = line.strip()
         
-        for size in range(5, 2, -1):
+        for size in range(6, 2, -1):
             name = ls[0:size-1]
             
             if name == 'META':
@@ -32,10 +32,12 @@ class entdados(dsFile):
             elif name in self.tables:
                 self.getTable(name).parseLine(line)
                 break
+            elif name in ['CI', 'CE']:
+                self.getTable('CICE').parseLine(line)
     
     def readDSFile(self, fileName):
         nRec = 0
-        with open(fileName, 'r') as f:
+        with self.openDSFile(fileName) as f:
             for line in f:
                 nRec = nRec + 1
                 

@@ -7,23 +7,23 @@ import operator
 import os.path
 import re
 
-from areacont import areacont
-from cotasr11 import cotasr11
-from curvtviag import curvtviag
-from dadvaz import dadvaz
-from deflant import deflant
-from desselet import desselet
-from dessem import dessem
-from eletbase import eletbase
-from entdados import entdados
-from ils_tri import ils_tri
-from infofcf import infofcf
-from operuh import operuh
-from operut import operut
-from ptoper import ptoper
-from respot import respot
-from termdat import termdat
-from tolperd import tolperd
+from deckparser.importers.dessem.areacont import areacont
+from deckparser.importers.dessem.cotasr11 import cotasr11
+from deckparser.importers.dessem.curvtviag import curvtviag
+from deckparser.importers.dessem.dadvaz import dadvaz
+from deckparser.importers.dessem.deflant import deflant
+from deckparser.importers.dessem.desselet import desselet
+from deckparser.importers.dessem.dessem import dessem
+from deckparser.importers.dessem.eletbase import eletbase
+from deckparser.importers.dessem.entdados import entdados
+from deckparser.importers.dessem.ils_tri import ils_tri
+from deckparser.importers.dessem.infofcf import infofcf
+from deckparser.importers.dessem.operuh import operuh
+from deckparser.importers.dessem.operut import operut
+from deckparser.importers.dessem.ptoper import ptoper
+from deckparser.importers.dessem.respot import respot
+from deckparser.importers.dessem.termdat import termdat
+from deckparser.importers.dessem.tolperd import tolperd
 
 
 def listCases(reFile='.*'):
@@ -39,7 +39,7 @@ def listCases(reFile='.*'):
     return fcl
 
 def case(opt):
-    xmlFile = 'cfg/{:s}.xml'.format(opt)
+    xmlFile = '{:s}.xml'.format(opt)
     cfg = {'xml': xmlFile}
     
     if opt == 'dessem':

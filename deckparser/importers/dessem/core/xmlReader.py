@@ -3,15 +3,17 @@ Created on 23 de jul de 2018
 
 @author: Renan
 '''
-from core.dataType import parseDataType
-from core.record import record
-from core.table import table
+from deckparser.importers.dessem.core.dataType import parseDataType
+from deckparser.importers.dessem.core.record import record
+from deckparser.importers.dessem.core.table import table
+import deckparser.importers.dessem.cfg as cfg
 import xml.etree.ElementTree as ET
-
+import os
 
 class xmlReader:
     def decodeDsFile(self, df, fileName):
-        tree = ET.parse(fileName)
+        fullPath = os.path.join(cfg.__path__[0], fileName)
+        tree = ET.parse(fullPath)
         rootNode = tree.getroot()
         
         #name = rootNode.attrib['name']
@@ -59,6 +61,9 @@ class xmlReader:
             f['set'] = caseSet
         else:
             f['type'] = att['type']
+            if 'default' in att:
+                f['default'] = parseDataType(att['default'], f['type'])
+            
             if cpsField:
                 f['size'] = int(att['size'])
             else:

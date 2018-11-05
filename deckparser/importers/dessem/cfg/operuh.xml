@@ -1,1 +1,93 @@
-<dsFile name="operuh"><record name="Restr"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="OPERUH" /></field><field c="8" cf="13" name="nomeRestr" type="string" /></record><table name="REST"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="OPERUH" /></field><field c="8" cf="13" name="nomeRestr" type="string"><validate value="REST" /></field><field c="15" cf="19" name="idRestr" type="int" /><field c="22" name="tipoRestr" type="string"><validate list="L;V" /></field><field c="25" default="1" name="flagSim" type="bin" /><field c="28" cf="39" name="justificativa" type="string" /><field c="41" cf="50" name="valor" type="real"><validate min="0.0" /></field></table><table name="ELEM"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="OPERUH" /></field><field c="8" cf="13" name="nomeRestr" type="string"><validate value="ELEM" /></field><field c="15" cf="19" name="idRestr" type="int" /><field c="21" cf="23" name="idUsina" type="int" /><field c="26" cf="37" name="nomeUsina" type="string" /><field c="41" cf="42" name="idVariavel" type="int"><validate range="1;9" /></field><field c="44" cf="48" name="fatPart" type="real" /></table><table name="LIM"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="OPERUH" /></field><field c="8" cf="13" name="nomeRestr" type="string"><validate value="LIM" /></field><field c="15" cf="19" name="idRestr" type="int" /><field c="21" cf="22" name="diaIni" type="d" /><field c="24" cf="25" name="horaIni" type="h" /><field c="27" name="meiaHoraIni" type="bin" /><field c="29" cf="30" name="diaFim" special="F" type="d" /><field c="32" cf="33" name="horaFim" type="h" /><field c="35" name="meiaHoraFim" type="bin" /><field c="39" cf="48" default="0.0" name="limInf" type="real"><validate min="0.0" /></field><field c="49" cf="58" default="9999999999" name="limSup" type="real"><validate min="0.0" /></field></table><table name="VAR"><field c="1" cf="6" name="nomeCampo" type="string"><validate value="OPERUH" /></field><field c="8" cf="13" name="nomeRestr" type="string"><validate value="VAR" /></field><field c="15" cf="19" name="idRestr" type="int" /><field c="20" cf="21" name="diaIni" type="d" /><field c="23" cf="24" name="horaIni" type="h" /><field c="26" name="meiaHoraIni" type="bin" /><field c="28" cf="29" name="diaFim" type="d" /><field c="31" cf="32" name="horaFim" type="h" /><field c="34" name="meiaHoraFim" type="bin" /><field c="38" cf="47" default="9999999999" name="rampaMaxRelDecr" type="real"><validate min="0.0" /></field><field c="48" cf="57" default="9999999999" name="rampaMaxRelIncr" type="real"><validate min="0.0" /></field><field c="58" cf="67" default="9999999999" name="rampaMaxAbsDecr" type="real"><validate min="0.0" /></field><field c="68" cf="77" default="9999999999" name="rampaMaxAbsIncr" type="real"><validate min="0.0" /></field></table></dsFile>
+<dsFile name="operuh">
+	<record name="Restr">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="OPERUH" />
+		</field>
+		<field c="8" cf="13" name="nomeRestr" type="string" />
+	</record>
+	<table name="REST">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="OPERUH" />
+		</field>
+		<field c="8" cf="13" name="nomeRestr" type="string">
+			<validate value="REST" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="22" name="tipoRestr" type="string">
+			<validate list="L;V" />
+		</field>
+		<field c="25" default="1" name="flagSim" type="bin" />
+		<field c="28" cf="39" name="justificativa" type="string" />
+		<field c="41" cf="50" name="valor" type="real">
+			<validate min="0.0" />
+		</field>
+	</table>
+	<table name="ELEM">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="OPERUH" />
+		</field>
+		<field c="8" cf="13" name="nomeRestr" type="string">
+			<validate value="ELEM" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="21" cf="23" name="idUsina" type="int" />
+		<field c="26" cf="37" name="nomeUsina" type="string" />
+		<field c="41" cf="42" name="idVariavel" type="int">
+			<validate range="1;9" />
+		</field>
+		<field c="44" cf="48" name="fatPart" type="real" />
+	</table>
+	<table name="LIM">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="OPERUH" />
+		</field>
+		<field c="8" cf="13" name="nomeRestr" type="string">
+			<validate value="LIM" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="21" cf="22" name="diaIni" type="d" />
+		<field c="24" cf="25" name="horaIni" type="h" />
+		<field c="27" name="meiaHoraIni" type="bin" />
+		<field c="29" cf="30" name="diaFim" special="F" type="d" />
+		<field c="32" cf="33" name="horaFim" type="h" />
+		<field c="35" name="meiaHoraFim" type="bin" />
+		<field c="39" cf="48" default="0.0" name="limInf" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="49" cf="58" default="9999999999" name="limSup"
+			type="real">
+			<validate min="0.0" />
+		</field>
+	</table>
+	<table name="VAR">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="OPERUH" />
+		</field>
+		<field c="8" cf="13" name="nomeRestr" type="string">
+			<validate value="VAR" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="20" cf="21" name="diaIni" type="d" />
+		<field c="23" cf="24" name="horaIni" type="h" />
+		<field c="26" name="meiaHoraIni" type="bin" />
+		<field c="28" cf="29" name="diaFim" type="d" />
+		<field c="31" cf="32" name="horaFim" type="h" />
+		<field c="34" name="meiaHoraFim" type="bin" />
+		<field c="38" cf="47" default="9999999999"
+			name="rampaMaxRelDecr" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="48" cf="57" default="9999999999"
+			name="rampaMaxRelIncr" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="58" cf="67" default="9999999999"
+			name="rampaMaxAbsDecr" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="68" cf="77" default="9999999999"
+			name="rampaMaxAbsIncr" type="real">
+			<validate min="0.0" />
+		</field>
+	</table>
+</dsFile>

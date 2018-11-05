@@ -5,7 +5,7 @@ Created on 4 de jul de 2018
 '''
 import re
 
-from core.dataType import parseDataType, validateDataType
+from deckparser.importers.dessem.core.dataType import parseDataType, validateDataType
 
 
 class record:
@@ -13,6 +13,24 @@ class record:
     def __init__(self, recMap):
         self.recMap = recMap
         self.data = None
+        self.line = None
+        
+    def isEmpty(self):
+        return self.data is None
+     
+    def toDict(self, df=True):
+        ds = {}
+        if self.data is None:
+            return ds
+        if df:
+            return self.applyDefault(self.data)
+        for k in self.recMap:
+            ds[k] = self.data.get(k)
+        return ds
+    
+    def clear(self):
+        self.data = None
+        self.metadata = None
         self.line = None
         
     @staticmethod
@@ -47,7 +65,13 @@ class record:
     def getField(self, key):
         return self.data[key]
         
-    def listFields(self, reField):
+    def getData(self):
+        return self.data
+        
+    def listFields(self, reField=None):
+        if reField == None:
+            return self.recMap.keys()
+        
         pattern = re.compile(reField)
         fl = []
         for f in self.recMap:
@@ -62,6 +86,20 @@ class record:
     def setRange(self, key, r):
         self.recMap[key]['range'] = r
         
+    def applyDefault(self, r):
+        ds = {}
+        for k in r:
+            if r[k] is None:
+                if k in self.recMap:
+                    f = self.recMap[k]
+                    if 'default' in f:
+                        ds[k] = f['default']
+                    else:
+                        ds[k] = None
+            else:
+                ds[k] = r[k]
+        return ds
+
     def parse(self, line):
         m = self.recMap
         r = dict()
@@ -116,8 +154,6 @@ class record:
         v = v.strip()
         
         if self.isBlankField(v):
-            if 'default' in f:
-                return f['default'], md
             return None, md
         
         if 'special' in f:
