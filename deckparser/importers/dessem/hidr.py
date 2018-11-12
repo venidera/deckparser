@@ -35,7 +35,7 @@ class HIDR():
                 c=c+1
         f.close()
     
-    def readFile(self, fileName, lines=1e6):
+    def readDSFile(self, fileName, lines=1e6):
         c=1
         with open(fileName, 'rb') as f:
             while(self.readLine(f)):
@@ -54,7 +54,7 @@ class HIDR():
         try:
             self.currLine[k] = self.parseFieldValue(b, t)
         except struct.error:
-            
+            # TODO Tratar erro de leitura
             print(b)
             raise
         self.addKey(k)
@@ -152,7 +152,7 @@ class HIDR():
         self.readField(f, 'tipoRegula', 'string', 1)
         
         return True
-    
+    '''
     def formatList(self, v):
         return '[' + ', '.join([str(i) for i in v]) + ']'
-    
+    '''

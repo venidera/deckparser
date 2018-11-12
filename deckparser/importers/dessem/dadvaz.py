@@ -6,10 +6,12 @@ Created on 4 de jul de 2018
 from deckparser.importers.dessem.core.dsFile import dsFile
 from deckparser.importers.dessem.core.record import record
 
-
 class dadvaz(dsFile):
-    def __init__(self, cfg=None):
-        dsFile.__init__(self, cfg)
+    def __init__(self):
+        dsFile.__init__(self)
+    
+    def _dsFile__getConfig(self):
+        return {'xml': 'dadvaz.xml'}
     
     def readDSFile(self, fileName):
         nRec = 0

@@ -3,18 +3,18 @@ Created on 12 de jul de 2018
 
 @author: Renan
 '''
-import re
-
-from .xmlReader import xmlReader
+from deckparser.importers.dessem.core.xmlReader import xmlReader
 
 class dsFile:
-    def __init__(self, cfg=None):
+    def __init__(self):
         self.records = {}
         self.tables = {}
+        self.fileEncoding = None
+        cfg = self.__getConfig()
         if 'xml' in cfg:
             self.loadConfig(cfg['xml'])
         else:
-            raise ValueError('Need xml config file')
+            raise ValueError('Missing xml config file')
     
     def isEmpty(self):
         for k in self.records:
@@ -25,8 +25,13 @@ class dsFile:
                 return False
         return True
     
+    def setEncoding(self, e):
+        self.fileEncoding = e
+    
     def openDSFile(self, fn):
-        return open(fn, 'r')#, encoding='latin_1')
+        if self.fileEncoding:
+            return open(fn, 'r', encoding=self.fileEncoding)
+        return open(fn, 'r')
     
     def toDict(self, df=True):
         ds = {}
@@ -58,49 +63,3 @@ class dsFile:
             self.records[n].clear()
         for n in self.tables:
             self.tables[n].clear()
-    
-    def showData(self, showRaw=False, maxLines=None):
-        for n in self.records:
-            print('>> Record "{:s}"'.format(n))
-            self.records[n].show(showRaw)
-        for n in self.tables:
-            print('>> Table "{:s}"'.format(n))
-            self.tables[n].show(showRaw, maxLines)
-    
-    def showHeader(self):
-        for n in self.records:
-            print('>> Record "{:s}"'.format(n))
-            self.records[n].showFields()
-            print('-'*50)
-        for n in self.tables:
-            print('>> Table "{:s}"'.format(n))
-            self.tables[n].showFields()
-            print('-'*50)
-    
-    def test(self, fileName, maxLines=1e6):
-        self.readDSFile(fileName)
-        self.showData(showRaw=True, maxLines=maxLines)
-    
-    def listFields(self, reField, reRec):
-        fields = dict()
-        rl = self.listRecords(reRec)
-        for n in rl:
-            fl = rl[n].listFields(reField)
-            for f in fl:
-                if f not in fields:
-                    fields[f] = [n]
-                else:
-                    fields[f].append(n)
-        return fields
-    
-    def listRecords(self, reRec):
-        pattern = re.compile(reRec)
-        recs = dict()
-        for rn in self.records:
-            if pattern.match(rn) is not None:
-                recs[rn] = self.records[rn]
-        for rn in self.tables:
-            if pattern.match(rn) is not None:
-                recs[rn] = self.tables[rn]
-        return recs
-    

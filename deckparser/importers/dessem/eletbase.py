@@ -6,11 +6,15 @@ Created on 5 de jul de 2018
 from deckparser.importers.dessem.core.dsFile import dsFile
 from deckparser.importers.dessem.core.record import record
 
-
 class eletbase(dsFile):
-    def __init__(self, cfg=None, muda=False):
-        dsFile.__init__(self, cfg)
+    def __init__(self, muda=False):
         self.muda = muda
+        dsFile.__init__(self)
+        
+    def _dsFile__getConfig(self):
+        if self.muda:
+            return {'xml': 'eletmodif.xml'}
+        return {'xml': 'eletbase.xml'}
     
     # TODO Aparentemente esta trocada a especificacao da versao antiga com a nova no manual
     def newVersionDBAR(self):

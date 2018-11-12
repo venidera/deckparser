@@ -11,7 +11,8 @@ modelos de simulação e otimização, e também podem ser exportados para
 formatos mais amigáveis ou transacionais.
 
 Neste documento estaremos utilizando o conjunto de decks DESSEM CCEE
-[*DES_201805.zip*] que consiste dos decks do PMO de maio/2018;
+(https://www.ccee.org.br/ccee/documentos/CCEE_640604) [*DES_201805.zip*]
+que consiste dos decks do PMO de maio/2018;
 
 ## Instalação do módulo Python
 
@@ -20,7 +21,7 @@ Neste documento estaremos utilizando o conjunto de decks DESSEM CCEE
 ## Estrutura do importador
 
 O importador dos decks do DESSEM está localizado no pactote "deckparser.importers.dessem", 
-que possui dois pacotoes fundamentais:
+que possui os seguintes pacotoes:
 
 - Pacote "cfg": contém os arquivos de configuração, em formato xml, que determina 
 a estrutura dos dados contidos em cada arquivo do deck. Cada arquivo xml contém:
@@ -128,11 +129,26 @@ ou ambos ("None" ou [True,False])
 cada um destes contendo os arquivos do deck. Cada arquivo (caso) deve possuir nome  
 conforme o padrao:
 
-DES_CCEE_yyyymmdd_(Com|Sem)Rede.zip
+DES_CCEE_(yyyy)(mm)(dd)_(Com|Sem)Rede.zip
 
 Onde:
 yyyy, mm, dd: são ano, mês e dia do caso;
 Com (Sem): indica se o caso considera (ou não) a rede elétrica.
+
+** Pode-se escolher o padrão dos nomes de arquivo utilizando o quarto argumento do 
+método desssem2dicts:
+
+>>>> dc = desssem2dicts(fn, dia, rd, {'file_pattern':2})
+
+O padrão acima mencionado correponde à opção file_pattern=1.
+O formato para file_pattern=2 é:
+
+DS_CCEE_(mm)(yyyy)_(COM|SEM)REDE_RV(r)D(dd).zip
+
+Onde:
+yyyy, mm, dd: são ano, mês e dia do caso;
+r: é a revisão do PMO 
+COM (SEM): indica se o caso considera (ou não) a rede elétrica.
 
 ** O resultado da leitura é o um objeto "dict" com a seguinte estrutura:
 
@@ -145,7 +161,7 @@ r: indica se o caso considera rede elétrica (bool)
 
 O conjunto de dados de cada caso possui a seguinte estrutura:
 
-{arquivo: {(registro|tabela): dados:(dict|list)}
+{arquivo: {(registro|tabela): (dados:(dict|list))}
 (ex.: {'entdados': {'UH': dados, ...}})
 
 O conjunto de dados de cada registro é estruturado na forma: {campo: valor}
@@ -154,7 +170,7 @@ O conjunto de dados de cada registro é estruturado na forma: {campo: valor}
 Caso o resgitro seja múltiplo (tabela), os dados são fornecidos em um objeto do tipo "list", 
 contendo um objeto "dict" (conforme estrutura do registro) para cada registro lido.
 
-Os dados do arquivo "hidr" são estruturados em uma única tabela: {'hidr': tabela:list}.
+Os dados do arquivo "hidr" são estruturados em uma única tabela: {'hidr': (tabela:list)}.
 
 ** A classe Loader é responsável por realizar o carregamento dos dados de um deck. 
 O código abaixo realiza a leitura do caso contido no diretório "dr" e armazena 

@@ -5,11 +5,11 @@ Created on 2 de nov de 2018
 '''
 import zipfile, os, re, shutil
 from uuid import uuid4 as hasher
-from logging import info
 from datetime import date
+import logging
 
 class DessemZipped(object):
-    def __init__(self, fn=None):
+    def __init__(self, fn=None, fp=1):
         # arquivo zipado que sera aberto
         self.z = None
         self.dias = dict()
@@ -18,11 +18,15 @@ class DessemZipped(object):
         self.filename = None
         self.fhash = None
         self.internal_dir = None
+        self.setFilePattern(fp)
         if fn:
             self.setZipFile(fn)
             self.openZip()
         else:
             self.fn = None
+
+    def getLogger(self):
+        return logging.getLogger(__name__)
 
     def __del__(self):
         for d in self.dias:
@@ -40,6 +44,33 @@ class DessemZipped(object):
 
     def setZipFile(self,fn):
         self.fn = fn
+        
+    def setFilePattern(self, cod):
+        if cod == 1:
+            self.fileReExpr = "DES_CCEE_([0-9]{4})([0-9]{2})([0-9]{2})_(Sem|Com)Rede.zip"
+            self.fileParseFunc = DessemZipped.parseFileNamePat1
+        elif cod == 2:
+            self.fileReExpr = "DS_CCEE_([0-9]{2})([0-9]{4})_(SEM|COM)REDE_RV([0-9]{1})D([0-9]{2}).zip"
+            self.fileParseFunc = DessemZipped.parseFileNamePat2
+        else:
+            raise ValueError('Codigo para padrao de nome de arquivo invalido: '+str(cod))
+    
+    @staticmethod
+    def parseFileNamePat1(rr):
+        r = True if rr.group(4) == 'Com' else False
+        return {'ano': int(rr.group(1)), 'mes': int(rr.group(2)), 'dia': int(rr.group(3)), 'rede': r}
+    
+    @staticmethod
+    def parseFileNamePat2(rr):
+        r = True if rr.group(3) == 'COM' else False
+        d = int(rr.group(5))
+        m = int(rr.group(1))
+        rv = int(rr.group(4))
+        if rv == 0 and d > 20:
+            m = m - 1
+        elif rv > 3 and d < 10:
+            m = m + 1
+        return {'ano': int(rr.group(2)), 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
 
     def openZip(self):
         if zipfile.is_zipfile(self.fn):
@@ -50,14 +81,14 @@ class DessemZipped(object):
             self.filename = self.zipfilename.split(".")[-2]
             self.fhash = str(hasher())
             for fn in self.z.namelist():
-                rr = re.match("DES_CCEE_([0-9]{4})([0-9]{2})([0-9]{2})_(Sem|Com)Rede.zip",fn)
+                rr = re.match(self.fileReExpr,fn)
                 if rr is None:
-                    print('Arquivo ignorado: '+str(fn))
+                    self.getLogger().info('File ignored: %s', fn)
                     continue
-                else:
-                    print('Arquivo indexado: '+str(fn))
-                d = date(int(rr.group(1)), int(rr.group(2)), int(rr.group(3)))
-                r = True if rr.group(4) == 'Com' else False
+                self.getLogger().info('File indexed: %s', fn)
+                ps = self.fileParseFunc(rr)
+                d = date(ps['ano'], ps['mes'], ps['dia'])
+                r = ps['rede']
                 if d:
                     if d not in self.dias: self.dias[d] = {}
                     self.dias[d][r] = {
@@ -66,9 +97,21 @@ class DessemZipped(object):
                         'tmpdir': None,
                         'filelist': dict()
                     }
-                        
+            self.printIndex()
         else:
-            info(self.fn + " is not a zip file")
+            self.getLogger().error('%s is not a zip file', self.fn)
+    
+    def printIndex(self):
+        print('\nAvailable cases\n')
+        itm = []
+        for d in self.dias:
+            for r in self.dias[d]:
+                itm.append((d,r))
+        itm.sort()
+        for i in itm:
+            (d, r) = i
+            rd = 'Com rede' if r else 'Sem rede'
+            print(d.strftime('%d/%b/%Y') + ', ' + rd)
 
     def extractAllFiles(self,dia,r):
         try:
@@ -81,15 +124,16 @@ class DessemZipped(object):
                 z.extract(fname, d['tmpdir'])
             return d['tmpdir']
         except:
-            info('Erro ao extrair arquivo ',dia,f)
+            rd = 'Com rede' if r else 'Sem rede'
+            self.getLogger().warning('Error unziping file %s, case: %s %s', f, str(dia), str(rd))
             raise
 
     def openDia(self, dia, r):
         try:
             if dia not in self.dias:
-                raise ValueError('Deck nao possui o dia especificado: '+str(dia))
+                raise ValueError('Date not indexed: '+str(dia))
             if r not in self.dias[dia]:
-                raise ValueError('Opcao de rede eletrica nao disponivel: '+str(r))
+                raise ValueError('Grid option not available: '+str(r))
             
             d = self.dias[dia][r]
             if d['zip'] is not None:
@@ -113,9 +157,8 @@ class DessemZipped(object):
             d['tmpdir'] = tmpdir
             return tmpdir
         except:
-            info('Erro ao abrir dia',dia)
+            self.getLogger().error('Error opening day: %s', str(dia))
             raise
-            
 
     def closeDia(self, dia, r):
         try:
@@ -127,5 +170,5 @@ class DessemZipped(object):
             d['tmpdir'] = None
             shutil.rmtree(tmpdir)
         except:
-            info('Erro ao fechar dia ',dia)
+            self.getLogger().warning('Error closing day: %s', str(dia))
             raise

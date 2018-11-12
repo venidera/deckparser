@@ -7,10 +7,12 @@ Created on 25 de out de 2018
 from deckparser.importers.dessem.core.dsFile import dsFile
 from deckparser.importers.dessem.core.record import record
 
-
 class simul(dsFile):
-    def __init__(self, cfg=None):
-        dsFile.__init__(self, cfg)
+    def __init__(self):
+        dsFile.__init__(self)
+        
+    def _dsFile__getConfig(self):
+        return {'xml': 'simul.xml'}
         
     def endOfBlock(self, line):
         return record.assertString(line, 'FIM')

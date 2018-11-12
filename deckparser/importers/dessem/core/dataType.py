@@ -3,6 +3,7 @@ Created on 23 de jul de 2018
 
 @author: Renan
 '''
+from deckparser.importers.dessem.core.exceptions import ValidationException
 
 def parseDataType(v, t):
     if t == 'int' or t in ['h', 'd', 'ds', 'm', 'a', 'bin']:
@@ -27,25 +28,25 @@ def validateDataType(v, t):
 
 def validateHour(v):
     if v < 0 or v > 24:
-        raise ValueError('Invalid hour')
+        raise ValidationException('hour', v, [0,24], 'between')
     
 def validateDay(v):
     if v < 1 or v > 31:
-        raise ValueError('Invalid day')
+        raise ValidationException('day', v, [1,31], 'between')
     
 def validateWeekday(v):
     if v < 1 or v > 7:
-        raise ValueError('Invalid day (week)')
+        raise ValidationException('weeak day', v, [1,7], 'between')
     
 def validateMonth(v):
     if v < 1 or v > 12:
-        raise ValueError('Invalid month')
+        raise ValidationException('month', v, [1,12], 'between')
     
 def validateYear(v):
-    if v < 1900:
-        raise ValueError('Invalid year')
+    if v < 1:
+        raise ValidationException('year', v, [1], '>')
     
 def validateBin(v):
     if v not in [0, 1]:
-        raise ValueError('Invalid bin')
+        raise ValidationException('bin', v, [0,1], 'in')
     

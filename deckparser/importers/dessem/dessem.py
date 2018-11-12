@@ -7,8 +7,11 @@ from deckparser.importers.dessem.core.dsFile import dsFile
 from deckparser.importers.dessem.core.record import record
 
 class dessem(dsFile):
-    def __init__(self, cfg=None):
-        dsFile.__init__(self, cfg)
+    def __init__(self):
+        dsFile.__init__(self)
+    
+    def _dsFile__getConfig(self):
+        return {'xml': 'dessem.xml'}
     
     def readDSFile(self, fileName):
         nRec = 0
