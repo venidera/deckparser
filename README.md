@@ -20,6 +20,7 @@ DeckParser fornece programas para abrir e ler os dados dos programas NEWAVE, DEC
 
 [Importação de Decks DECOMP](docs/Processo_de_importacao_de_um_deck_DECOMP.md)
 
+[Importação de Decks DESSEM](docs/Processo_de_importacao_de_um_deck_DESSEM.md)
 
 ## Instalação
 
@@ -43,7 +44,7 @@ O time de desenvolvimento é formado por membros da equipe Venidera:
 
 * [André Toscano](https://github.com/aemitos)
 * [João Borsói Soares](https://github.com/joaoborsoi)
-* [Renan de Paula Maciel]()
+* [Renan de Paula Maciel](https://github.com/renanmaciel)
 
 ## Licença
 

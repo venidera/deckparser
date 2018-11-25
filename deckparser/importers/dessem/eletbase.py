@@ -16,7 +16,6 @@ class eletbase(dsFile):
             return {'xml': 'eletmodif.xml'}
         return {'xml': 'eletbase.xml'}
     
-    # TODO Aparentemente esta trocada a especificacao da versao antiga com a nova no manual
     def newVersionDBAR(self):
         t = self.getTable('DBAR')
         t.setRange('idBarra', [1, 4])
@@ -104,7 +103,7 @@ class eletbase(dsFile):
         modo = None
         sufix = ' MUDA' if self.muda else ''
         
-        # TODO Checar o formato do DBAR
+        # Aparentemente esta trocada a especificacao da versao antiga com a nova no manual
         #self.newVersionDBAR()
         self.newVersionDLIN()
         self.newVersionDCSC()

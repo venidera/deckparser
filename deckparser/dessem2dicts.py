@@ -23,6 +23,8 @@ def load_dessem(fn, dia=None, rd=None, opt={'filename_pattern':1, 'output_format
     if dz.zipLoaded():
         rd = casesRede(rd)
         dia = casesDia(dia, dz.dias.keys())
+        enc = opt.get('file_encoding')
+        fmt = opt.get('output_format')
         dd = {}
         for d in dia:
             for r in rd:
@@ -30,14 +32,7 @@ def load_dessem(fn, dia=None, rd=None, opt={'filename_pattern':1, 'output_format
                     getLogger().warning('Invalid grid option (use bool True/False): %s', str(r))
                 elif d in dz.dias and r in dz.dias[d]:
                     if d not in dd: dd[d] = {}
-                    try:
-                        dt = load_dessem_case(dz, d, r, opt)
-                    except:
-                        getLogger().warning('Retrying loading case: %s %s', str(d), optGridToStr(r))
-                        optAlt = {}
-                        for ko in opt: optAlt[ko] = opt[ko]
-                        optAlt['file_encoding'] = 'latin_1'
-                        dt = load_dessem_case(dz, d, r, optAlt)
+                    dt = load_dessem_case(dz, d, r, enc, fmt)
                     if dt:
                         dd[d][r] = dt
                 else:
@@ -52,7 +47,7 @@ def load_dessem(fn, dia=None, rd=None, opt={'filename_pattern':1, 'output_format
 def optGridToStr(r):
     return ('Com Rede' if r else 'Sem Rede')
 
-def load_dessem_case(dz, d, r, opt):
+def load_dessem_case(dz, d, r, enc, fmt=None):
     rd = optGridToStr(r)
     print('Loading case for date {:s} {:s}'.format(str(d), str(rd)))
     getLogger().info('Loading case for date %s %s', str(d), str(rd))
@@ -61,9 +56,8 @@ def load_dessem_case(dz, d, r, opt):
     except:
         getLogger().warning('Could not open case: %s %s', str(d), str(r))
         return None
-    ld = Loader(dr, opt.get('file_encoding'))
+    ld = Loader(dr, enc)
     ld.loadAll()
-    fmt = opt.get('output_format')
     if not fmt:
         return ld
     else:

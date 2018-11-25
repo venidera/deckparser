@@ -53,11 +53,6 @@ class Loader:
         m['ils_tri'] = ils_tri()
         m['cotasr11'] = cotasr11()
         
-        if self.fileEncoding:
-            for k in m:
-                if k != 'hidr':
-                    m[k].setEncoding(self.fileEncoding)
-        
         self.dsFileMap = m
         self.index = {}
         self.indexMap = {'entdados': 'dadger', 'dadvaz': 'vazoes', 'hidr': 'cadusih', 
@@ -116,19 +111,40 @@ class Loader:
     def getLogger(self):
         return logging.getLogger(__name__)
     
-    ''' Carga de arquivos tipo texto '''
+    def getEncoding(self):
+        e = self.fileEncoding
+        if not e:
+            return [None, 'latin_1']
+        if isinstance(e, list):
+            return e
+        return [e]
+
     def load(self, fileType, dsFileName):
+        lg = self.getLogger()
         if dsFileName is None:
             dsFileName = self.getArq(fileType)
         if dsFileName is None:
-            self.getLogger().warning('Missing index for file type: %s', str(fileType))
+            lg.warning('Missing index for file type: %s', str(fileType))
             return
-        else:
-            self.getLogger().info('Loading file: %s (%s)', dsFileName, fileType)
+        
         dsf = self.dsFileMap[fileType]
         dsf.clearData()
         fullPath = os.path.join(self.dirDS, dsFileName)
-        dsf.readDSFile(fullPath)
+        rld = False
+        for enc in self.getEncoding():
+            try:
+                if fileType != 'hidr':
+                    dsf.setEncoding(enc)
+                lg.info('Loading file: %s (%s, encoding=%s)', dsFileName, fileType, (enc if enc else 'default'))
+                dsf.readDSFile(fullPath)
+                if rld: lg.warning('File reloaded successfully: %s', fileType)
+                else: lg.info('File loaded successfully: %s', dsFileName)
+                break
+            except:
+                lg.warning('Exception caught, retrying loading file', exc_info=True)
+                rld = True
+        else:
+            lg.error('Failed loading file: %s', fileType)
     
     def loadAll(self):
         for f in self.dsFileMap:

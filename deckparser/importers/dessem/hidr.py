@@ -4,6 +4,7 @@ Created on 7 de ago de 2018
 @author: Renan Maciel
 '''
 import struct
+import logging
 
 class HIDR():
     def __init__(self):
@@ -53,10 +54,11 @@ class HIDR():
             return False
         try:
             self.currLine[k] = self.parseFieldValue(b, t)
-        except struct.error:
-            # TODO Tratar erro de leitura
-            print(b)
-            raise
+        except struct.error as e:
+            lg = logging.getLogger(__name__)
+            lg.warning('HIDR: Parse exception: %s \nField: %s', str(e), k, exc_info=True)
+            self.currLine[k] = None
+            return False
         self.addKey(k)
         return True
     
@@ -152,7 +154,3 @@ class HIDR():
         self.readField(f, 'tipoRegula', 'string', 1)
         
         return True
-    '''
-    def formatList(self, v):
-        return '[' + ', '.join([str(i) for i in v]) + ']'
-    '''

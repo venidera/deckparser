@@ -109,8 +109,8 @@ class record:
                     for kd in cf:
                         r[kd] = cf[kd]
                 else:
-                    r[key] = self.parseField(f, f['range'], line)
-            except (ValueError, ValidationException) as e:
+                    r[key] = self.parseField(key, f, f['range'], line)
+            except ValueError as e:
                 self.handleException(line, key, e)
                 r[key] = None
         self.data = r
@@ -125,11 +125,11 @@ class record:
         for k in fields:
             fd = fields[k]
             rd = [pos, pos + fd['size'] - 1]
-            r[k] = self.parseField(fd, rd, line)
+            r[k] = self.parseField(k, fd, rd, line)
             pos = pos + fd['size']
         return r
     
-    def parseField(self, f, r, line):
+    def parseField(self, k, f, r, line):
         t = f['type']
         v = line[r[0]-1:r[1]]
         v = v.strip()
@@ -143,10 +143,13 @@ class record:
                 return s
         
         value = parseDataType(v, t)
-        validateDataType(value, t)
-        
-        if 'validate' in f:
-            self.validateField(f['validate'], value)
+        try:
+            validateDataType(value, t)
+            if 'validate' in f:
+                self.validateField(f['validate'], value)
+        except ValidationException as e:
+            self.handleException(line, k, e)
+            return value
             
         return value
     
