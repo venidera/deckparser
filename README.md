@@ -1,7 +1,7 @@
 DeckParser: Um leitor de dados do NEWAVE, DECOMP and DESSEM
 =============================================
 
-![GitHub Release](https://img.shields.io/badge/release-v0.0.1-blue.svg)
+![GitHub Release](https://img.shields.io/badge/release-v0.0.2-blue.svg)
 ![GitHub license](https://img.shields.io/badge/license-Apachev2-yellow.svg)
 
 DeckParser fornece programas para abrir e ler os dados dos programas NEWAVE, DECOMP e DESSEM
