@@ -8,31 +8,35 @@ from deckparser.dessemzipped import DessemZipped
 from datetime import date
 import logging
 
-def dessem2dicts(fn, dia=None, rd=None, opt={'filename_pattern':1}):
-    opt['output_format'] = 'dict'
-    return load_dessem(fn, dia, rd, opt)
+def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, file_encoding=None):
+    return load_dessem(fn, dia, rd, file_filter, interval_list, 'dict', file_encoding)
 
 def getLogger():
     return logging.getLogger(__name__)
 
-def load_dessem(fn, dia=None, rd=None, opt={'filename_pattern':1, 'output_format':'dict'}):
+def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None):
     """
     Open the zipped file and start to import data
     """
-    dz = DessemZipped(fn, opt.get('filename_pattern'))
+    dz = DessemZipped(fn)
     if dz.zipLoaded():
         rd = casesRede(rd)
         dia = casesDia(dia, dz.dias.keys())
-        enc = opt.get('file_encoding')
-        fmt = opt.get('output_format')
         dd = {}
-        for d in dia:
+        for _d in dia:
+            if isinstance(_d, int):
+                d = dz.getDate(_d)
+                if not d:
+                    getLogger().warning('Invalid day: %s', str(_d))
+                    continue
+            else: d = _d
+            
             for r in rd:
                 if r not in [True,False]:
                     getLogger().warning('Invalid grid option (use bool True/False): %s', str(r))
                 elif d in dz.dias and r in dz.dias[d]:
                     if d not in dd: dd[d] = {}
-                    dt = load_dessem_case(dz, d, r, enc, fmt)
+                    dt = load_dessem_case(dz, d, r, file_filter, interval_list, file_encoding, output_format)
                     if dt:
                         dd[d][r] = dt
                 else:
@@ -47,7 +51,7 @@ def load_dessem(fn, dia=None, rd=None, opt={'filename_pattern':1, 'output_format
 def optGridToStr(r):
     return ('Com Rede' if r else 'Sem Rede')
 
-def load_dessem_case(dz, d, r, enc, fmt=None):
+def load_dessem_case(dz, d, r, file_filter=None, interval_list=None, enc=None, fmt=None):
     rd = optGridToStr(r)
     print('Loading case for date {:s} {:s}'.format(str(d), str(rd)))
     getLogger().info('Loading case for date %s %s', str(d), str(rd))
@@ -57,7 +61,8 @@ def load_dessem_case(dz, d, r, enc, fmt=None):
         getLogger().warning('Could not open case: %s %s', str(d), str(r))
         return None
     ld = Loader(dr, enc)
-    ld.loadAll()
+    ld.setFileFilter(file_filter)
+    ld.loadAll(interval_list)
     if not fmt:
         return ld
     else:

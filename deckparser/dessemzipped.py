@@ -9,7 +9,7 @@ from datetime import date
 import logging
 
 class DessemZipped(object):
-    def __init__(self, fn=None, fp=1):
+    def __init__(self, fn=None):
         # arquivo zipado que sera aberto
         self.z = None
         self.dias = dict()
@@ -18,10 +18,14 @@ class DessemZipped(object):
         self.filename = None
         self.fhash = None
         self.internal_dir = None
-        self.setFilePattern(fp)
         if fn:
             self.setZipFile(fn)
+            self.setFilePattern(1)
             self.openZip()
+            if len(self.dias) == 0:
+                self.setFilePattern(2)
+                self.openZip()
+            self.printIndex()
         else:
             self.fn = None
 
@@ -53,7 +57,7 @@ class DessemZipped(object):
             self.fileReExpr = "DS_CCEE_([0-9]{2})([0-9]{4})_(SEM|COM)REDE_RV([0-9]{1})D([0-9]{2}).zip"
             self.fileParseFunc = DessemZipped.parseFileNamePat2
         else:
-            raise ValueError('Codigo para padrao de nome de arquivo invalido: '+str(cod))
+            raise ValueError('Invalid file pattern code: '+str(cod))
     
     @staticmethod
     def parseFileNamePat1(rr):
@@ -97,9 +101,13 @@ class DessemZipped(object):
                         'tmpdir': None,
                         'filelist': dict()
                     }
-            self.printIndex()
         else:
             self.getLogger().error('%s is not a zip file', self.fn)
+            
+    def getDate(self, dia):
+        for d in self.dias:
+            if d.day == dia:
+                return d
     
     def printIndex(self):
         print('\nAvailable cases\n')

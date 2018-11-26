@@ -10,6 +10,7 @@ class dsFile:
         self.records = {}
         self.tables = {}
         self.fileEncoding = None
+        self.recFilter = None
         cfg = self.__getConfig()
         if 'xml' in cfg:
             self.loadConfig(cfg['xml'])
@@ -33,12 +34,34 @@ class dsFile:
             return open(fn, 'r', encoding=self.fileEncoding)
         return open(fn, 'r')
     
+    def listRecords(self):
+        r = []
+        for n in self.records:
+            r.append(n)
+        for n in self.tables:
+            r.append(n)
+        return r
+    
+    def setRecFilter(self, recList):
+        self.recFilter = recList
+    
+    def filterRec(self, r):
+        if self.recFilter is None:
+            return True
+        if r in self.recFilter:
+            return True
+        return False
+    
     def toDict(self, df=True):
         ds = {}
         for k in self.records:
+            if not self.filterRec(k):
+                continue
             r = self.records[k]
             ds[k] = r.toDict(df)
         for k in self.tables:
+            if not self.filterRec(k):
+                continue
             t = self.tables[k]
             ds[k] = t.toDict(df)
         return ds

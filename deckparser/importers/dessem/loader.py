@@ -26,11 +26,12 @@ import logging
 
 ''' Classe responsavel por carregar os arquivos do DESSEM usando o pacote importers.'''
 class Loader:
-    def __init__(self, dirDS, fileEncoding=None):
+    def __init__(self, dirDS=None, fileEncoding=None):
         self.dirDS = dirDS
         self.fileEncoding = fileEncoding
         self.init()
-        self.loadIndex()
+        if dirDS:
+            self.loadIndex()
     
     ''' Inicializa as instancias dos importers e os indices de arquivos '''
     def init(self):
@@ -63,6 +64,28 @@ class Loader:
         self.initEletBase()
         self.initEletModif()
         
+        self.file_filter = None
+        
+    def listFiles(self):
+        return list(self.dsFileMap.keys())
+    
+    def listRecords(self, fileType):
+        f = self.dsFileMap.get(fileType)
+        if f:
+            return f.listRecords()
+        return None
+    
+    def setFileFilter(self, file_filter):
+        self.file_filter = file_filter
+        
+    def filterFile(self, f):
+        ff = self.file_filter
+        if ff is None:
+            return True
+        if f in ff:
+            return True
+        return False
+    
     def initEletBase(self):
         d = eletbase()
         self.dsFileMap['eletbase'] = d
@@ -136,6 +159,8 @@ class Loader:
                 if fileType != 'hidr':
                     dsf.setEncoding(enc)
                 lg.info('Loading file: %s (%s, encoding=%s)', dsFileName, fileType, (enc if enc else 'default'))
+                if self.file_filter:
+                    dsf.setRecFilter(self.file_filter[fileType])
                 dsf.readDSFile(fullPath)
                 if rld: lg.warning('File reloaded successfully: %s', fileType)
                 else: lg.info('File loaded successfully: %s', dsFileName)
@@ -146,11 +171,12 @@ class Loader:
         else:
             lg.error('Failed loading file: %s', fileType)
     
-    def loadAll(self):
+    def loadAll(self, interval_list=None):
         for f in self.dsFileMap:
             if f not in ['dessem','eletbase','eletmodif']:
-                self.load(f, None)
-        self.loadElet()
+                if self.filterFile(f):
+                    self.load(f, None)
+        self.loadElet(interval_list)
     
     def loadDessem(self, dsFileName):
         self.load('dessem', dsFileName)
@@ -193,10 +219,12 @@ class Loader:
             intCodList = self.getEletCodList()
         intCodBaseList = self.getEletCodBaseSet(intCodList)
         
-        for i in intCodBaseList:
-            self.__loadEletBase(i)
-        for i in intCodList:
-            self.__loadEletModif(i)
+        if self.filterFile('eletbase'):
+            for i in intCodBaseList:
+                self.__loadEletBase(i)
+        if self.filterFile('eletmodif'):
+            for i in intCodList:
+                self.__loadEletModif(i)
     
     def __loadEletBase(self, i):
         r = self.eletIndex['base'].get(i)
@@ -269,27 +297,35 @@ class Loader:
         for f in self.dsFileMap:
             if f in ['eletbase', 'eletmodif']:
                 continue
+            if not self.filterFile(f):
+                continue
             ds = self.dsFileMap[f]
             if fmt == 'dict':
                 dd[f] = ds.toDict()
             else:
                 dd[f] = ds
-        dd['elet'] = self.getEletData(fmt)
+        ed = self.getEletData(fmt)
+        for ef in ed:
+            dd[ef] = ed[ef]
         return dd
     
     def getEletData(self, fmt):
-        dd = {'base': {}, 'modif': {}}
+        dd = {}
         edb = self.eletData['base']
-        for i in edb:
-            if fmt == 'dict':
-                dd['base'][i] = edb[i].toDict()
-            else:
-                dd['base'][i] = edb[i]
+        if self.filterFile('eletbase'):
+            dd['eletbase'] = {}
+            for i in edb:
+                if fmt == 'dict':
+                    dd['eletbase'][i] = edb[i].toDict()
+                else:
+                    dd['eletbase'][i] = edb[i]
         edm = self.eletData['modif']
-        for i in edm:
-            if fmt == 'dict':
-                dd['modif'][i] = edm[i].toDict()
-            else:
-                dd['modif'][i] = edm[i]
+        if self.filterFile('eletmodif'):
+            dd['eletmodif'] = {}
+            for i in edm:
+                if fmt == 'dict':
+                    dd['eletmodif'][i] = edm[i].toDict()
+                else:
+                    dd['eletmodif'][i] = edm[i]
         return dd
     

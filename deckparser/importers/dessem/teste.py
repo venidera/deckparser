@@ -14,7 +14,7 @@ for d in range(1,31):
     dias.append(date(2018,5,d))
 
 rd = [True, False]
-dc = dessem2dicts(fn, dias, rd, {'filename_pattern':2})
+dc = dessem2dicts(fn, dias, rd)
 for d in dc:
     for r in dc[d]:
         printDict(dc[d][r]['entdados']['UH'], 0)

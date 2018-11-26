@@ -23,101 +23,220 @@ Também foram realizados testes com o conjunto de decks do PMO de outubro/2018
 
 Para informações sobre a intalação do módulo Python veja o documento:
 
-Processo_de_importacao_de_um_deck_DECOMP.md
+*Processo_de_importacao_de_um_deck_DECOMP.md*
+
+## Extraindo dados para formato JSON
+
+A forma mais simples de testar a instalação e o importador, é extrair
+os dados utilizando o comando *dessem2json*, que possui a sintaxe
+abaixo:
+
+```
+$ dessem2json 
+--------------------------------------------------
+Conversor do deck de dados do DESSEM para formato JSON
+--------------------------------------------------
+- Sintaxe
+>>>> dessem2json [list_files | list_records <arquivo> | list_cases] <deck-file-path> [dia [rede [arquivo [registro [intervalo de tempo]]]]]
+
+Comando list_files: lista os tipos de arquivos disponíveis para leitura
+Comando list_records <arquivo>: lista os registros para o tipo de arquivo dado
+Comando list_cases <deck-file-path>: lista os decks (casos) disponíveis no arquivo fonrnecido
+
+Dia (int):  dia do mes correspondente ao caso
+Rede (bool): opcao de caso com rede elétrica (True) ou sem rede (False)
+Arquivo (string): tipo de arquivo a ser lido (use o comando list_files para conhecer)
+Registro (string): registro a ser exportado (use o comando list_records <arquivo> para conhecer)
+Intervalo de tempo (int): índice do intervalo de tempo que deve ser lido (executa a leitura do arquivo desselet para conhecer)
+
+- Para qualquer das opções acima pode-se ser fornecida uma lista (não usar espaços), exemplo
+>>>> dessem2json <deck-file-path> [2,3] [True,False] [entdados,operuh] [UH,ELEM]
+- Na ausencia do parâmetro ou utilizando a opção *all*, todos os elementos encontrados sao exportados, exemplo
+>>>> dessem2json <deck-file-path> 2 all [entdados]
+
+--------------------------------------------------
+Arquivos disponíveis para leitura
+--------------------------------------------------
+- Arquivos de índice
+>>>> dessem, desselet
+- Arquivo com dados gerais do caso
+>>>> entdados
+- Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis
+>>>> hidr, operuh, dadvaz, curvtviag, cotasr11, ils_tri
+- Arquivos com dados para simulação
+>>>> simul, deflant
+- Arquivos com dados sobre área de controle e reserva de potência
+>>>> areacont, respot
+- Arquivos com dados da rede elétrica
+>>>> eletbase, eletmodif
+- Arquivos com dados das usinas termelétricas
+>>>> termdat, operut, ptoper
+- Outros arquivos
+>>>> infofcf, tolperd
+
+--------------------------------------------------
+Exemplos
+--------------------------------------------------
+- Lista de arquivos que podem ser lidos
+>>>> dessem2json list_files
+- Lista de registros que podem ser lidos de um dado arquivo
+>>>> dessem2json list_records arquivo
+- Lista de casos contidos no arquivo
+>>>> dessem2json DES_201805.zip list_cases
+- Exportação de todos os decks contidos no arquivo fornecido
+>>>> dessem2json DES_201805.zip
+- Exportação dos decks com data 02/05/2018
+>>>> dessem2json DES_201805.zip 2
+- Exportação dos decks com datas 02/05/2018 e 05/05/2018
+>>>> dessem2json DES_201805.zip [2,5]
+- Exportação do deck com rede elétrica
+>>>> dessem2json DES_201805.zip 2 True
+- Exportação do arquivo entdados, contido no deck especificado
+>>>> dessem2json DES_201805.zip 2 True entdados
+- Exportação do registro UH do arquivo entdados
+>>>> dessem2json DES_201805.zip 2 True entdados UH
+- Exportação dos dados de barramentos da rede elétrica básica* para o primeiro intervalo de tempo
+>>>> dessem2json DES_201805.zip 2 True eletbase DBAR 1
+- Exportação dos dados de modificação de barramentos da rede elétrica básica para o primeiro intervalo de tempo
+>>>> dessem2json DES_201805.zip 2 True eletmodif DBAR 1
+
+* Rede elétrica básica é aquela que não contém as modificações específicas para o intervalo de tempo dado
+```
+
+Por exemplo, a saída para a extração do registro UH do arquivo entdados, do dia 02/05/2018 (sem rede) fica:
+
+```
+$ python dessem2json DES_201805.zip 2 False entdados UH
+Loading case for date 2018-05-02 Sem Rede
+{
+ "2018-05-02": {
+  "sem_rede": {
+   "entdados": {
+    "UH": [
+     {
+      "nomeCampo": "UH",
+      "idUsina": 1,
+      "nomeUsina": "CAMARGOS",
+      "idREE": 10,
+      "volumeInicial": 85.51,
+      "flagEvap": 1,
+      "diaIni": "I",
+      "horaIni": null,
+      "meiaHoraIni": null,
+      "volumeMorto": 0.0,
+      "flagProdutivCte": 0,
+      "flagRestrBangBang": 0
+     },
+     {
+      "nomeCampo": "UH",
+      "idUsina": 2,
+      "nomeUsina": "ITUTINGA",
+      "idREE": 10,
+      "volumeInicial": 99.95,
+      "flagEvap": 1,
+      "diaIni": "I",
+      "horaIni": null,
+      "meiaHoraIni": null,
+      "volumeMorto": 0.0,
+      "flagProdutivCte": 0,
+      "flagRestrBangBang": 0
+     },
+      ...
+```
 
 ## Estrutura do importador
 
-O importador dos decks do DESSEM está localizado no pactote "deckparser.importers.dessem", 
+O importador dos decks do DESSEM está localizado no pactote *deckparser.importers.dessem*, 
 que possui os seguintes pacotoes:
 
-- Pacote "cfg": contém os arquivos de configuração, em formato xml, que determina 
+- Pacote *cfg*: contém os arquivos de configuração, em formato xml, que determina 
 a estrutura dos dados contidos em cada arquivo do deck. Cada arquivo xml contém:
 
-	- Atributo "name": nome de identificação do tipo de arquivo;
-	- Conjunto de elementos tipo "record" e/ou "table", cada um contendo:
-		- Atributo "name": nome do registro;
-		- Conjunto de elementos tipo "field", que identificam cada campo do registro, 
+	- Atributo *name*: nome de identificação do tipo de arquivo;
+	- Conjunto de elementos tipo *record* e/ou *table*, cada um contendo:
+		- Atributo *name*: nome do registro;
+		- Conjunto de elementos tipo *field*, que identificam cada campo do registro, 
 			contendo:
 			- Atributos: nome (name), tipo de dado (type), valor default (default) e 
 				valores especiais (special)
 			- Elemento com validações (validation), 
 			- Estrutura de campos compostos (composed=True).
 
-- Pacote "core": cotém os módulos que realizam os métodos fundamentais utilizados 
+- Pacote *core*: cotém os módulos que realizam os métodos fundamentais utilizados 
 na importação, as principais classes destes módulos são:
 
-	- xmlReader: responsável por fazer a leitura dos arquivos de configuração;
-	- record: classe que representa a estrutura de dados de cada registro dos arquivos do deck.
+	- *xmlReader*: responsável por fazer a leitura dos arquivos de configuração;
+	- *record*: classe que representa a estrutura de dados de cada registro dos arquivos do deck.
 		É responsável por fazer a leitura de todos os campos;
-	- table: realiza a leitura dos resgitros múltiplos e armzena os dados lidos em uma lista;
-	- dsFile: classe abstrata que é estendida pelas classes importadoras, que por sua vez 
+	- *table*: realiza a leitura dos resgitros múltiplos e armzena os dados lidos em uma lista;
+	- *dsFile*: classe abstrata que é estendida pelas classes importadoras, que por sua vez 
 		realizam a importação dos dados de cada arquivo do deck. A função desta classe é fazer a 
 		leitura de todos os registros do arquivo;
-	- O pacote "core" ainda contém o módulo "dataType", que contém métodos para decodificar
+	- O pacote *core* ainda contém o módulo *dataType*, que contém métodos para decodificar
 		e validar cada tipo de dado.
 
-O arquivo "hidr", por ser um arquivo não formatado (codificado), possui metodologia de 
+O arquivo *hidr*, por ser um arquivo não formatado (codificado), possui metodologia de 
 leitura especifica.
 
-Cada módulo localizado no pacote "dessem" contém uma classe que realiza a importação 
+Cada módulo localizado no pacote *dessem* contém uma classe que realiza a importação 
 de um arquivo específico. O conjunto de arquivos que podem ser lidos é:
 
 - Arquivos de indice:
-	- "dessem": índice dos arquivos contidos no decks;
-	- "desselet": dados sobre os intervalos de tempo e índice dos arquivos que contém os dados
+	- *dessem*: índice dos arquivos contidos no decks;
+	- *desselet*: dados sobre os intervalos de tempo e índice dos arquivos que contém os dados
 		da rede elétrica: para cada caso base (patamar de carga); e as alterações de rede elétrica 
 		aplicadas especificamente para cada intervalo de tempo;
 
 - Arquivo com dados gerais do caso:
-	- "entdados": dados diversos sobre cada elemento do sistema, além de dados sobre a 
+	- *entdados*: dados diversos sobre cada elemento do sistema, além de dados sobre a 
 		configuração dos intervalos de tempo, entre outras opções de configuração do estudo;
 
 - Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis:
-	- "hidr":  dados cadastrais e construtivos das usinas hidrelétricas;
-	- "operuh": dados sobre as restrições de operação hidraúlica;
-	- "dadvaz": dados sobre as vazões naturais afluentes ao longo do período de interesse;
-	- "curvtviag": dados sobre a propagação da água entre usinas hidrelétricas;
-	- "cotasr11": cotas na régua 11 anteriores ao início do estudo;
-	- "ils_tri": dados de vazão no canal Pereira Barreto (entre as usinas de Ilha Solteira e Três Irmãos);
+	- *hidr*:  dados cadastrais e construtivos das usinas hidrelétricas;
+	- *operuh*: dados sobre as restrições de operação hidraúlica;
+	- *dadvaz*: dados sobre as vazões naturais afluentes ao longo do período de interesse;
+	- *curvtviag*: dados sobre a propagação da água entre usinas hidrelétricas;
+	- *cotasr11*: cotas na régua 11 anteriores ao início do estudo;
+	- *ils_tri*: dados de vazão no canal Pereira Barreto (entre as usinas de Ilha Solteira e Três Irmãos);
 
 - Arquivos com dados para simulação (período de pré-interesse):
-	- "simul": dados sobre a simulação hidráulica anterior ao período de interesse;
-	- "deflant": dados sobre as vazões defluentes anteriores ao início do período de interesse;
+	- *simul*: dados sobre a simulação hidráulica anterior ao período de interesse;
+	- *deflant*: dados sobre as vazões defluentes anteriores ao início do período de interesse;
 
 - Arquivos com dados sobre área de controle e reserva de potência:
-	- "areacont": dados das áreas de controle;
-	- "respot": dados sobre reserva de potência mínima;
+	- *areacont*: dados das áreas de controle;
+	- *respot*: dados sobre reserva de potência mínima;
 
 - Arquivos com dados da rede elétrica:
-	- "eletbase": dados básicos da rede elétrica para cada caso (patamar de carga);
-	- "eletmodif": dados sobre as modificações da rede elétrica aplicadas em cada 
+	- *eletbase*: dados básicos da rede elétrica para cada caso (patamar de carga);
+	- *eletmodif*: dados sobre as modificações da rede elétrica aplicadas em cada 
 		intervalo de tempo;
 
 - Arquivos com dados das usinas termelétricas:
-	- "termdat": dados cadastrais e construtivos das usinas termelétricas;
-	- "operut": dados sobre a operação termelétrica, inclusive restrições;
-	- "ptoper": dados sobre a operação de usinas que não são decididos pelo modelo DESSEM
+	- *termdat*: dados cadastrais e construtivos das usinas termelétricas;
+	- *operut*: dados sobre a operação termelétrica, inclusive restrições;
+	- *ptoper*: dados sobre a operação de usinas que não são decididos pelo modelo DESSEM
 		(atualmente somente a leitura dos dados sobre a geração termelétrica antecipada 
 		está configurada);
 
 - Outros arquivos:
-	- "infofcf": dados sobre a função de custo futuro do DECOMP;
-	- "tolperd": dados sobre a tolerência para convergência do valor das perdas elétricas;
+	- *infofcf*: dados sobre a função de custo futuro do DECOMP;
+	- *tolperd*: dados sobre a tolerência para convergência do valor das perdas elétricas;
 
 - Arquivos cuja leitura não está implementada (codificados):
-	- "mlt": dados sobre média de longo termo das vazões naturais afluentes;
-	- "mapcut": dados sobre a função de custo futuro do DECOMP;
+	- *mlt*: dados sobre média de longo termo das vazões naturais afluentes;
+	- *mapcut*: dados sobre a função de custo futuro do DECOMP;
 
-O módulo "util" contém alguns métodos destinados a realizar testes.
-O módulo "teste" contém exemplos de testes. 
+O módulo *util* contém alguns métodos destinados a realizar testes.
+O módulo *teste* contém exemplos de testes. 
 
 ## Executando a importação
 
-A importação dos dados em objetos do tipo "dict" é realizada utilizando o método 
-"desssem2dicts", a sintaxe deste é método é a seguinte:
+A importação dos dados em objetos do tipo *dict* é realizada utilizando o método 
+*desssem2dicts*, a sintaxe deste é método é a seguinte:
 ```
 >>>> from deckparser.dessem2dicts import dessem2dicts
->>>> dc = desssem2dicts(fn, dia, rd)
+>>>> dc = desssem2dicts(fn, dia, rd, [file_filter, [interval_list]])
 ```
 
 Onde:
@@ -125,12 +244,25 @@ Onde:
 - fn: é o caminho para o arquivo compactado que contém os decks do DESSEM
 
 - dia: especifica os dias que deverão ser lidos, pode ser:
+	- O dia do mês (int);
 	- datetime.date(Y,m,d);
-	- list contendo objetos do tipo datetime.date;
+	- list contendo objetos do tipo int ou datetime.date;
 	- None (todos os dias encontrados no arquivo)
 
 - rd: especifica se devem ser lidos os casos com rede (True), sem rede (False) 
-	ou ambos ("None" ou [True,False])
+	ou ambos (*None* ou [True,False])
+	
+- O parâmetro *file_filter* deve ser do tipo dict, conforme o padrão:
+```
+{arquivo: list(registro)}
+Exemplo: {'entdados': ['UH', 'UT']}
+```
+
+- O parâmetro *interval_list* deve ser do tipo list, contendo os índices (int) de cada
+intervalo de tempo (conforme a especificação no arquivo desselet) a serem lidos. Caso 
+seja feita a leitura dos arquivos do tipo *eletbase* deve-se notar que o resultado é
+fornecido com os índices correspondentes a cada caso base selecionado, por exemplo, 
+os índices [1,2] podem corresponder ao mesmo caso base de índice 1 
 
 O arquivo (compactado) fornecido deve conter arquivos também compactados (casos), 
 cada um destes contendo os arquivos do deck. Cada caso deve possuir nome conforme o 
@@ -145,14 +277,8 @@ Onde:
 
 - Com (Sem): indica se o caso considera (ou não) a rede elétrica.
 
-Pode-se escolher o padrão dos nomes de arquivo utilizando o quarto argumento do 
-método desssem2dicts:
-```
->>>> dc = desssem2dicts(fn, dia, rd, {'file_pattern':2})
-```
-
-O padrão acima mencionado correponde à opção file_pattern=1 (default).
-O formato para file_pattern=2 é:
+O padrão acima mencionado também pode assumir a seguinte forma, sendo identificado
+de forma automatica:
 ```
 DS_CCEE_(mm)(yyyy)_(COM|SEM)REDE_RV(r)D(dd).zip
 ```
@@ -165,9 +291,10 @@ Onde:
 
 - COM (SEM): indica se o caso considera (ou não) a rede elétrica.
 
-O resultado da leitura é o um objeto "dict" com a seguinte estrutura:
+O resultado da leitura é o um objeto *dict* com a seguinte estrutura:
 ```
 {dia: {r: caso:dict}}
+Exemplo: {date(2018,05,25): {True: casoComRede, False: casoSemRede}}
 ```
 
 Onde:
@@ -175,31 +302,30 @@ Onde:
 - dia: é um objeto do tipo date
 
 - r: indica se o caso considera rede elétrica (bool)
-	(ex.: {date(2018,05,25): {True: casoComRede, False: casoSemRede}})
 
 O conjunto de dados de cada caso possui a seguinte estrutura:
 ```
 {arquivo: {(registro|tabela): (dados:(dict|list))}
-(ex.: {'entdados': {'UH': dados, ...}})
+Exemplo: {'entdados': {'UH': dados, ...}}
 ```
 
 O conjunto de dados de cada registro é estruturado na forma:
 ```
 {campo: valor}
-(ex.: {'idUsina': 66, 'nomeUsina': 'ITAIPU', ...})
+Exemplo: {'idUsina': 66, 'nomeUsina': 'ITAIPU', ...}
 ```
 
-Caso o resgitro seja múltiplo (tabela), os dados são fornecidos em um objeto do tipo "list", 
-contendo um objeto "dict" (conforme a estrutura acima) para cada registro lido.
+Caso o resgitro seja múltiplo (tabela), os dados são fornecidos em um objeto do tipo *list*, 
+contendo um objeto *dict* (conforme a estrutura acima) para cada registro lido.
 
-Os dados do arquivo "hidr" são estruturados em uma única tabela:
+Os dados do arquivo *hidr* são armazenados em um único registro (UHE):
 ```
-{'hidr': (tabela:list)}
+{'hidr': {'UHE': list}}
 ```
 
 A classe Loader é responsável por realizar o carregamento dos dados de um deck. 
-O código abaixo realiza a leitura do caso contido no diretório "dr" e armazena 
-o resultado da leitura em "dc":
+O código abaixo realiza a leitura do caso contido no diretório *dr* e armazena 
+o resultado da leitura em *dc*:
 
 ```
 >>> from deckparser.importers.dessem.loader import Loader

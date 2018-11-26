@@ -10,21 +10,37 @@ class HIDR():
     def __init__(self):
         self.keyList = []
         self.lines = []
+        self.recFilter = None
     
     def isEmpty(self):
         return len(self.lines) == 0
     
     def clearData(self):
         self.lines = []
+        
+    def listRecords(self):
+        return ['UHE']
+    
+    def setRecFilter(self, recList):
+        self.recFilter = recList
+    
+    def filterRec(self, r):
+        if self.recFilter is None:
+            return True
+        if r in self.recFilter:
+            return True
+        return False
     
     def toDict(self):
+        if not self.filterRec('UHE'):
+            return {}
         lst = []
         for ln in self.lines:
             ds = {}
             for k in self.keyList:
                 ds[k] = ln[k]
             lst.append(ds)
-        return lst
+        return {'UHE': lst}
     
     def search(self, fileName, nomeUsina):
         c=1
@@ -47,6 +63,11 @@ class HIDR():
                 if c >= lines:
                     break
         f.close()
+        
+    def getField(self, k, default):
+        f = self.currLine.get(k)
+        if f is None: return default
+        return f
         
     def readField(self, f, k, t, size):
         b = f.read(size)
@@ -76,22 +97,25 @@ class HIDR():
         
         return None
     
-    def readVector(self, f, k, t, n, size):
-        self.currLine[k] = self._readVector(f, t, n, size)
+    def readVector(self, f, k, t, n, size, limit=None):
+        self.currLine[k] = self._readVector(f, t, n, size, limit)
         self.addKey(k)
         return True
     
-    def _readVector(self, f, t, n, size):
+    def _readVector(self, f, t, n, size, limit=None):
         v = []
-        for _ in range(0, n):
+        for i in range(0, n):
             b = f.read(size)
-            v.append(self.parseFieldValue(b, t))
+            if limit is None or i < limit:
+                v.append(self.parseFieldValue(b, t))
         return v
     
-    def readMultiVector(self, f, k, t, n, m, size):
+    def readMultiVector(self, f, k, t, n, m, size, limit=None):
         mv = []
-        for _ in range(0, n):
-            mv.append(self._readVector(f, t, m, size))
+        for i in range(0, n):
+            v = self._readVector(f, t, m, size)
+            if limit is None or i < limit:
+                mv.append(v)
         self.currLine[k] = mv
         self.addKey(k)
         return True
@@ -124,22 +148,24 @@ class HIDR():
         self.readVector(f, 'polAreaCota', 'real', 5, 4)
         self.readVector(f, 'coefEvap', 'int', 12, 4)
         self.readField(f, 'numCG', 'int', 4)
-        self.readVector(f, 'numUG', 'int', 5, 4)
-        self.readVector(f, 'potencia', 'real', 5, 4)
+        numCG = self.getField('numCG', 5)
+        self.readVector(f, 'numUG', 'int', 5, 4, limit=numCG)
+        self.readVector(f, 'potencia', 'real', 5, 4, limit=numCG)
 
         # Trecho extraido do import do newave
-        self.readMultiVector(f, 'Pol_QHT', 'real', 5, 5, 4)
-        self.readMultiVector(f, 'Pol_QHG', 'real', 5, 5, 4)
-        self.readMultiVector(f, 'Pol_PH', 'real', 5, 5, 4)
-
-        self.readVector(f, 'hef', 'real', 5, 4)
-        self.readVector(f, 'qef', 'int', 5, 4)
+        self.readMultiVector(f, 'Pol_QHT', 'real', 5, 5, 4, limit=numCG)
+        self.readMultiVector(f, 'Pol_QHG', 'real', 5, 5, 4, limit=numCG)
+        self.readMultiVector(f, 'Pol_PH', 'real', 5, 5, 4, limit=numCG)
+        
+        self.readVector(f, 'hef', 'real', 5, 4, limit=numCG)
+        self.readVector(f, 'qef', 'int', 5, 4, limit=numCG)
         self.readField(f, 'prodEsp', 'real', 4)
         self.readField(f, 'perdaHidr', 'real', 4)
         
         self.readField(f, 'numCurvasCF', 'int', 4)
-        self.readMultiVector(f, 'coefCF', 'real', 6, 5, 4)
-        self.readVector(f, 'cotaCF', 'real', 6, 4)
+        numCF = self.getField('numCurvasCF', 6)
+        self.readMultiVector(f, 'coefCF', 'real', 6, 5, 4, limit=numCF)
+        self.readVector(f, 'cotaCF', 'real', 6, 4, limit=numCF)
         self.readField(f, 'cotaMediaCF', 'real', 4)
         self.readField(f, 'flagVertCF', 'int', 4)
         self.skip(f, 4*4)
