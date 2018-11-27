@@ -8,7 +8,7 @@ from datetime import date
 from deckparser.dessem2dicts import dessem2dicts
 from deckparser.importers.dessem.util import printDict
 
-fn = '<Caminho para o arquivo compactado que contem os decks>'
+fn = 'C:\\Users\\Renan\\Documents\\Doutorado\\P&D\\Leitura de dados\\Decks de referencia\\des_201810.zip'
 dias = []
 for d in range(1,31):
     dias.append(date(2018,5,d))
@@ -22,7 +22,7 @@ for d in dc:
 '''
 from deckparser.importers.dessem.loader import Loader
 
-dirDS = <Caminho para o diretorio que contem o deck>
+dirDS = 'C:\\Users\\Renan\\Documents\\Doutorado\\P&D\\Leitura de dados\\Decks de referencia\\DES_CCEE_20180525_ComRede\\'
 
 ld = Loader(dirDS)
 ld.loadElet([99])
