@@ -1,17 +1,19 @@
 
 from deckparser.importers.imputils import searchInList, getUpdateIndexes
+from collections import OrderedDict as odict
+
 
 def importSISTEMA(fdata,dger):
-    SISTEMA = dict()
+    SISTEMA = odict()
     # Inicia a leitura do arquivo
     # Ler numero de patamares de deficit
-    strsearch = searchInList(fdata,'NUMERO DE PATAMARES DE DEFICIT')
+    strsearch = searchInList(fdata, 'NUMERO DE PATAMARES DE DEFICIT')
     if strsearch['line']:
         SISTEMA['npdef'] = int(fdata[strsearch['line'] + 2])
     # Ler lista de subsistemas reais, sem ficticios
     #SISTEMA['ss'] = list(['SIN'])
-    SISTEMA['sss'] = dict()
-    strsearch = searchInList(fdata,' NUM|NOME SSIS.|')
+    SISTEMA['sss'] = odict()
+    strsearch = searchInList(fdata, ' NUM|NOME SSIS.|')
     if strsearch['line']:
         lineref = int(strsearch['line'] + 2)
         while True:
@@ -23,10 +25,10 @@ def importSISTEMA(fdata,dger):
             if fdata[lineref][0:4].strip() == '999':
                 break
     # Ler Custo de Deficit
-    SISTEMA['deficit'] = dict()
+    SISTEMA['deficit'] = odict()
     for i in SISTEMA['sss'].keys():
         if SISTEMA['sss'][i]['fict'] == 0:
-            SISTEMA['deficit'][i] = dict()
+            SISTEMA['deficit'][i] = odict()
     strsearch = searchInList(fdata,'CUSTO DO DEFICIT')
     if strsearch['line']:
         lineref = int(strsearch['line'] + 3)
@@ -86,7 +88,7 @@ def importSISTEMA(fdata,dger):
         if len(strsfim) == 0:
             strsfim = searchInList(fdata,'GERACAO DE USINAS NAO SIMULADAS')
         linereffim = int(strsfim['line'] - 1)
-        SISTEMA['mercado'] = dict()
+        SISTEMA['mercado'] = odict()
         #for i in SISTEMA['sss'].keys():
         #    if SISTEMA['sss'][i]['fict'] == 0:
         #    SISTEMA['mercado'][i] = dict()
@@ -122,7 +124,7 @@ def importSISTEMA(fdata,dger):
     if strsfim['line']:
         linerefini = int(strsfim['line'] + 3)
         linereffim = len(fdata) - 1
-        SISTEMA['gpu'] = dict()
+        SISTEMA['gpu'] = odict()
         for line in range(linerefini,linereffim):
             if fdata[line][0:2] == '  ' and fdata[line].strip() != '':
                 SUBSIS = fdata[line].strip()
