@@ -16,19 +16,10 @@ class table:
         return len(self.dataSet) == 0
      
     def toDict(self, df=True):
-        fl = self.rec.recMap
+        lines = self.getData(False)
         lst = []
-        lines = self.getData(df)
         for ln in lines:
-            ds = {}
-            for k in fl:
-                f = fl[k]
-                if f.get('composed'):
-                    for kd in self.rec.composedToDict(f, ln):
-                        ds[kd] = ln.get(kd)
-                else:
-                    ds[k] = ln.get(k)
-            lst.append(ds)
+            lst.append(self.rec.lineToDict(ln, df))
         return lst
     
     def clear(self):

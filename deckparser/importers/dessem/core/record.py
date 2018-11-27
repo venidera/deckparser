@@ -11,6 +11,7 @@ class record:
     
     def __init__(self, recMap):
         self.recMap = recMap
+        self.exportIgnore = ['nomeCampo']
         self.data = None
         self.line = None
         
@@ -18,15 +19,19 @@ class record:
         return self.data is None
      
     def toDict(self, df=True):
+        return self.lineToDict(self.data, df)
+    
+    def lineToDict(self, r, df=True):
         ds = {}
-        r = self.data
         if r is None:
             return ds
         if df:
-            return self.applyDefault(r)
+            r = self.applyDefault(r)
         for k in self.recMap:
+            if k in self.exportIgnore:
+                continue
             f = self.recMap[k]
-            if f['composed']:
+            if f.get('composed'):
                 for kd in self.composedToDict(f, r):
                     ds[kd] = r.get(kd)
             else:

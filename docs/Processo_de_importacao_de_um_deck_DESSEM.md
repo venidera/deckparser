@@ -10,14 +10,14 @@ Python, que podem ser utilizados para submissão como entrada em
 modelos de simulação e otimização, e também podem ser exportados para
 formatos mais amigáveis ou transacionais.
 
-O formato dos arquivos contidos nos decks corresponde à especificação
-que consta no Manual do Usuário da versão 12.2 do DESSEM. 
-
 Neste documento estaremos utilizando o conjunto de decks DESSEM CCEE
-(https://www.ccee.org.br/ccee/documentos/CCEE_640604) [*DES_201805.zip*]
+[*DES_201805.zip*](https://www.ccee.org.br/ccee/documentos/CCEE_640604)
 que consiste dos decks do PMO de maio/2018.
 Também foram realizados testes com o conjunto de decks do PMO de outubro/2018 
-(https://www.ccee.org.br/ccee/documentos/DES_201810) [*des_201810.zip*].
+[*des_201810.zip*](https://www.ccee.org.br/ccee/documentos/DES_201810).
+
+O formato dos arquivos contidos nos decks corresponde à especificação
+que consta no Manual do Usuário da versão 12.2 do DESSEM. 
 
 ## Instalação do módulo Python
 
@@ -28,7 +28,7 @@ Para informações sobre a intalação do módulo Python veja o documento:
 ## Extraindo dados para formato JSON
 
 A forma mais simples de testar a instalação e o importador, é extrair
-os dados utilizando o comando *dessem2json*, que possui a sintaxe
+os dados utilizando o comando `dessem2json`, que possui a sintaxe
 abaixo:
 
 ```
@@ -51,7 +51,7 @@ Intervalo de tempo (int): índice do intervalo de tempo que deve ser lido (execu
 
 - Para qualquer das opções acima pode-se ser fornecida uma lista (não usar espaços), exemplo
 >>>> dessem2json <deck-file-path> [2,3] [True,False] [entdados,operuh] [UH,ELEM]
-- Na ausencia do parâmetro ou utilizando a opção *all*, todos os elementos encontrados sao exportados, exemplo
+- Na ausencia do parâmetro ou utilizando a opção all, todos os elementos encontrados sao exportados, exemplo
 >>>> dessem2json <deck-file-path> 2 all [entdados]
 
 --------------------------------------------------
@@ -103,10 +103,10 @@ Exemplos
 * Rede elétrica básica é aquela que não contém as modificações específicas para o intervalo de tempo dado
 ```
 
-Por exemplo, a saída para a extração do registro UH do arquivo entdados, do dia 02/05/2018 (sem rede) fica:
+Por exemplo, a saída para a extração do registro *UH* do arquivo *entdados*, do dia 02/05/2018 (sem rede) fica:
 
 ```
-$ python dessem2json DES_201805.zip 2 False entdados UH
+$ dessem2json DES_201805.zip 2 False entdados UH
 Loading case for date 2018-05-02 Sem Rede
 {
  "2018-05-02": {
@@ -147,7 +147,7 @@ Loading case for date 2018-05-02 Sem Rede
 ## Estrutura do importador
 
 O importador dos decks do DESSEM está localizado no pactote *deckparser.importers.dessem*, 
-que possui os seguintes pacotoes:
+que possui os seguintes pacotes:
 
 - Pacote *cfg*: contém os arquivos de configuração, em formato xml, que determina 
 a estrutura dos dados contidos em cada arquivo do deck. Cada arquivo xml contém:
@@ -157,10 +157,10 @@ a estrutura dos dados contidos em cada arquivo do deck. Cada arquivo xml contém
 		- Atributo *name*: nome do registro;
 		- Conjunto de elementos tipo *field*, que identificam cada campo do registro, 
 			contendo:
-			- Atributos: nome (name), tipo de dado (type), valor default (default) e 
-				valores especiais (special)
-			- Elemento com validações (validation), 
-			- Estrutura de campos compostos (composed=True).
+			- Atributos: nome (*name*), tipo de dado (*type*), valor default (*default*) e 
+				valores especiais (*special*)
+			- Elemento com validações (*validation*), 
+			- Estrutura de campos compostos (*composed=True*).
 
 - Pacote *core*: cotém os módulos que realizam os métodos fundamentais utilizados 
 na importação, as principais classes destes módulos são:
@@ -232,33 +232,33 @@ O módulo *teste* contém exemplos de testes.
 
 ## Executando a importação
 
-A importação dos dados em objetos do tipo *dict* é realizada utilizando o método 
+A importação dos dados em objetos do tipo `dict` é realizada utilizando o método 
 *desssem2dicts*, a sintaxe deste é método é a seguinte:
-```
+```python
 >>>> from deckparser.dessem2dicts import dessem2dicts
 >>>> dc = desssem2dicts(fn, dia, rd, [file_filter, [interval_list]])
 ```
 
 Onde:
 
-- fn: é o caminho para o arquivo compactado que contém os decks do DESSEM
+- `fn`: é o caminho para o arquivo compactado que contém os decks do DESSEM
 
-- dia: especifica os dias que deverão ser lidos, pode ser:
-	- O dia do mês (int);
-	- datetime.date(Y,m,d);
-	- list contendo objetos do tipo int ou datetime.date;
-	- None (todos os dias encontrados no arquivo)
+- `dia`: especifica os dias que deverão ser lidos, pode ser:
+	- Dia do mês (`int`);
+	- Data (`datetime.date(Y,m,d)`);
+	- `list` contendo objetos do tipo `int` ou `datetime.date`;
+	- `None` (todos os dias encontrados no arquivo)
 
-- rd: especifica se devem ser lidos os casos com rede (True), sem rede (False) 
-	ou ambos (*None* ou [True,False])
+- `rd`: especifica se devem ser lidos os casos com rede (`True`), sem rede (`False`) 
+	ou ambos (`None` ou `[True,False]`)
 	
-- O parâmetro *file_filter* deve ser do tipo dict, conforme o padrão:
+- O parâmetro `file_filter` deve ser do tipo `dict`, conforme o padrão:
 ```
 {arquivo: list(registro)}
 Exemplo: {'entdados': ['UH', 'UT']}
 ```
 
-- O parâmetro *interval_list* deve ser do tipo list, contendo os índices (int) de cada
+- O parâmetro `interval_list` deve ser do tipo `list`, contendo os índices (`int`) de cada
 intervalo de tempo (conforme a especificação no arquivo desselet) a serem lidos. Caso 
 seja feita a leitura dos arquivos do tipo *eletbase* deve-se notar que o resultado é
 fornecido com os índices correspondentes a cada caso base selecionado, por exemplo, 
@@ -266,32 +266,32 @@ os índices [1,2] podem corresponder ao mesmo caso base de índice 1
 
 O arquivo (compactado) fornecido deve conter arquivos também compactados (casos), 
 cada um destes contendo os arquivos do deck. Cada caso deve possuir nome conforme o 
-padrao:
+padrão:
 ```
 DES_CCEE_(yyyy)(mm)(dd)_(Com|Sem)Rede.zip
 ```
 
 Onde:
 
-- yyyy, mm, dd: são ano, mês e dia do caso;
+- `yyyy`, `mm`, `dd`: são ano, mês e dia do caso;
 
-- Com (Sem): indica se o caso considera (ou não) a rede elétrica.
+- `Com` (`Sem`): indica se o caso considera (ou não) a rede elétrica.
 
 O padrão acima mencionado também pode assumir a seguinte forma, sendo identificado
-de forma automatica:
+de forma automática:
 ```
 DS_CCEE_(mm)(yyyy)_(COM|SEM)REDE_RV(r)D(dd).zip
 ```
 
 Onde:
 
-- yyyy, mm, dd: são ano, mês e dia do caso;
+- `yyyy`, `mm`, `dd`: são ano, mês e dia do caso;
 
-- r: é a revisão do PMO;
+- `r`: é a revisão do PMO;
 
-- COM (SEM): indica se o caso considera (ou não) a rede elétrica.
+- `COM` (`SEM`): indica se o caso considera (ou não) a rede elétrica.
 
-O resultado da leitura é o um objeto *dict* com a seguinte estrutura:
+O resultado da leitura é o um objeto `dict` com a seguinte estrutura:
 ```
 {dia: {r: caso:dict}}
 Exemplo: {date(2018,05,25): {True: casoComRede, False: casoSemRede}}
@@ -299,9 +299,9 @@ Exemplo: {date(2018,05,25): {True: casoComRede, False: casoSemRede}}
 
 Onde:
 
-- dia: é um objeto do tipo date
+- `dia`: é um objeto do tipo `date`
 
-- r: indica se o caso considera rede elétrica (bool)
+- `r`: indica se o caso considera rede elétrica (`bool`)
 
 O conjunto de dados de cada caso possui a seguinte estrutura:
 ```
@@ -315,8 +315,8 @@ O conjunto de dados de cada registro é estruturado na forma:
 Exemplo: {'idUsina': 66, 'nomeUsina': 'ITAIPU', ...}
 ```
 
-Caso o resgitro seja múltiplo (tabela), os dados são fornecidos em um objeto do tipo *list*, 
-contendo um objeto *dict* (conforme a estrutura acima) para cada registro lido.
+Caso o resgitro seja múltiplo (tabela), os dados são fornecidos em um objeto do tipo `list`, 
+contendo um objeto `dict` (conforme a estrutura acima) para cada registro lido.
 
 Os dados do arquivo *hidr* são armazenados em um único registro (UHE):
 ```
@@ -324,10 +324,10 @@ Os dados do arquivo *hidr* são armazenados em um único registro (UHE):
 ```
 
 A classe Loader é responsável por realizar o carregamento dos dados de um deck. 
-O código abaixo realiza a leitura do caso contido no diretório *dr* e armazena 
-o resultado da leitura em *dc*:
+O código abaixo realiza a leitura do caso contido no diretório `dr` e armazena 
+o resultado da leitura em `dc`:
 
-```
+```python
 >>> from deckparser.importers.dessem.loader import Loader
 >>> 
 >>> ld = Loader(dr)
