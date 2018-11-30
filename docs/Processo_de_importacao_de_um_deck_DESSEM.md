@@ -21,15 +21,16 @@ que consta no Manual do Usuário da versão 12.2 do DESSEM.
 
 ## Instalação do módulo Python
 
-Para informações sobre a intalação do módulo Python veja o documento:
-
-*Processo_de_importacao_de_um_deck_DECOMP.md*
+Para informações sobre a intalação do módulo Python veja o documento que descreve a [importação de decks DECOMP](Processo_de_importacao_de_um_deck_DECOMP.md).
 
 ## Extraindo dados para formato JSON
 
 A forma mais simples de testar a instalação e o importador, é extrair
 os dados utilizando o comando `dessem2json`, que possui a sintaxe
 abaixo:
+
+> Em sistemas Windows pode ser necessário alterar a extensão do arquivo *dessem2json* renomeando-o para *dessem2json.py*.
+> Uma alternativa é usar o comando `python dessem2json`.
 
 ```
 $ dessem2json 
