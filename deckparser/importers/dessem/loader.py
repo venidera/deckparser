@@ -147,13 +147,12 @@ class Loader:
         if dsFileName is None:
             dsFileName = self.getArq(fileType)
         if dsFileName is None:
-            lg.warning('Missing index for file type: %s', str(fileType))
+            lg.info('Missing index for file type: %s', str(fileType))
             return
         
         dsf = self.dsFileMap[fileType]
         dsf.clearData()
         fullPath = os.path.join(self.dirDS, dsFileName)
-        rld = False
         for enc in self.getEncoding():
             try:
                 if fileType != 'hidr':
@@ -162,12 +161,10 @@ class Loader:
                 if self.file_filter:
                     dsf.setRecFilter(self.file_filter[fileType])
                 dsf.readDSFile(fullPath)
-                if rld: lg.warning('File reloaded successfully: %s', fileType)
-                else: lg.info('File loaded successfully: %s', dsFileName)
+                lg.info('File loaded successfully: %s', dsFileName)
                 break
             except:
-                lg.warning('Exception caught, retrying loading file', exc_info=True)
-                rld = True
+                lg.info('Exception caught, retrying loading file', exc_info=True)
         else:
             lg.error('Failed loading file: %s', fileType)
     

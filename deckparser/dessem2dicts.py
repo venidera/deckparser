@@ -27,7 +27,7 @@ def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, out
             if isinstance(_d, int):
                 d = dz.getDate(_d)
                 if not d:
-                    getLogger().warning('Invalid day: %s', str(_d))
+                    getLogger().warning('Day not indexed: %s', str(_d))
                     continue
             else: d = _d
             
