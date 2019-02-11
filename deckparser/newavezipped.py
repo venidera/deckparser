@@ -59,9 +59,10 @@ class NewaveZipped(object):
                     key = evfn
                 self.fns_set[key] = fn
             # Check if it is a deck
-            deckfiles = ['dger','sistema','confhd']
+            deckfiles = ['dger','sistema','confh']
             zipfiles = list(self.fns_set.keys())
-            if not set([fd.lower() for fd in deckfiles]).issubset(set([fz.lower() for fz in zipfiles])):
+            if not all([fd.upper() in str(zipfiles) for fd in deckfiles]):
+            # if not set([fd.lower() for fd in deckfiles]).issubset(set([fz.lower() for fz in zipfiles])):
                 info('The file doesn\'t look like a deck file.')
                 # Check if it has a zip
                 possible_decks = dict()
@@ -87,7 +88,7 @@ class NewaveZipped(object):
         else:
             info(self.fn + " is not a zip file")
 
-    def openFile(self,fnp):
+    def openFile(self, fnp):
         try:
             fname = self.fns_set[fnp.upper()]
             f = self.z.open(fname)

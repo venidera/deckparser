@@ -7,7 +7,7 @@ def importCADIC(fdata, dger):
     impc = -1
     while fdata[liner].strip() != '999':
         vcheck = fdata[liner][:4].strip()
-        if 0 < len(vcheck) < 4:
+        if 0 < len(vcheck) < 4 and 'PRE' != vcheck and 'POS' != vcheck:
             vals = fdata[liner].split()
             subsis = vals[0]
             if subsis not in CADIC.keys():
@@ -21,11 +21,12 @@ def importCADIC(fdata, dger):
             impc += 1
         else:
             ano = fdata[liner][:4].strip()
-            if ano == '':
-                # PDE - Sem C_ADIC
+            # PRE ainda será tratado
+            if ano == '' or len(fdata[liner].strip()) <= 4:
+                # PDE ou Leilao - Sem C_ADIC
                 valores = [0.0] * dger['ni']
                 CADIC[subsis][impc] = {'pt1': pt1, 'pt2': pt2, 'valores': valores.copy()}
-                while fdata[liner][:4].strip() == '':
+                while fdata[liner][:4].strip() == '' or len(fdata[liner].strip()) <= 4 and fdata[liner].strip() != '999':
                     liner += 1
                 continue
             elif len(ano) == 4 and ano in str(dger['yph']):

@@ -10,27 +10,33 @@ def importPATAMAR(fdata, dger, sss):
     idxline = 6
     PATDURA = dict()
     PATCARGA = dict()
-    for i in range(numpatamarcarga):
-        PATDURA[i] = list()
-    for idss in sss:
-        PATCARGA[idss] = dict()
-        for i in range(numpatamarcarga):
-            PATCARGA[idss][i] = list()
     PATINTER = list()
-    for anoi in range(dger['nyears']):
-        if fdata[idxline][0:5].strip() in str(dger['yph']):
-            anopat = fdata[idxline][0:5].strip()
-            for idpat in range(numpatamarcarga):
-                # Lendo os valores
-                mesini = 1
-                if int(anopat) == dger['yi']:
-                    mesini = dger['mi']
-                PATDURA[idpat] = line2list(dline=fdata[idxline][5:102], mi=mesini, ar=anopat, mf=12, bloco=8, vlista=PATDURA[idpat], dger=dger)
-                idxline = idxline + 1
+    if numpatamarcarga == 1:
+        PATDURA[0] = [1.0] * dger['ni'] 
+    else:
+        for i in range(numpatamarcarga):
+            PATDURA[i] = list()
+        for idss in sss:
+            PATCARGA[idss] = dict()
+            for i in range(numpatamarcarga):
+                PATCARGA[idss][i] = list()
+        for anoi in range(dger['nyears']):
+            if fdata[idxline][0:5].strip() in str(dger['yph']):
+                anopat = fdata[idxline][0:5].strip()
+                for idpat in range(numpatamarcarga):
+                    # Lendo os valores
+                    mesini = 1
+                    if int(anopat) == dger['yi']:
+                        mesini = dger['mi']
+                    PATDURA[idpat] = line2list(dline=fdata[idxline][5:102], mi=mesini, ar=anopat, mf=12, bloco=8, vlista=PATDURA[idpat], dger=dger)
+                    idxline = idxline + 1
     # Carregar os patamares de carga
     idxline = searchInList(fdata, 'CARGA(P.U.DEMANDA MED.)')['line'] + 2
     for idxss in sss:
         ssis = int(fdata[idxline].strip())
+        if numpatamarcarga == 1:
+            PATCARGA[str(ssis)] = [[1.0] * dger['ni']]
+            continue
         if int(idxss) == ssis:
             idxline = idxline + 1
             for anoi in range(dger['nyears']):
@@ -44,7 +50,7 @@ def importPATAMAR(fdata, dger, sss):
                         PATCARGA[str(ssis)][idpat] = line2list(dline=fdata[idxline][7:91], mi=mesini, ar=anopat, mf=12, bloco=7, vlista=PATCARGA[str(ssis)][idpat], dger=dger)
                         idxline = idxline + 1
     idxline = searchInList(fdata, 'INTERCAMBIO(P.U.INTERC.MEDIO)')['line'] + 2
-    while len(fdata[idxline].strip()) > 0:
+    while len(fdata[idxline].strip()) > 0 and numpatamarcarga > 1:
         vals = fdata[idxline].split()
         # if fdata[idxline][0:2].strip() == '' and fdata[idxline][0:5].strip() != '':
         if len(vals) == 2:
