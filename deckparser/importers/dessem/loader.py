@@ -201,14 +201,19 @@ class Loader:
     def getEletCodList(self):
         return self.eletIndex['modif'].keys()
     
+    def getEletCodBase(self, i):
+        r = self.eletIndex['modif'].get(i)
+        if r is None:
+            self.getLogger().warning('No elet base index for interval: %d', i)
+        else:
+            return r['patamar']
+    
     def getEletCodBaseSet(self, intCodList):
         s = set()
         for i in intCodList:
-            r = self.eletIndex['modif'].get(i)
-            if r is None:
-                self.getLogger().warning('No elet base index for interval: %d', i)
-            else:
-                s.add(r['patamar'])
+            p = self.getEletCodBase(i)
+            if p is not None:
+                s.add(p)
         return s
 
     def loadElet(self, intCodList=None):

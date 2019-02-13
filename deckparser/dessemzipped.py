@@ -25,7 +25,6 @@ class DessemZipped(object):
             if len(self.dias) == 0:
                 self.setFilePattern(2)
                 self.openZip()
-            self.printIndex()
         else:
             self.fn = None
 

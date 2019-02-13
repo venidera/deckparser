@@ -53,7 +53,6 @@ def optGridToStr(r):
 
 def load_dessem_case(dz, d, r, file_filter=None, interval_list=None, enc=None, fmt=None):
     rd = optGridToStr(r)
-    print('Loading case for date {:s} {:s}'.format(str(d), str(rd)))
     getLogger().info('Loading case for date %s %s', str(d), str(rd))
     try:
         dr = dz.extractAllFiles(d, r)
