@@ -1,6 +1,5 @@
 from deckparser.newavezipped import NewaveZipped
 from deckparser.newavedicted import NewaveDicted
-
 from deckparser.importers.newave.importDGER import importDGER
 from deckparser.importers.newave.importSISTEMA import importSISTEMA
 from deckparser.importers.newave.importCAR import importCAR
@@ -19,6 +18,7 @@ from deckparser.importers.newave.importEXPH import importEXPH
 from deckparser.importers.newave.importPATAMAR import importPATAMAR
 from deckparser.importers.newave.importCADTERM import importCADTERM
 from deckparser.importers.newave.importSHIST import importSHIST
+from logging import info
 
 
 def newave2dicts(fn):
@@ -44,8 +44,18 @@ def newave2dicts(fn):
         dd.CLAST, dd.MODIFCLAST = importCLAST(fobj=dz.openFile(fnp='clast'), utes=dd.TERM.keys(), nyears=len(dd.DGER['yph']))
         dd.MANUTT = importMANUTT(fobj=dz.openFile(fnp='manutt'), utes=dd.TERM.keys())
         dd.HIDR, dd.HIDRcount = importHIDR(fn=dz.extractFile(fnp='hidr'))
-        dd.CONFHD = importCONFHD(dz.openFile(fnp='confhd'))
-        dd.MODIF = importMODIF(fobj=dz.openFile(fnp='modif'), uhes=dd.CONFHD.keys())
+        for conff in ['confhd', 'confh']:
+            try:
+                dd.CONFHD = importCONFHD(dz.openFile(fnp=conff))
+            except Exception as e:
+                info('File {} not found.'.format(conff))
+        for modiff in ['modif', 'modif55']:
+            try:
+                fobj = dz.openFile(fnp=modiff)
+                if fobj:
+                    dd.MODIF = importMODIF(fobj=fobj, uhes=dd.CONFHD.keys())
+            except Exception as e:
+                info('File {} not found.'.format(modiff))
         dd.DSVAGUA = importDSVAGUA(dz.openFileExtData(fnp='dsvagua'), uhes=dd.CONFHD.keys(), dger=dd.DGER)
         dd.VAZOES, dd.VAZcount, dd.vaz = importVAZOES(fn=dz.extractFile(fnp='vazoes'), hcount=dd.HIDRcount, dger=dd.DGER)
         dd.ENCHVM, dd.MOTORI = importEXPH(dz.openFileExtData(fnp='exph'))

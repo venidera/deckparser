@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-__version__ = '0.0.2'
+__version__ = '1.0.0'
 
 long_desc = """Deckparser
 
