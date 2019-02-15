@@ -1,7 +1,7 @@
 import sys,logging,json
 from deckparser.dessem2dicts import dessem2dicts
 from deckparser.importers.dessem.loader import Loader
-from deckparser.dessemzipped import DessemZipped
+from deckparser.dessemsource import dessem_source
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
@@ -116,7 +116,7 @@ def print_sample():
     print_header('Exemplos')
     __print_desc('Lista de arquivos que podem ser lidos', 'dessem2json list_files')
     __print_desc('Lista de registros que podem ser lidos de um dado arquivo', 'dessem2json list_records arquivo')
-    __print_desc('Lista de casos contidos no arquivo', 'dessem2json DES_201805.zip list_cases')
+    __print_desc('Lista de casos contidos no arquivo', 'dessem2json list_cases DES_201805.zip')
     __print_desc('Exportação de todos os decks contidos no arquivo fornecido', 'dessem2json DES_201805.zip')
     __print_desc('Exportação dos decks com data 02/05/2018', 'dessem2json DES_201805.zip 2')
     __print_desc('Exportação dos decks com datas 02/05/2018 e 05/05/2018', 'dessem2json DES_201805.zip [2,5]')
@@ -137,7 +137,7 @@ def __print_desc(header, code):
     print('>>>> '+code)
     
 def list_cases(fn):
-    DessemZipped(fn)
+    dessem_source(fn).printIndex()
 
 def list_files():
     print_header('Lista de arquivos')

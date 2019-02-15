@@ -4,22 +4,20 @@ Created on 2 de nov de 2018
 @author: Renan Maciel
 '''
 from deckparser.importers.dessem.loader import Loader
-from deckparser.dessemzipped import DessemZipped
+from deckparser.importers.dessem.out.result_loader import ResultLoader
+from deckparser.dessemsource import dessem_source
 from datetime import date
 import logging
 
-def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, file_encoding=None):
-    return load_dessem(fn, dia, rd, file_filter, interval_list, 'dict', file_encoding)
+def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, file_encoding=None, load_results=False):
+    return load_dessem(fn, dia, rd, file_filter, interval_list, 'dict', file_encoding, load_results)
 
 def getLogger():
     return logging.getLogger(__name__)
 
-def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None):
-    """
-    Open the zipped file and start to import data
-    """
-    dz = DessemZipped(fn)
-    if dz.zipLoaded():
+def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None, load_results=False):
+    dz = dessem_source(fn, load_results)
+    if dz.validSource():
         rd = casesRede(rd)
         dia = casesDia(dia, dz.dias.keys())
         dd = {}
@@ -36,7 +34,10 @@ def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, out
                     getLogger().warning('Invalid grid option (use bool True/False): %s', str(r))
                 elif d in dz.dias and r in dz.dias[d]:
                     if d not in dd: dd[d] = {}
-                    dt = load_dessem_case(dz, d, r, file_filter, interval_list, file_encoding, output_format)
+                    if load_results:
+                        dt = load_dessem_result(dz, d, r, file_filter, file_encoding, output_format)
+                    else:
+                        dt = load_dessem_case(dz, d, r, file_filter, interval_list, file_encoding, output_format)
                     if dt:
                         dd[d][r] = dt
                 else:
@@ -62,6 +63,22 @@ def load_dessem_case(dz, d, r, file_filter=None, interval_list=None, enc=None, f
     ld = Loader(dr, enc)
     ld.setFileFilter(file_filter)
     ld.loadAll(interval_list)
+    if not fmt:
+        return ld
+    else:
+        return ld.getData(fmt)
+
+def load_dessem_result(dz, d, r, file_filter=None, enc=None, fmt=None):
+    rd = optGridToStr(r)
+    getLogger().info('Loading results for date %s %s', str(d), str(rd))
+    try:
+        dr = dz.extractAllFiles(d, r)
+    except:
+        getLogger().warning('Could not open results: %s %s', str(d), str(r))
+        return None
+    ld = ResultLoader(dr, enc)
+    ld.setFileFilter(file_filter)
+    ld.loadAll()
     if not fmt:
         return ld
     else:
