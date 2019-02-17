@@ -1,11 +1,11 @@
 
-def parseValue(v, cf):
+def parseValue(v, field_type):
     v = v.strip()
     if v in ['-', '']:
         return None
-    if cf == 'i':
+    if field_type == 'int':
         return int(v)
-    if cf == 'f':
+    if field_type == 'real':
         try:
             return float(v)
         except ValueError:
@@ -13,7 +13,7 @@ def parseValue(v, cf):
                 return float('inf')
             else:
                 raise
-    if cf == 's':
+    if field_type == 'string':
         return v
 
 def checkInf(v):

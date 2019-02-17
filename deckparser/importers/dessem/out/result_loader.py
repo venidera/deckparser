@@ -19,6 +19,9 @@ class ResultLoader:
         m['pdo_operacao'] = pdo_operacao()
         m['pdo_sumaoper'] = pdo_sumaoper()
         self.resultLoaders = m
+    
+    def get(self, fileType):
+        return self.resultLoaders.get(fileType)
         
     def setFileFilter(self, file_filter):
         self.file_filter = file_filter

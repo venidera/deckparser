@@ -1,63 +1,12 @@
 import re
 from datetime import date
-from deckparser.importers.dessem.out.pdo_base_oper import pdo_base_oper, TableDef
-
-class SumaTableDef(TableDef):
-    def __init__(self, cs):
-        super().__init__(cs)
-    
-    @staticmethod
-    def balHidr():
-        t = TableDef([5, 20, 26, 35, 45, 54, 63, 72, 80, 90, 99, 109, 115, 124],
-                     ['i','s','f','f','f','f','f','f','f','f','f','f','f','f'],
-                     ['idUhe', 'nome', 'volIniPerc', 'volIni', 'volAfl', 'volTurb', 'volVert', 'volDesv', 
-                      'volDesc', 'volEvap', 'volAlt', 'volBomb', 'volFinalPerc', 'volFinal'],
-                     [None, None, '%', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', '%', 'hm3'])
-        return t
-    
-    @staticmethod
-    def vazoes():
-        t = TableDef([5, 22, 28, 38, 48, 58, 68, 78, 88, 98, 108, 118],
-                     ['i','s','f','f','f','f','f','f','f','f','f','f'],
-                     ['idUhe', 'nome', 'vazAfl', 'vazTurb', 'vazVert', 'vazDesv', 
-                      'vazDesc', 'vazAlt', 'vazBomb', 'defMin', 'defMax', 'turbMax'],
-                     [None, None, 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s'])
-        return t
-    
-    @staticmethod
-    def gerHidr():
-        t = TableDef([5, 20, 24, 32, 42, 52, 62, 72, 82],
-                     ['i','s','s','f','f','f','f','f','f'],
-                     ['idUhe', 'nome', 'subSistema', 'vazTurb', 'gerHidr', 'reserv', 'gerMax', 'vt', 'produtibMed'],
-                     [None, None, None, 'm3/s', 'MW', 'MW', 'MW', 'm3/s', 'MW/(m3/s)'])
-        return t
-    
-    @staticmethod
-    def custos():
-        t = TableDef([41, 59],
-                     ['s','f'],
-                     ['descricao', 'valor'],
-                     [None, None])
-        return t
+from deckparser.importers.dessem.out.pdo_base_oper import pdo_base_oper
 
 class pdo_sumaoper(pdo_base_oper):
     def __init__(self):
-        super().__init__()
+        super().__init__('pdo_sumaoper')
         self.addBlockType('day')
         self.addBlockType('week')
-    
-    def getTableSet(self):
-        return {'1': SumaTableDef.balHidr(),
-                 '2': SumaTableDef.vazoes(),
-                 '3': SumaTableDef.gerHidr(),
-                 '4': TableDef.gerTerm(),
-                 '5a': TableDef.intercambioEnergetico(),
-                 '5b': TableDef.intercambioEletrico(),
-                 '6': TableDef.gerItaipu(),
-                 '7': TableDef.energiaContratada(),
-                 '8a': TableDef.balancoEnergetico(),
-                 '8b': TableDef.balancoEletrico(),
-                 '9': SumaTableDef.custos()}
     
     def checkOpenBlock_day(self, line):
         dtrex = '(\d{2})\/(\d{2})\/(\d{4})'

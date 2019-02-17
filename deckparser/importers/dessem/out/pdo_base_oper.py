@@ -1,98 +1,61 @@
 import re
 from deckparser.importers.dessem.out.pdo_common import parseValue
+import os
+import json
+from deckparser.importers.dessem.out import cfg
+import io
 
 class ColumnDef:
-    def __init__(self, ce, cf, cn):
-        self.colEnd = ce
-        self.colFormat = cf
-        self.colName = cn
+    def __init__(self, f):
+        self.range = [f['c'], f['cf']]
+        self.type = f['type']
+        self.name = f['name']
+        self.unit = f.get('unit')
+        self.desc = f.get('desc')
 
 class TableDef:
-    def __init__(self, cs, cf, cn, unt):
-        self.colSpacing = cs
-        self.colFormat = cf
-        self.colName = cn
-        self.colUnit = unt
+    def __init__(self, name, fields):
+        self.name = name
+        self.fields = fields
     
     def numOfCols(self):
-        return len(self.colSpacing)
+        return len(self.fields)
+    
+    def searchColDef(self, nm):
+        for f in self.fields:
+            if f['name'] == nm:
+                return ColumnDef(f)
     
     def getColDef(self, i):
-        return ColumnDef(self.colSpacing[i],
-                         self.colFormat[i],
-                         self.colName[i])
+        return ColumnDef(self.fields[i])
     
     def getUnitDict(self):
         unt = {}
         for i in range(self.numOfCols()):
-            unt[self.colName[i]] = self.colUnit[i]
+            cd = self.getColDef(i)
+            unt[cd.name] = cd.unit
         return unt
-    
-    @staticmethod
-    def gerTerm():
-        t = TableDef([5, 21, 25, 33, 43, 53, 63, 73],
-                     ['i','s','s','f','f','f','f','f'],
-                     ['idUte', 'nome', 'idSubsistema', 'gerMin', 'gerTerm', 'reserv', 'gerMax', 'capacidade'],
-                     [None, None, None, 'MW', 'MW', 'MW', 'MW', 'MW'])
-        return t
-    
-    @staticmethod
-    def intercambioEnergetico():
-        t = TableDef([7, 12, 19, 29],
-                     ['s','s','f','f'],
-                     ['orig', 'dest', 'intercambio', 'intercMax'],
-                     [None, None, 'MW', 'MW'])
-        return t
-
-    @staticmethod
-    def intercambioEletrico():
-        t = TableDef([7, 12, 19, 29],
-                     ['s','s','f','f'],
-                     ['orig', 'dest', 'intercambio', 'intercMax'],
-                     [None, None, 'MW', 'MW'])
-        return t
-
-    @staticmethod
-    def gerItaipu():
-        t = TableDef([10, 23, 36],
-                     ['f','f','f'],
-                     ['ger60Hz', 'ger50HzSE', 'ger50HzANDE'],
-                     ['MW', 'MW', 'MW'])
-        return t
-    
-    @staticmethod
-    def energiaContratada():
-        t = TableDef([15, 23, 28, 35, 45, 55, 65],
-                     ['s','s','s','f','f','f','f'],
-                     ['nomeContrato', 'tipoContrato', 'idSubsistema', 'qtdMin', 'qtdContr', 'qtdMax', 'custo'],
-                     [None, None, None, 'MW', 'MW', 'MW', '$/MWh'])
-        return t
-    
-    @staticmethod
-    def balancoEnergetico():
-        t = TableDef([6, 13, 22, 31, 40, 49, 58, 67, 76, 85, 94, 103, 110, 119, 127, 135, 144, 153, 164, 171],
-                     ['s','f','f','f','f','f','f','f','f','f','f','f','f','f','s','f','f','f','f','f'],
-                     ['siglaSubsistema', 'cmo', 'demanda', 'perdas', 'gerPeq', 'gerFixBar', 'gerHidr', 'gerTerm', 
-                      'consue', 'importacao', 'exportacao', 'deficit', 'deficitPerc', 'saldo', 'observacao', 
-                      'gerTermMin', 'impMin', 'expMin', 'earmFinal', 'earmFinalPerc'],
-                     [None, '$/MWh', 'MW', 'MW', 'MW', 'MW', 'MW', 'MW', None, 'MW', 'MW', 'MW', '%', 'MW', None, 'MW', 'MW', 'MW', 'MWmes', '%'])
-        return t
-    
-    @staticmethod
-    def balancoEletrico():
-        t = TableDef([9, 18, 27, 40, 51],
-                     ['s','f','f','f','f'],
-                     ['siglaSubsistema', 'demanda', 'perdas', 'geracao', 'saldo'],
-                     [None, 'MW', 'MW', 'MW', 'MW'])
-        return t
 
 class pdo_base_oper:
-    def __init__(self):
-        self.tableSet = self.getTableSet()
+    def __init__(self, tableName):
+        self.tableName = tableName
+        self.tableSet = self.loadTableSet()
         self.blockGroup = {}
         self.blockIndex = {}
         self.openBlock = None
         self.openTableKey = None
+    
+    def loadTableSet(self):
+        fPath = os.path.join(cfg.__path__[0], self.tableName+'.json')
+        with io.open(fPath, 'r', encoding='utf8') as fp:
+            d = json.load(fp, encoding='utf8')
+        #with open(os.path.join(cfg.__path__[0], self.tableName+'.json'), 'r') as fp:
+        #    d = json.load(fp, encoding='utf-8')
+        fp.close()
+        ts = {}
+        for tk,td in d.items():
+            ts[tk] = TableDef(td['name'], td['fields'])
+        return ts
     
     def openFile(self, fn):
         return open(fn, 'r')
@@ -112,6 +75,9 @@ class pdo_base_oper:
     def setOpenBlock(self, blockType, k):
         self.openBlock = {'type': blockType, 'key': k}
     
+    def getBlock(self, tp):
+        return self.blockGroup[tp]
+        
     def getOpenBlock(self):
         tp = self.openBlock['type']
         k = self.openBlock['key']
@@ -180,20 +146,17 @@ class pdo_base_oper:
             return line
         
         lnd = {}
-        ci = 1
         for i in range(td.numOfCols()):
             cdef = td.getColDef(i)
-            cd = cdef.colEnd
-            cf = cdef.colFormat
-            rv = line[(ci-1):(cd-1)]
+            r = cdef.range
+            rv = line[r[0]:r[1]]
             try:
-                v = parseValue(rv, cf)
+                v = parseValue(rv, cdef.type)
             except ValueError:
-                print('Field range: ({:d}, {:d})'.format(ci, cd))
+                print('Field range: ({:d}, {:d})'.format(r[0], r[1]))
                 print('Value: '+rv)
                 raise
-            ci = cd
-            lnd[cdef.colName] = v
+            lnd[cdef.name] = v
         return lnd
     
     def checkEndOfTable(self, line):

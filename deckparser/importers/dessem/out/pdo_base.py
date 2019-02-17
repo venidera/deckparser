@@ -1,27 +1,43 @@
 from deckparser.importers.dessem.out.pdo_common import parseValue
+from deckparser.importers.dessem.out import cfg
+import json
+import os
+import io
 
 class ColumnDef:
-    def __init__(self, cn, cf):
-        self.colName = cn
-        self.colFormat = cf
+    def __init__(self, f):
+        self.name = f['name']
+        self.type = f['type']
+        self.unit = f.get('unit')
+        self.desc = f.get('desc')
 
 class TableDef:
-    def __init__(self, cn, cf, unt):
-        self.colName = cn
-        self.colFormat = cf
-        self.colUnit = unt
+    def __init__(self, fields):
+        self.fields = fields
     
     def numOfCols(self):
-        return len(self.colName)
+        return len(self.fields)
+    
+    def searchColDef(self, nm):
+        for f in self.fields:
+            if f['name'] == nm:
+                return ColumnDef(f)
     
     def getColDef(self, i):
-        return ColumnDef(self.colName[i],
-                         self.colFormat[i])
+        return ColumnDef(self.fields[i])
 
 class pdo_base:
-    def __init__(self):
-        self.tableDef = self.getTableDef()
+    def __init__(self, tableName):
+        self.tableName = tableName
+        self.tableDef = self.loadTableDef()
         self.data = []
+    
+    def loadTableDef(self):
+        fPath = os.path.join(cfg.__path__[0], self.tableName+'.json')
+        with io.open(fPath, 'r', encoding='utf8') as fp:
+            d = json.load(fp, encoding='utf8')
+        fp.close()
+        return TableDef(d[self.tableName])
     
     def readHeaderLine(self, line):
         pass
@@ -32,7 +48,7 @@ class pdo_base:
         dt = {}
         for i in range(td.numOfCols()):
             cd = td.getColDef(i)
-            dt[cd.colName] = parseValue(rdt[i], cd.colFormat)
+            dt[cd.name] = parseValue(rdt[i], cd.type)
         
         self.data.append(dt)
     

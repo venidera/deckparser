@@ -1,0 +1,823 @@
+{
+   "1": {
+      "name": "balHidr",
+      "fields": [
+         {
+            "name": "idUhe",
+            "type": "int",
+            "c": 0,
+            "cf": 4
+         },
+         {
+            "name": "nome",
+            "type": "string",
+            "c": 4,
+            "cf": 19
+         },
+         {
+            "name": "subSistema",
+            "type": "string",
+            "c": 19,
+            "cf": 22
+         },
+         {
+            "name": "volIniPerc",
+            "type": "real",
+            "c": 22,
+            "cf": 28,
+            "unit": "%",
+			"desc": "Volume Armazenado Inicial"
+         },
+         {
+            "name": "volIni",
+            "type": "real",
+            "c": 28,
+            "cf": 38,
+            "unit": "hm3",
+			"desc": "Volume Armazenado Inicial"
+         },
+         {
+            "name": "volIncr",
+            "type": "real",
+            "c": 38,
+            "cf": 47,
+            "unit": "hm3",
+			"desc": "Volume Incremental"
+         },
+         {
+            "name": "volMontV",
+            "type": "real",
+            "c": 47,
+            "cf": 56,
+            "unit": "hm3",
+			"desc": "Volume Defluente a Montante V."
+         },
+         {
+            "name": "volMont",
+            "type": "real",
+            "c": 56,
+            "cf": 65,
+            "unit": "hm3",
+			"desc": "Volume Defluente a Montante"
+         },
+         {
+            "name": "volTurb",
+            "type": "real",
+            "c": 65,
+            "cf": 74,
+            "unit": "hm3",
+			"desc": "Volume Turbinado"
+         },
+         {
+            "name": "volVert",
+            "type": "real",
+            "c": 74,
+            "cf": 83,
+            "unit": "hm3",
+			"desc": "Volume Vertido"
+         },
+         {
+            "name": "volDesv",
+            "type": "real",
+            "c": 83,
+            "cf": 92,
+            "unit": "hm3",
+			"desc": "Volume Desviado"
+         },
+         {
+            "name": "volDesc",
+            "type": "real",
+            "c": 92,
+            "cf": 101,
+            "unit": "hm3",
+			"desc": "Volume de Descarga"
+         },
+         {
+            "name": "volEvap",
+            "type": "real",
+            "c": 101,
+            "cf": 110,
+            "unit": "hm3",
+			"desc": "Volume Evaporado"
+         },
+         {
+            "name": "volAlt",
+            "type": "real",
+            "c": 110,
+            "cf": 119,
+            "unit": "hm3",
+			"desc": "Volume Alt"
+         },
+         {
+            "name": "volBomb",
+            "type": "real",
+            "c": 119,
+            "cf": 128,
+            "unit": "hm3",
+			"desc": "Volume Bombeado"
+         },
+         {
+            "name": "volFinalPerc",
+            "type": "real",
+            "c": 128,
+            "cf": 135,
+            "unit": "%",
+			"desc": "Volume Armazenado Final"
+         },
+         {
+            "name": "volFinal",
+            "type": "real",
+            "c": 135,
+            "cf": 146,
+            "unit": "hm3",
+			"desc": "Volume Armazenado Final"
+         }
+      ]
+   },
+   "2": {
+      "name": "vazoes",
+      "fields": [
+         {
+            "name": "idUhe",
+            "type": "int",
+            "c": 0,
+            "cf": 4
+         },
+         {
+            "name": "nome",
+            "type": "string",
+            "c": 4,
+            "cf": 19
+         },
+         {
+            "name": "subSistema",
+            "type": "string",
+            "c": 19,
+            "cf": 22
+         },
+         {
+            "name": "vazIncr",
+            "type": "real",
+            "c": 22,
+            "cf": 30,
+            "unit": "m3/s",
+			"desc": "Vazão Incremental"
+         },
+         {
+            "name": "vazMontV",
+            "type": "real",
+            "c": 30,
+            "cf": 43,
+            "unit": "m3/s",
+			"desc": "Vazão Defluente a Montante V."
+         },
+         {
+            "name": "vazMont",
+            "type": "real",
+            "c": 43,
+            "cf": 52,
+            "unit": "m3/s",
+			"desc": "Vazão Defluente a Montante"
+         },
+         {
+            "name": "vazTurb",
+            "type": "real",
+            "c": 52,
+            "cf": 61,
+            "unit": "m3/s",
+			"desc": "Vazão Turbinada"
+         },
+         {
+            "name": "vazVert",
+            "type": "real",
+            "c": 61,
+            "cf": 70,
+            "unit": "m3/s",
+			"desc": "Vazão Vertida"
+         },
+         {
+            "name": "vazDesv",
+            "type": "real",
+            "c": 70,
+            "cf": 79,
+            "unit": "m3/s",
+			"desc": "Vazão Desviada"
+         },
+         {
+            "name": "vazDesc",
+            "type": "real",
+            "c": 79,
+            "cf": 88,
+            "unit": "m3/s",
+			"desc": "Vazão de Descarga"
+         },
+         {
+            "name": "vazAlt",
+            "type": "real",
+            "c": 88,
+            "cf": 97,
+            "unit": "m3/s",
+			"desc": "Vazão Alt"
+         },
+         {
+            "name": "vazBomb",
+            "type": "real",
+            "c": 97,
+            "cf": 106,
+            "unit": "m3/s",
+			"desc": "Vazão Bombeada"
+         },
+         {
+            "name": "defMin",
+            "type": "real",
+            "c": 106,
+            "cf": 115,
+            "unit": "m3/s",
+			"desc": "Defluência Mínima"
+         },
+         {
+            "name": "defMax",
+            "type": "real",
+            "c": 115,
+            "cf": 124,
+            "unit": "m3/s",
+			"desc": "Defluência Máxima"
+         }
+      ]
+   },
+   "2B": {
+      "name": "bomb",
+      "fields": [
+         {
+            "name": "idBomb",
+            "type": "int",
+            "c": 0,
+            "cf": 3
+         },
+         {
+            "name": "uheMont",
+            "type": "string",
+            "c": 3,
+            "cf": 21
+         },
+         {
+            "name": "uheJus",
+            "type": "string",
+            "c": 21,
+            "cf": 38
+         },
+         {
+            "name": "vazBomb",
+            "type": "real",
+            "c": 38,
+            "cf": 47,
+            "unit": "m3/s",
+			"desc": "Vazão Bombeada"
+         }
+      ]
+   },
+   "3": {
+      "name": "gerHidr",
+      "fields": [
+         {
+            "name": "idUhe",
+            "type": "int",
+            "c": 0,
+            "cf": 3
+         },
+         {
+            "name": "nome",
+            "type": "string",
+            "c": 3,
+            "cf": 18
+         },
+         {
+            "name": "subSistema",
+            "type": "string",
+            "c": 18,
+            "cf": 21
+         },
+         {
+            "name": "vazTurb",
+            "type": "real",
+            "c": 21,
+            "cf": 29,
+            "unit": "m3/s"
+         },
+         {
+            "name": "vazTurbMax",
+            "type": "real",
+            "c": 29,
+            "cf": 38,
+            "unit": "m3/s",
+			"desc": "Vazão Turbinada Máxima"
+         },
+         {
+            "name": "gerHidr",
+            "type": "real",
+            "c": 38,
+            "cf": 47,
+            "unit": "MW",
+			"desc": "Geração Hidrelétrica"
+         },
+         {
+            "name": "reserv",
+            "type": "real",
+            "c": 47,
+            "cf": 56,
+            "unit": "MW",
+			"desc": "Reserva de Potência"
+         },
+         {
+            "name": "gerMax",
+            "type": "real",
+            "c": 56,
+            "cf": 65,
+            "unit": "MW",
+			"desc": "Geração Máxima"
+         },
+         {
+            "name": "vt",
+            "type": "real",
+            "c": 65,
+            "cf": 74,
+            "unit": "m3/s",
+			"desc": "VT"
+         },
+         {
+            "name": "valorAgua",
+            "type": "real",
+            "c": 74,
+            "cf": 83,
+            "unit": "$/MWh",
+			"desc": "Valor da Geração Incremental"
+         },
+         {
+            "name": "altQueda",
+            "type": "real",
+            "c": 83,
+            "cf": 90,
+            "unit": "m",
+			"desc": "Altura de Queda"
+         },
+         {
+            "name": "produtib",
+            "type": "real",
+            "c": 90,
+            "cf": 99,
+            "unit": "MW/(m3/s)",
+			"desc": "Produtibilidade média"
+         }
+      ]
+   },
+   "4": {
+      "name": "gerTerm",
+      "fields": [
+         {
+            "name": "idUte",
+            "type": "int",
+            "c": 0,
+            "cf": 4
+         },
+         {
+            "name": "nome",
+            "type": "string",
+            "c": 4,
+            "cf": 20
+         },
+         {
+            "name": "idSubsistema",
+            "type": "string",
+            "c": 20,
+            "cf": 24
+         },
+         {
+            "name": "gerMin",
+            "type": "real",
+            "c": 24,
+            "cf": 32,
+            "unit": "MW",
+			"desc": "Geração Termelétrica Mínima"
+         },
+         {
+            "name": "gerTerm",
+            "type": "real",
+            "c": 32,
+            "cf": 42,
+            "unit": "MW",
+			"desc": "Geração Termelétrica"
+         },
+         {
+            "name": "reserv",
+            "type": "real",
+            "c": 42,
+            "cf": 52,
+            "unit": "MW",
+			"desc": "Reserva de Potência"
+         },
+         {
+            "name": "gerMax",
+            "type": "real",
+            "c": 52,
+            "cf": 62,
+            "unit": "MW",
+			"desc": "Geração Termelétrica Máxima"
+         },
+         {
+            "name": "capacidade",
+            "type": "real",
+            "c": 62,
+            "cf": 72,
+            "unit": "MW",
+			"desc": "Capacidade de Geração"
+         }
+      ]
+   },
+   "5a": {
+      "name": "intercambioEnergetico",
+      "fields": [
+         {
+            "name": "orig",
+            "type": "string",
+            "c": 0,
+            "cf": 6
+         },
+         {
+            "name": "dest",
+            "type": "string",
+            "c": 6,
+            "cf": 11
+         },
+         {
+            "name": "intercambio",
+            "type": "real",
+            "c": 11,
+            "cf": 18,
+            "unit": "MW",
+			"desc": "Intercâmbio Energético"
+         },
+         {
+            "name": "intercMax",
+            "type": "real",
+            "c": 18,
+            "cf": 28,
+            "unit": "MW",
+			"desc": "Intercâmbio Energético Máximo"
+         }
+      ]
+   },
+   "5b": {
+      "name": "intercambioEletrico",
+      "fields": [
+         {
+            "name": "orig",
+            "type": "string",
+            "c": 0,
+            "cf": 6
+         },
+         {
+            "name": "dest",
+            "type": "string",
+            "c": 6,
+            "cf": 11
+         },
+         {
+            "name": "intercambio",
+            "type": "real",
+            "c": 11,
+            "cf": 18,
+            "unit": "MW",
+			"desc": "Intercâmbio Elétrico"
+         },
+         {
+            "name": "intercMax",
+            "type": "real",
+            "c": 18,
+            "cf": 28,
+            "unit": "MW",
+			"desc": "Intercâmbio Elétrico Máximo"
+         }
+      ]
+   },
+   "6": {
+      "name": "gerItaipu",
+      "fields": [
+         {
+            "name": "ger60Hz",
+            "type": "real",
+            "c": 0,
+            "cf": 9,
+            "unit": "MW",
+			"desc": "Geração de Itaipu em 60Hz"
+         },
+         {
+            "name": "ger50HzSE",
+            "type": "real",
+            "c": 9,
+            "cf": 22,
+            "unit": "MW",
+			"desc": "Geração de Itaipu em 50Hz (SE)"
+         },
+         {
+            "name": "ger50HzANDE",
+            "type": "real",
+            "c": 22,
+            "cf": 35,
+            "unit": "MW",
+			"desc": "Geração de Itaipu em 60Hz (ANDE)"
+         }
+      ]
+   },
+   "7": {
+      "name": "energiaContratada",
+      "fields": [
+         {
+            "name": "nomeContrato",
+            "type": "string",
+            "c": 0,
+            "cf": 14
+         },
+         {
+            "name": "tipoContrato",
+            "type": "string",
+            "c": 14,
+            "cf": 22
+         },
+         {
+            "name": "idSubsistema",
+            "type": "string",
+            "c": 22,
+            "cf": 27
+         },
+         {
+            "name": "qtdMin",
+            "type": "real",
+            "c": 27,
+            "cf": 34,
+            "unit": "MW",
+			"desc": "Energia Contratada Mínima"
+         },
+         {
+            "name": "qtdContr",
+            "type": "real",
+            "c": 34,
+            "cf": 44,
+            "unit": "MW",
+			"desc": "Energia Contratada"
+         },
+         {
+            "name": "qtdMax",
+            "type": "real",
+            "c": 44,
+            "cf": 54,
+            "unit": "MW",
+			"desc": "Energia Contratada Máxima"
+         },
+         {
+            "name": "custo",
+            "type": "real",
+            "c": 54,
+            "cf": 64,
+            "unit": "$/MWh",
+			"desc": "Preço da Energia Contratada"
+         }
+      ]
+   },
+   "8a": {
+      "name": "balancoEnergetico",
+      "fields": [
+         {
+            "name": "siglaSubsistema",
+            "type": "string",
+            "c": 0,
+            "cf": 5
+         },
+         {
+            "name": "cmo",
+            "type": "real",
+            "c": 5,
+            "cf": 12,
+            "unit": "$/MWh",
+			"desc": "Custo Marginal de Operação"
+         },
+         {
+            "name": "demanda",
+            "type": "real",
+            "c": 12,
+            "cf": 21,
+            "unit": "MW",
+			"desc": "Demanda de Energia"
+         },
+         {
+            "name": "perdas",
+            "type": "real",
+            "c": 21,
+            "cf": 30,
+            "unit": "MW",
+			"desc": "Perdas na Rede Elétrica"
+         },
+         {
+            "name": "gerPeq",
+            "type": "real",
+            "c": 30,
+            "cf": 39,
+            "unit": "MW",
+			"desc": "Geração de Usinas não Simuladas"
+         },
+         {
+            "name": "gerFixBar",
+            "type": "real",
+            "c": 39,
+            "cf": 48,
+            "unit": "MW",
+			"desc": "Geração FixBar"
+         },
+         {
+            "name": "gerHidr",
+            "type": "real",
+            "c": 48,
+            "cf": 57,
+            "unit": "MW",
+			"desc": "Geração Hidrelétrica"
+         },
+         {
+            "name": "gerTerm",
+            "type": "real",
+            "c": 57,
+            "cf": 66,
+            "unit": "MW",
+			"desc": "Geração Termelétrica"
+         },
+         {
+            "name": "consue",
+            "type": "real",
+            "c": 66,
+            "cf": 75,
+			"desc": "Consumo com Bombeamento"
+         },
+         {
+            "name": "importacao",
+            "type": "real",
+            "c": 75,
+            "cf": 84,
+            "unit": "MW",
+			"desc": "Importação de Energia"
+         },
+         {
+            "name": "exportacao",
+            "type": "real",
+            "c": 84,
+            "cf": 93,
+            "unit": "MW",
+			"desc": "Exportação de Energia"
+         },
+         {
+            "name": "deficit",
+            "type": "real",
+            "c": 93,
+            "cf": 102,
+            "unit": "MW",
+			"desc": "Déficit de Energia"
+         },
+         {
+            "name": "deficitPerc",
+            "type": "real",
+            "c": 102,
+            "cf": 109,
+            "unit": "%",
+			"desc": "Déficit de Energia"
+         },
+         {
+            "name": "saldo",
+            "type": "real",
+            "c": 109,
+            "cf": 118,
+            "unit": "MW",
+			"desc": "Saldo de Energia"
+         },
+         {
+            "name": "observacao",
+            "type": "string",
+            "c": 118,
+            "cf": 126
+         },
+         {
+            "name": "gerTermMin",
+            "type": "real",
+            "c": 126,
+            "cf": 134,
+            "unit": "MW",
+			"desc": "Geração Termelétrica Mínima"
+         },
+         {
+            "name": "impMin",
+            "type": "real",
+            "c": 134,
+            "cf": 143,
+            "unit": "MW",
+			"desc": "Importação Mínima"
+         },
+         {
+            "name": "expMin",
+            "type": "real",
+            "c": 143,
+            "cf": 152,
+            "unit": "MW",
+			"desc": "Exportação Mínima"
+         },
+         {
+            "name": "earmFinal",
+            "type": "real",
+            "c": 152,
+            "cf": 163,
+            "unit": "MWmes",
+			"desc": "Energia Armazenada Final"
+         },
+         {
+            "name": "earmFinalPerc",
+            "type": "real",
+            "c": 163,
+            "cf": 170,
+            "unit": "%",
+			"desc": "Energia Armazenada Final"
+         }
+      ]
+   },
+   "8b": {
+      "name": "balancoEletrico",
+      "fields": [
+         {
+            "name": "siglaSubsistema",
+            "type": "string",
+            "c": 0,
+            "cf": 8
+         },
+         {
+            "name": "demanda",
+            "type": "real",
+            "c": 8,
+            "cf": 17,
+            "unit": "MW",
+			"desc": "Demanda"
+         },
+         {
+            "name": "perdas",
+            "type": "real",
+            "c": 17,
+            "cf": 26,
+            "unit": "MW",
+			"desc": "Perdas na Rede Elétrica"
+         },
+         {
+            "name": "geracao",
+            "type": "real",
+            "c": 26,
+            "cf": 39,
+            "unit": "MW",
+			"desc": "Geração"
+         },
+         {
+            "name": "saldo",
+            "type": "real",
+            "c": 39,
+            "cf": 50,
+            "unit": "MW",
+			"desc": "Saldo"
+         }
+      ]
+   },
+   "9": {
+      "name": "custos",
+      "fields": [
+         {
+            "name": "descricao",
+            "type": "string",
+            "c": 0,
+            "cf": 24
+         },
+         {
+            "name": "valor",
+            "type": "real",
+            "c": 24,
+            "cf": 33
+         }
+      ]
+   },
+   "10": {
+      "name": "cortesAtivos",
+      "fields": [
+         {
+            "name": "iteracao",
+            "type": "int",
+            "c": 0,
+            "cf": 8
+         },
+         {
+            "name": "multiplicador",
+            "type": "real",
+            "c": 8,
+            "cf": 28
+         }
+      ]
+   }
+}

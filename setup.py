@@ -34,6 +34,7 @@ if __name__ == '__main__':
         ],
         test_suite=project_name + '.tests',
         scripts=['bin/decomp2json', 'bin/dessem2json'],
-        package_data={'deckparser.importers.dessem.cfg': ['*.xml']},
+        package_data={'deckparser.importers.dessem.cfg': ['*.xml'],
+                      'deckparser.importers.dessem.out.cfg': ['*.json']},
         include_package_data=True
     )

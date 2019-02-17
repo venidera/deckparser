@@ -1,0 +1,112 @@
+{
+   "pdo_sist": [
+      {
+         "name": "intervalo",
+         "type": "int"
+      },
+      {
+         "name": "patamar",
+         "type": "string"
+      },
+      {
+         "name": "subSistema",
+         "type": "string"
+      },
+      {
+         "name": "cmo",
+         "type": "real",
+         "unit": "$/MWH",
+		 "desc": "Custo Marginal de Operação"
+      },
+      {
+         "name": "demanda",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Demanda de Energia"
+      },
+      {
+         "name": "perdas",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Perdas na Rede Elétrica"
+      },
+      {
+         "name": "gerPeq",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração de Usinas não Simuladas"
+      },
+      {
+         "name": "gerFixBar",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração FixBar"
+      },
+      {
+         "name": "gerHidrTot",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração Hidrelétrica Total"
+      },
+      {
+         "name": "gerTermTot",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração Termelétrica Total"
+      },
+      {
+         "name": "consumoBomb",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Consumo com Bombeamento"
+      },
+      {
+         "name": "importacao",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Importação de Energia"
+      },
+      {
+         "name": "exportacao",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Exportação de Energia"
+      },
+      {
+         "name": "deficit",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Déficit de Energia"
+      },
+      {
+         "name": "saldo",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Saldo de Energia"
+      },
+      {
+         "name": "recebimento",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Recebimento de Energia"
+      },
+      {
+         "name": "gerTermMinTot",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração Termelétrica Mínima Total"
+      },
+      {
+         "name": "gerTermMaxTot",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração Termelétrica Máxima Total"
+      },
+      {
+         "name": "earm",
+         "type": "real",
+         "unit": "MWH",
+		 "desc": "Energia Armazenada"
+      }
+   ]
+}

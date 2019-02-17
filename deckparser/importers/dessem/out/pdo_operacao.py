@@ -1,84 +1,12 @@
 import re
 from datetime import datetime
-from deckparser.importers.dessem.out.pdo_base_oper import pdo_base_oper, TableDef
-
-class OperTableDef(TableDef):
-    def __init__(self, cs):
-        super().__init__(cs)
-    
-    @staticmethod
-    def balHidr():
-        t = TableDef([5, 20, 23, 29, 39, 48, 57, 66, 75, 84, 93, 102, 111, 120, 129, 136, 147],
-                     ['i','s','s','f','f','f','f','f','f','f','f','f','f','f','f','f','f'],
-                     ['idUhe', 'nome', 'subSistema', 'volIniPerc', 'volIni', 'volIncr', 
-                      'volMontV', 'volMont', 'volTurb', 'volVert', 'volDesv', 'volDesc', 
-                      'volEvap', 'volAlt', 'volBomb', 'volFinalPerc', 'volFinal'],
-                     [None, None, None, '%', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', 
-                      'hm3', 'hm3', 'hm3', 'hm3', 'hm3', 'hm3', '%', 'hm3'])
-        return t
-    
-    @staticmethod
-    def vazoes():
-        t = TableDef([5, 20, 23, 31, 44, 53, 62, 71, 80, 89, 98, 107, 116, 125],
-                     ['i','s','s','f','f','f','f','f','f','f','f','f','f','f'],
-                     ['idUhe', 'nome', 'subSistema', 'vazIncr', 'vazMontV', 'vazMont', 
-                      'vazTurb', 'vazVert', 'vazDesv', 'vazDesc', 'vazAlt', 'vazBomb', 'defMin', 'defMax'],
-                     [None, None, None, 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s', 'm3/s'])
-        return t
-    
-    @staticmethod
-    def gerHidr():
-        t = TableDef([4, 19, 22, 30, 39, 48, 57, 66, 75, 84, 91, 100],
-                     ['i','s','s','f','f','f','f','f','f','f','f','f'],
-                     ['idUhe', 'nome', 'subSistema', 'vazTurb', 'vazTurbMax', 
-                      'gerHidr', 'reserv', 'gerMax', 'vt', 'valorAgua', 'altQueda', 'produtib'],
-                     [None, None, None, 'm3/s', 'm3/s', 'MW', 'MW', 'MW', 'm3/s', '$/MWh', 'm', 'MW/(m3/s)'])
-        return t
-    
-    @staticmethod
-    def bomb():
-        t = TableDef([4, 22, 39, 48],
-                     ['i','s','s','f'],
-                     ['idBomb', 'uheMont', 'uheJus', 'vazBomb'],
-                     [None, None, None, 'm3/s'])
-        return t
-    
-    @staticmethod
-    def cortesAtivos():
-        t = TableDef([9, 29],
-                     ['i','f'],
-                     ['iteracao', 'multiplicador'],
-                     [None, None])
-        return t
-
-    @staticmethod
-    def custos():
-        t = TableDef([25, 34],
-                     ['s','f'],
-                     ['descricao', 'valor'],
-                     [None, None])
-        return t
+from deckparser.importers.dessem.out.pdo_base_oper import pdo_base_oper
 
 class pdo_operacao(pdo_base_oper):
     def __init__(self):
-        super().__init__()
+        super().__init__('pdo_operacao')
         self.addBlockType('interval')
-    
-    def getTableSet(self):
-        return {'1': OperTableDef.balHidr(),
-                 '2': OperTableDef.vazoes(),
-                 '2B': OperTableDef.bomb(),
-                 '3': OperTableDef.gerHidr(),
-                 '4': TableDef.gerTerm(),
-                 '5a': TableDef.intercambioEnergetico(),
-                 '5b': TableDef.intercambioEletrico(),
-                 '6': TableDef.gerItaipu(),
-                 '7': TableDef.energiaContratada(),
-                 '8a': TableDef.balancoEnergetico(),
-                 '8b': TableDef.balancoEletrico(),
-                 '9': OperTableDef.custos(),
-                 '10': OperTableDef.cortesAtivos()}
-    
+
     def checkOpenBlock_interval(self, line):
         dtrex = '(\d{2})\/(\d{2})\/(\d{4}) - (\d{2})\:(\d{2})'
         rex = 'PERIODO:\s*(\d*)  -  '+dtrex+' a '+dtrex
