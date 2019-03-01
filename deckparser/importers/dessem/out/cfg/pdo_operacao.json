@@ -42,7 +42,7 @@
             "c": 38,
             "cf": 47,
             "unit": "hm3",
-			"desc": "Volume Incremental"
+			"desc": "Volume Afluente Incremental"
          },
          {
             "name": "volMontV",
@@ -161,7 +161,7 @@
             "c": 22,
             "cf": 30,
             "unit": "m3/s",
-			"desc": "Vazão Incremental"
+			"desc": "Vazão Afluente Incremental"
          },
          {
             "name": "vazMontV",
@@ -326,7 +326,7 @@
             "c": 47,
             "cf": 56,
             "unit": "MW",
-			"desc": "Reserva de Potência"
+			"desc": "Reserva de Potência Hidrelétrica"
          },
          {
             "name": "gerMax",
@@ -334,7 +334,7 @@
             "c": 56,
             "cf": 65,
             "unit": "MW",
-			"desc": "Geração Máxima"
+			"desc": "Geração Hidrelétrica Máxima"
          },
          {
             "name": "vt",
@@ -345,7 +345,7 @@
 			"desc": "VT"
          },
          {
-            "name": "valorAgua",
+            "name": "valorGH",
             "type": "real",
             "c": 74,
             "cf": 83,

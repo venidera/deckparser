@@ -131,17 +131,19 @@ class DessemSource(object):
                 return d
     
     def printIndex(self):
-        print('\nAvailable cases\n')
+        itm = self.listIndex()
+        for d,r in itm:
+            rd = 'Com rede' if r else 'Sem rede'
+            print(d.strftime('%d/%b/%Y') + ', ' + rd)
+    
+    def listIndex(self):
         itm = []
         for d in self.dias:
             for r in self.dias[d]:
                 itm.append((d,r))
         itm.sort()
-        for i in itm:
-            (d, r) = i
-            rd = 'Com rede' if r else 'Sem rede'
-            print(d.strftime('%d/%b/%Y') + ', ' + rd)
-
+        return itm
+    
     def extractAllFiles(self,dia,r):
         try:
             d = self.dias[dia][r]
