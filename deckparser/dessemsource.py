@@ -131,6 +131,7 @@ class DessemSource(object):
                 return d
     
     def printIndex(self):
+        print('\nAvailable cases\n')
         itm = self.listIndex()
         for d,r in itm:
             rd = 'Com rede' if r else 'Sem rede'
@@ -145,18 +146,27 @@ class DessemSource(object):
         return itm
     
     def extractAllFiles(self,dia,r):
+        fList = self.dias[dia][r]['filelist'].keys()
+        return self.extractFiles(dia, r, fList)
+    
+    def extractFiles(self,dia,r,fileList):
         try:
             d = self.dias[dia][r]
             if d['zip'] is None:
                 self.openDia(dia, r)
-            for f in d['filelist']:
-                fname = d['filelist'][f]
-                z = d['zip']
-                z.extract(fname, d['tmpdir'])
+            for f in fileList:
+                f = f.upper()
+                if f in d['filelist']:
+                    fname = d['filelist'][f]
+                    z = d['zip']
+                    z.extract(fname, d['tmpdir'])
+                else:
+                    rd = 'Com rede' if r else 'Sem rede'
+                    self.getLogger().warning('Absent file %s, case: %s %s', f, str(dia), rd)
             return d['tmpdir']
         except:
             rd = 'Com rede' if r else 'Sem rede'
-            self.getLogger().warning('Error unziping file %s, case: %s %s', f, str(dia), str(rd))
+            self.getLogger().warning('Error unziping file %s, case: %s %s', f, str(dia), rd)
             raise
 
     def openDia(self, dia, r):

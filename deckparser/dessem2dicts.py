@@ -71,13 +71,14 @@ def load_dessem_case(dz, d, r, file_filter=None, interval_list=None, enc=None, f
 def load_dessem_result(dz, d, r, file_filter=None, enc=None, fmt=None):
     rd = optGridToStr(r)
     getLogger().info('Loading results for date %s %s', str(d), str(rd))
+    ld = ResultLoader(None, enc)
+    ld.setFileFilter(file_filter)
     try:
-        dr = dz.extractAllFiles(d, r)
+        dr = dz.extractFiles(d, r, ld.getFileList())
     except:
         getLogger().warning('Could not open results: %s %s', str(d), str(r))
         return None
-    ld = ResultLoader(dr, enc)
-    ld.setFileFilter(file_filter)
+    ld.setDirDS(dr)
     ld.loadAll()
     if not fmt:
         return ld

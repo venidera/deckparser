@@ -20,6 +20,12 @@ class ResultLoader:
         m['pdo_sumaoper'] = pdo_sumaoper()
         self.resultLoaders = m
     
+    def setDirDS(self, dirDS):
+        self.dirDS = dirDS
+    
+    def getFileList(self):
+        return [f for f in self.resultLoaders.keys() if self.filterFile(f)]
+    
     def get(self, fileType):
         return self.resultLoaders.get(fileType)
         
