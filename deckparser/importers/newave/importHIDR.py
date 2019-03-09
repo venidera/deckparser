@@ -200,15 +200,15 @@ def importHIDR(fn):
     if HIDRcount == 601 or HIDRcount == 585:
         HIDRcount = 600
     HIDR = dict()
+    chave=1
     for reg in bdhdata:
-        chave = reg['Nome'].decode('utf-8').strip()
-        if chave != '':
+        if reg['Nome'].decode('utf-8').strip() != '':
             temp = reg.tolist()
             tdict = dict()
-            for idx in range(1, len(lsttipo)):
-                if lsttipo[idx][0] in ['Data', 'Observacao', 'Regulacao', 'Posto_BDH']:
+            for idx in range(len(lsttipo)):
+                if lsttipo[idx][0] in ['Nome', 'Data', 'Observacao', 'Regulacao', 'Posto_BDH']:
                     try:
-                        value = temp[idx].decode('utf-8')
+                        value = temp[idx].decode('utf-8').strip()
                     except Exception as e:
                         info(e)
                         value = ''
@@ -216,5 +216,6 @@ def importHIDR(fn):
                     value = temp[idx]
                 tdict[lsttipo[idx][0]] = value
             HIDR[chave] = tdict
+        chave+=1
     remove(fn)
     return HIDR, HIDRcount
