@@ -27,12 +27,18 @@ class DessemFilePattern:
         if m:
             return self.capture(m)
     
-    def realMonth(self, rv, d, m):
+    def realMonth(self, rv, d, m, y):
         if rv == 0 and d > 20:
             m = m - 1
+            if m < 1:
+                m = 12
+                y = y - 1
         elif rv > 3 and d < 10:
             m = m + 1
-        return m
+            if m > 12:
+                m = 1
+                y = y
+        return m,y
 
 class DessemFilePattern_CCEE1(DessemFilePattern):
     def __init__(self, open_results):
@@ -60,8 +66,10 @@ class DessemFilePattern_CCEE2(DessemFilePattern):
         r = True if rr.group(3) == 'COM' else False
         d = int(rr.group(5))
         m = int(rr.group(1))
+        y = int(rr.group(2))
         rv = int(rr.group(4))
-        return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
+        m,y = self.realMonth(rv, d, m, y)
+        return {'ano': y, 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
 
 class DessemFilePattern_ONS(DessemFilePattern):
     def __init__(self, open_results):
@@ -74,8 +82,11 @@ class DessemFilePattern_ONS(DessemFilePattern):
         r = True
         d = int(rr.group(4))
         m = int(rr.group(1))
+        y = int(rr.group(2))
         rv = int(rr.group(3))
-        return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
+        m,y = self.realMonth(rv, d, m, y)
+        return {'ano': y, 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
+        #return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
 
 class DessemSource(object):
     def __init__(self, fn=None, open_results=False):
