@@ -43,7 +43,7 @@ class ResultLoader:
     def loadAll(self):
         for f in self.resultLoaders:
             if self.filterFile(f):
-                self.load(f)
+                self.load(f.upper())
     
     def load(self, fk):
         fn = fk+'.dat'
