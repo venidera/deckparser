@@ -43,10 +43,10 @@ class ResultLoader:
     def loadAll(self):
         for f in self.resultLoaders:
             if self.filterFile(f):
-                self.load(f.upper())
+                self.load(f)
     
     def load(self, fk):
-        fn = fk+'.dat'
+        fn = fk.upper() + '.DAT'
         fp = os.path.join(self.dirDS, fn)
         try:
             self.resultLoaders[fk].readFile(fp)

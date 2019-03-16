@@ -66,12 +66,12 @@ class pdo_base:
         return True
     
     def openDSOFile(self, fn):
-        return open(fn, 'r')
+        return open(fn, 'r', encoding='iso-8859-1')
     
     def readFile(self, fileName):
         modo = None
         with self.openDSOFile(fileName) as f:
-            for line in f:
+            for line in f.readlines():
                 line = line.strip()
                 if self.checkHeaderLimit(line):
                     if not modo:

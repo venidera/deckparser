@@ -58,7 +58,7 @@ class pdo_base_oper:
         return ts
     
     def openFile(self, fn):
-        return open(fn, 'r')
+        return open(fn, 'r', encoding='iso-8859-1')
     
     def getTableDef(self, k):
         return self.tableSet.get(k)
