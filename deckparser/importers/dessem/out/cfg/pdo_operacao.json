@@ -318,7 +318,8 @@
             "c": 38,
             "cf": 47,
             "unit": "MW",
-			"desc": "Geração Hidrelétrica"
+			"desc": "Geração Hidrelétrica",
+			"short_desc": "geracao_hidraulica"
          },
          {
             "name": "reserv",
@@ -405,7 +406,8 @@
             "c": 32,
             "cf": 42,
             "unit": "MW",
-			"desc": "Geração Termelétrica"
+			"desc": "Geração Termelétrica",
+			"short_desc": "geracao_termica"
          },
          {
             "name": "reserv",

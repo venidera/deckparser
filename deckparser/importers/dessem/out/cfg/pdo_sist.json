@@ -46,13 +46,15 @@
          "name": "gerHidrTot",
          "type": "real",
          "unit": "MW",
-		 "desc": "Geração Hidrelétrica Total"
+		 "desc": "Geração Hidrelétrica Total",
+		 "short_desc": "geracao_hidraulica"
       },
       {
          "name": "gerTermTot",
          "type": "real",
          "unit": "MW",
-		 "desc": "Geração Termelétrica Total"
+		 "desc": "Geração Termelétrica Total",
+		 "short_desc": "geracao_termica"
       },
       {
          "name": "consumoBomb",

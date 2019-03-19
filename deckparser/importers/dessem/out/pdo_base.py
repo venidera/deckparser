@@ -10,6 +10,7 @@ class ColumnDef:
         self.type = f['type']
         self.unit = f.get('unit')
         self.desc = f.get('desc')
+        self.short_desc = f.get('short_desc')
 
 class TableDef:
     def __init__(self, fields):
