@@ -1,10 +1,11 @@
-def importCLAST(fobj,utes,nyears):
+def importCLAST(fobj, utes, nyears):
     CLAST = dict()
     ModifCLAST = dict()
     for i in utes:
         ModifCLAST[i] = list()
     secParte = 0
-    for i,v in enumerate(fobj):
+    for i, bv in enumerate(fobj):
+        v = bv.decode('utf-8')
         if secParte == 0:
             if v[0:5] == " 9999":
                 secParte = 1
@@ -19,15 +20,9 @@ def importCLAST(fobj,utes,nyears):
                     tcusto[x+1] = v[inti:intf].strip()
                     inti = intf
                     intf = intf + 8
-                #custo1 = v[30:38].strip()
-                #custo2 = v[38:46].strip()
-                #custo3 = v[46:54].strip()
-                #custo4 = v[54:62].strip()
-                #custo5 = v[62:70].strip()
-                CLAST[CodUTE] = {'nomeclasse':nomeclasse,'tipocomb':tipocomb.upper()}
-                for k,v in tcusto.iteritems():
-                    CLAST[CodUTE]['custo' + str(k)] = v
-                #'custo1':custo1,'custo2':custo2,'custo3':custo3,'custo4':custo4,'custo5':custo5}
+                CLAST[CodUTE] = {'nomeclasse': nomeclasse, 'tipocomb': tipocomb.upper()}
+                for k, cv in tcusto.items():
+                    CLAST[CodUTE]['custo' + str(k)] = cv
         else:
             if (v[0:4] != " NUM") and (v.strip() != "") and (v[0:5] != " XXXX"):
                 CodUTE = v[0:6].strip()
@@ -36,5 +31,10 @@ def importCLAST(fobj,utes,nyears):
                 anoi = v[20:25].strip()
                 mesf = v[25:29].strip()
                 anof = v[29:34].strip()
-                ModifCLAST[CodUTE].append({'custo':custo,'mesi':mesi,'anoi':anoi,'mesf':mesf,'anof':anof})
+                ModifCLAST[CodUTE].append(
+                    {'custo': custo,
+                    'mesi': mesi,
+                    'anoi': anoi,
+                    'mesf': mesf,
+                    'anof': anof})
     return CLAST, ModifCLAST
