@@ -37,25 +37,21 @@ class DecompZipped(object):
         self.fn = fn
 
     def openZip(self):
-        if zipfile.is_zipfile(self.fn):
-            self.z = zipfile.ZipFile(self.fn, 'r')
-            real_path = os.path.realpath(self.fn)
-            self.dirname = os.path.dirname(real_path)
-            self.zipfilename = real_path.split("/")[-1]
-            self.filename = self.zipfilename.split(".")[-2]
-            self.fhash = str(hasher())
-            for fn in self.z.namelist():
-                sem = re.search(re.escape(self.filename)+"\-sem([1234]).zip",fn)
-                if sem:
-                    self.sem[int(sem.group(1))] = {
-                        'filename': fn,
-                        'zip': None,
-                        'tmpdir': None,
-                        'filelist': dict()
-                    }
-                        
-        else:
-            info(self.fn + " is not a zip file")
+        self.z = zipfile.ZipFile(self.fn, 'r')
+        real_path = os.path.realpath(self.fn)
+        self.dirname = os.path.dirname(real_path)
+        self.zipfilename = real_path.split("/")[-1]
+        self.filename = self.zipfilename.split(".")[-2]
+        self.fhash = str(hasher())
+        for fn in self.z.namelist():
+            sem = re.search(re.escape(self.filename)+"\-sem([1234]).zip",fn)
+            if sem:
+                self.sem[int(sem.group(1))] = {
+                    'filename': fn,
+                    'zip': None,
+                    'tmpdir': None,
+                    'filelist': dict()
+                }
 
     def numSemanas(self):
         return len(self.sem)

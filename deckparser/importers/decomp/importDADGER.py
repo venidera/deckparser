@@ -3,9 +3,9 @@ from logging import info,debug
 def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
-        'UH': [], 'CT': [], 'UE': [], 'DP': [], 'PQ': [], 'IT': [], 'IA': [],
-        'MP': [], 'VE': [], 'VM': [], 'DF': [], 'TI': [], 'MT': [], 'VI': [],
-        'RE': dict(), 'AC': []
+        'UH': dict(), 'CT': [], 'UE': [], 'DP': [], 'PQ': [], 'IT': [], 'IA': [],
+        'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': [],
+        'RE': dict(), 'AC': dict()
     }
 
     lineNum = 0
@@ -22,8 +22,10 @@ def importDADGER(data, reg=None):
             continue
        
         try:
-            if id == "UH":
-                DADGER["UH"].append(importUH(line))
+            if id == "TE":
+                DADGER["TE"] = line[4:84].strip()
+            elif id == "UH":
+                importUH(line,DADGER["UH"])
             elif id == "CT":
                 DADGER["CT"].append(importCT(line))
             elif id == "UE":
@@ -41,7 +43,7 @@ def importDADGER(data, reg=None):
             elif id == "DT":
                 DADGER["DT"] = importDT(line)
             elif id == "MP" or id == "VE" or id == "VM" or id == "DF" or id == "TI":
-                DADGER[id].append(importMPVEVMDFTI(id, line))
+                importMPVEVMDFTI(line, id, DADGER[id])
             elif id == "MT":
                 DADGER["MT"].append(importMT(line))
             elif id == "VI":
@@ -57,7 +59,7 @@ def importDADGER(data, reg=None):
             elif id == "FI":
                 importFI(line,DADGER["RE"])
             elif id == "AC":
-                DADGER['AC'].append(importAC(line))
+                importAC(line,DADGER['AC'])
         except ValueError as e:
             info(str(e)+" linha: "+str(lineNum))
             
@@ -69,9 +71,8 @@ def importDADGER(data, reg=None):
 
 
    
-def importUH(line):
-    return {
-        'CodUhe': int(line[4:7].strip()),
+def importUH(line, UH):
+    UH[int(line[4:7].strip())] = {
         'VolIni': float(line[14:24].strip())
     }
 
@@ -82,7 +83,7 @@ def importCT(line):
         'GtMin': [float(line[29:34].strip()),
                   float(line[49:54].strip()),
                   float(line[69:74].strip())],
-        'PotEf': [float(line[34:39].strip()),
+        'PotEfe': [float(line[34:39].strip()),
                   float(line[54:59].strip()),
                   float(line[74:79].strip())],
         'Custo': [float(line[39:49].strip()),
@@ -177,9 +178,9 @@ def importDT(line):
         "Dia": int(line[4:6].strip())
     }
 
-def importMPVEVMDFTI(id,line):
+def importMPVEVMDFTI(line,id,obj):
+    codUhe = int(line[4:7].strip())
     Reg = {
-        "CodUhe": int(line[4:7].strip()),
         "Unidade": "m3/s",
         "Valores": []
     }
@@ -197,7 +198,7 @@ def importMPVEVMDFTI(id,line):
         Reg["Valores"].append(float(Valor))
         i += 1
 
-    return Reg
+    obj[codUhe] = Reg
 
 def importMT(line):
     MT = {
@@ -286,40 +287,48 @@ def importFI(line, RE):
         "Valor": float(line[24:34].strip())
     })
 
-def importAC(line):
-    AC = {
-        "CodUhe": int(line[4:7].strip()),
+def importAC(line, AC):
+    codUhe = int(line[4:7].strip())
+    reg = {
         "Mnemonico": line[9:15].strip(),
         "Mes": line[69:72].strip()
     }
 
-    estagio = line[74:75].strip()
-    if estagio != "":
-        AC["Estagio"] = int(estagio)
+    try:
+        reg["Estagio"] = int(line[74:75].strip())
+    except Exception as e:
+        pass
+    
+    try:
+        reg["Ano"] = int(line[76:80].strip())
+    except Exception as e:
+        pass
 
 
-    if AC["Mnemonico"] == "NOMEUH":
-        AC["Valor"] = line[19:31].strip()
-    if AC["Mnemonico"] == "NUMPOS" or AC["Mnemonico"] == "NUMJUS" or \
-       AC["Mnemonico"] == "NUMCON" or AC["Mnemonico"] == "VERTJU" or \
-       AC["Mnemonico"] == "VAZMIN" or AC["Mnemonico"] == "NUMBAS" or \
-       AC["Mnemonico"] == "TIPTUR" or AC["Mnemonico"] == "TIPERH" or \
-       AC["Mnemonico"] == "JUSENA":
-        AC["Valor"] = int(line[19:24].strip())
-    elif AC["Mnemonico"] == "DESVIO" or AC["Mnemonico"] == "POTEFE" or \
-         AC["Mnemonico"] == "ALTEFE" or AC["Mnemonico"] == "NCHAVE":
-        AC["Indice"] = int(line[19:24].strip())
-        AC["Valor"] = float(line[24:34].strip())
-    elif AC["Mnemonico"] == "VOLMIN" or AC["Mnemonico"] == "VOLMAX" or \
-         AC["Mnemonico"] == "PROESP" or AC["Mnemonico"] == "PERHID" or \
-         AC["Mnemonico"] == "JUSMED":
-        AC["Valor"] = float(line[19:29].strip())
-    elif AC["Mnemonico"] == "COTVOL" or AC["Mnemonico"] == "COTARE":
-        AC["Indice"] = int(line[19:24].strip())
-        AC["Valor"] = float(line[24:39].strip())
-    elif AC["Mnemonico"] == "COFEVA" or AC["Mnemonico"] == "NUMMAQ" or \
-         AC["Mnemonico"] == "VAZEFE":
-        AC["Indice"] = int(line[19:24].strip())
-        AC["Valor"] = int(line[24:29].strip())
+    if reg["Mnemonico"] == "NOMEUH":
+        reg["Valor"] = line[19:31].strip()
+    if reg["Mnemonico"] == "NUMPOS" or reg["Mnemonico"] == "NUMJUS" or \
+       reg["Mnemonico"] == "NUMCON" or reg["Mnemonico"] == "VERTJU" or \
+       reg["Mnemonico"] == "VAZMIN" or reg["Mnemonico"] == "NUMBAS" or \
+       reg["Mnemonico"] == "TIPTUR" or reg["Mnemonico"] == "TIPERH" or \
+       reg["Mnemonico"] == "JUSENA":
+        reg["Valor"] = int(line[19:24].strip())
+    elif reg["Mnemonico"] == "DESVIO" or reg["Mnemonico"] == "POTEFE" or \
+         reg["Mnemonico"] == "ALTEFE" or reg["Mnemonico"] == "NCHAVE":
+        reg["Indice"] = int(line[19:24].strip())
+        reg["Valor"] = float(line[24:34].strip())
+    elif reg["Mnemonico"] == "VOLMIN" or reg["Mnemonico"] == "VOLMAX" or \
+         reg["Mnemonico"] == "PROESP" or reg["Mnemonico"] == "PERHID" or \
+         reg["Mnemonico"] == "JUSMED":
+        reg["Valor"] = float(line[19:29].strip())
+    elif reg["Mnemonico"] == "COTVOL" or reg["Mnemonico"] == "COTARE":
+        reg["Indice"] = int(line[19:24].strip())
+        reg["Valor"] = float(line[24:39].strip())
+    elif reg["Mnemonico"] == "COFEVA" or reg["Mnemonico"] == "NUMMAQ" or \
+         reg["Mnemonico"] == "VAZEFE":
+        reg["Indice"] = int(line[19:24].strip())
+        reg["Valor"] = int(line[24:29].strip())
 
-    return AC
+    if codUhe not in AC:
+        AC[codUhe] = []
+    AC[codUhe].append(reg)
