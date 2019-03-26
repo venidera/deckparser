@@ -27,12 +27,18 @@ class DessemFilePattern:
         if m:
             return self.capture(m)
     
-    def realMonth(self, rv, d, m):
+    def realMonth(self, rv, d, m, y):
         if rv == 0 and d > 20:
             m = m - 1
+            if m < 1:
+                m = 12
+                y = y - 1
         elif rv > 3 and d < 10:
             m = m + 1
-        return m
+            if m > 12:
+                m = 1
+                y = y
+        return m,y
 
 class DessemFilePattern_CCEE1(DessemFilePattern):
     def __init__(self, open_results):
@@ -60,8 +66,10 @@ class DessemFilePattern_CCEE2(DessemFilePattern):
         r = True if rr.group(3) == 'COM' else False
         d = int(rr.group(5))
         m = int(rr.group(1))
+        y = int(rr.group(2))
         rv = int(rr.group(4))
-        return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
+        m,y = self.realMonth(rv, d, m, y)
+        return {'ano': y, 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
 
 class DessemFilePattern_ONS(DessemFilePattern):
     def __init__(self, open_results):
@@ -74,8 +82,11 @@ class DessemFilePattern_ONS(DessemFilePattern):
         r = True
         d = int(rr.group(4))
         m = int(rr.group(1))
+        y = int(rr.group(2))
         rv = int(rr.group(3))
-        return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
+        m,y = self.realMonth(rv, d, m, y)
+        return {'ano': y, 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
+        #return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
 
 class DessemSource(object):
     def __init__(self, fn=None, open_results=False):
@@ -131,6 +142,7 @@ class DessemSource(object):
                 return d
     
     def printIndex(self):
+        print('\nAvailable cases\n')
         itm = self.listIndex()
         for d,r in itm:
             rd = 'Com rede' if r else 'Sem rede'
@@ -145,18 +157,27 @@ class DessemSource(object):
         return itm
     
     def extractAllFiles(self,dia,r):
+        fList = self.dias[dia][r]['filelist'].keys()
+        return self.extractFiles(dia, r, fList)
+    
+    def extractFiles(self,dia,r,fileList):
         try:
             d = self.dias[dia][r]
             if d['zip'] is None:
                 self.openDia(dia, r)
-            for f in d['filelist']:
-                fname = d['filelist'][f]
-                z = d['zip']
-                z.extract(fname, d['tmpdir'])
+            for f in fileList:
+                f = f.upper()
+                if f in d['filelist']:
+                    fname = d['filelist'][f]
+                    z = d['zip']
+                    z.extract(fname, d['tmpdir'])
+                else:
+                    rd = 'Com rede' if r else 'Sem rede'
+                    self.getLogger().warning('Absent file %s, case: %s %s', f, str(dia), rd)
             return d['tmpdir']
         except:
             rd = 'Com rede' if r else 'Sem rede'
-            self.getLogger().warning('Error unziping file %s, case: %s %s', f, str(dia), str(rd))
+            self.getLogger().warning('Error unziping file %s, case: %s %s', f, str(dia), rd)
             raise
 
     def openDia(self, dia, r):

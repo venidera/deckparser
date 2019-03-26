@@ -12,6 +12,7 @@ class ColumnDef:
         self.name = f['name']
         self.unit = f.get('unit')
         self.desc = f.get('desc')
+        self.short_desc = f.get('short_desc')
 
 class TableDef:
     def __init__(self, name, fields):
@@ -58,7 +59,7 @@ class pdo_base_oper:
         return ts
     
     def openFile(self, fn):
-        return open(fn, 'r')
+        return open(fn, 'r', encoding='iso-8859-1')
     
     def getTableDef(self, k):
         return self.tableSet.get(k)
