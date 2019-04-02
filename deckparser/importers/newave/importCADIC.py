@@ -32,7 +32,7 @@ def importCADIC(fdata, dger):
             elif len(ano) == 4 and ano in str(dger['yph']):
                 # Lendo os valores
                 lvals = fdata[liner][7:].split()
-                if int(ano) == dger['yi']:
+                if int(ano) == dger['yi'] and dger['mi']>1 and len(lvals)==12:
                     valores = lvals[dger['mi'] - 1:]
                 else:
                     valores = lvals
