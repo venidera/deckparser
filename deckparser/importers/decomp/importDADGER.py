@@ -3,7 +3,7 @@ from logging import info,debug
 def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
-        'UH': dict(), 'CT': [], 'UE': [], 'DP': dict(), 'PQ': [], 'IT': dict(), 'IA': [],
+        'UH': dict(), 'CT': [], 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': [],
         'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': [],
         'RE': dict(), 'AC': dict()
     }
@@ -33,7 +33,7 @@ def importDADGER(data, reg=None):
             elif id == "DP":
                 importDP(line,DADGER["DP"])
             elif id == "PQ":
-                DADGER["PQ"].append(importPQ(line))
+                importPQ(line,DADGER["PQ"])
             elif id == "IT":
                 importIT(line,NumPatamares,DADGER["IT"])
             elif id == "IA":
@@ -129,14 +129,22 @@ def importDP(line, DP):
     if len(mercado)>0:
         DP[estagio][codSubsistema]['MMED'] = mercado
 
-def importPQ(line):
-    return {
-        'CodSubsistema': int(line[14:16].strip()),
-        'Estagio': int(line[19:21].strip()),
+def importPQ(line, PQ):
+    estagio = int(line[19:21].strip())
+    codSubsistema = int(line[14:16].strip())
+    
+    if estagio not in PQ:
+        PQ[estagio] = dict()
+
+    if codSubsistema not in PQ[estagio]:        
+        PQ[estagio][codSubsistema] = list()
+        
+    PQ[estagio][codSubsistema].append({
+        'Nome': line[4:14].strip(),
         'Valor': [float(line[24:29].strip()),
                   float(line[29:34].strip()),
                   float(line[34:39].strip())]
-    }
+    })
 
 def importIT(line,numPatamares,IT):
     estagio = int(line[4:6].strip())
