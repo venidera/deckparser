@@ -151,7 +151,6 @@ class Loader:
             return
         
         dsf = self.dsFileMap[fileType]
-        dsf.clearData()
         fullPath = os.path.join(self.dirDS, dsFileName)
         for enc in self.getEncoding():
             try:
@@ -160,6 +159,7 @@ class Loader:
                 lg.info('Loading file: %s (%s, encoding=%s)', dsFileName, fileType, (enc if enc else 'default'))
                 if self.file_filter:
                     dsf.setRecFilter(self.file_filter[fileType])
+                dsf.clearData()
                 dsf.readDSFile(fullPath)
                 lg.info('File loaded successfully: %s', dsFileName)
                 break
