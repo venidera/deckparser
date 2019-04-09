@@ -3,7 +3,7 @@ from logging import info,debug
 def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
-        'UH': dict(), 'CT': [], 'UE': [], 'DP': [], 'PQ': [], 'IT': [], 'IA': [],
+        'UH': dict(), 'CT': [], 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': [],
         'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': [],
         'RE': dict(), 'AC': dict()
     }
@@ -31,11 +31,11 @@ def importDADGER(data, reg=None):
             elif id == "UE":
                 DADGER["UE"].append(importUE(line))
             elif id == "DP":
-                DADGER["DP"].append(importDP(line))
+                importDP(line,DADGER["DP"])
             elif id == "PQ":
-                DADGER["PQ"].append(importPQ(line))
+                importPQ(line,DADGER["PQ"])
             elif id == "IT":
-                DADGER["IT"].append(importIT(line,NumPatamares))
+                importIT(line,NumPatamares,DADGER["IT"])
             elif id == "IA":
                 DADGER["IA"].append(importIA(line,NumPatamares))
             elif id == "TX":
@@ -103,53 +103,61 @@ def importUE(line):
     }
 
 
-def importDP(line):
-    DP = {
-        'Estagio': int(line[4:6].strip()),
-        'CodSubsistema': int(line[9:11].strip()),
+def importDP(line, DP):
+    estagio = int(line[4:6].strip())
+    codSubsistema = int(line[9:11].strip())
+    
+    if estagio not in DP:
+        DP[estagio] = dict()
+    
+    DP[estagio][codSubsistema] = {
         'NumPatamares': int(line[14:15].strip()),
         'Duracao': []
     }
-    
+
     mercado = []
-    
-    for patamar in range(1,DP['NumPatamares']+1):
+    for patamar in range(1,DP[estagio][codSubsistema]['NumPatamares']+1):
         startPos = patamar*20-1
         carga = line[startPos:startPos+10].strip()
         if carga != "":
             carga = float(carga)
             mercado.append(carga)
 
-        DP['Duracao'].append(float(line[startPos+10:startPos+20].strip()))
+        DP[estagio][codSubsistema]['Duracao'].append(float(line[startPos+10:startPos+20].strip()))
         #    DuracaoTotal += Duracao[Patamar-1];
 
     if len(mercado)>0:
-        DP['MMED'] = mercado
+        DP[estagio][codSubsistema]['MMED'] = mercado
 
-    return DP
+def importPQ(line, PQ):
+    estagio = int(line[19:21].strip())
+    codSubsistema = int(line[14:16].strip())
+    
+    if estagio not in PQ:
+        PQ[estagio] = dict()
 
-def importPQ(line):
-    return {
-        'CodSubsistema': int(line[14:16].strip()),
-        'Estagio': int(line[19:21].strip()),
+    if codSubsistema not in PQ[estagio]:        
+        PQ[estagio][codSubsistema] = list()
+        
+    PQ[estagio][codSubsistema].append({
+        'Nome': line[4:14].strip(),
         'Valor': [float(line[24:29].strip()),
                   float(line[29:34].strip()),
                   float(line[34:39].strip())]
-    }
+    })
 
-def importIT(line,numPatamares):
-    IT = {
-        'Estagio': int(line[4:6].strip()),
+def importIT(line,numPatamares,IT):
+    estagio = int(line[4:6].strip())
+    IT[estagio] = {
         'GerIt50': [],
         'Mande': []
     }
     for patamar in range(1,numPatamares+1):
-        gerItInit = patamar*10
-        mandeInit = patamar*10
-        IT['GerIt50'].append(float(line[gerItInit:gerItInit+5].strip()))
-        IT['Mande'].append(float(line[mandeInit:mandeInit+5].strip()))
+        gerItInit = 10+patamar*10
+        mandeInit = 15+patamar*10
+        IT[estagio]['GerIt50'].append(float(line[gerItInit:gerItInit+5].strip()))
+        IT[estagio]['Mande'].append(float(line[mandeInit:mandeInit+5].strip()))
         
-    return IT
         
 def importIA(line,numPatamares):
     IA = {
