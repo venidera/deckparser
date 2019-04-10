@@ -102,8 +102,13 @@ class Loader:
     
     ''' Carrega o indice de arquivos do DESSEM '''
     def loadIndex(self):
-        self.loadDessem('dessem.arq')
+        self.loadDessem(self.getFileName('dessem.arq'))
         self.loadEletIndex()
+    
+    def getFileName(self, fn):
+        for f in os.listdir(self.dirDS):
+            if f.lower() == fn.lower():
+                return f
     
     ''' Carrega o indice de arquivos dos dados eletricos '''
     def loadEletIndex(self):
