@@ -45,7 +45,7 @@
 			<validate value="LIM" />
 		</field>
 		<field c="15" cf="19" name="idRestr" type="int" />
-		<field c="21" cf="22" name="diaIni" type="d" />
+		<field c="21" cf="22" name="diaIni" special="I" type="d" />
 		<field c="24" cf="25" name="horaIni" type="h" />
 		<field c="27" name="meiaHoraIni" type="bin" />
 		<field c="29" cf="30" name="diaFim" special="F" type="d" />
@@ -67,10 +67,10 @@
 			<validate value="VAR" />
 		</field>
 		<field c="15" cf="19" name="idRestr" type="int" />
-		<field c="20" cf="21" name="diaIni" type="d" />
+		<field c="20" cf="21" name="diaIni" special="I" type="d" />
 		<field c="23" cf="24" name="horaIni" type="h" />
 		<field c="26" name="meiaHoraIni" type="bin" />
-		<field c="28" cf="29" name="diaFim" type="d" />
+		<field c="28" cf="29" name="diaFim" special="F" type="d" />
 		<field c="31" cf="32" name="horaFim" type="h" />
 		<field c="34" name="meiaHoraFim" type="bin" />
 		<field c="38" cf="47" default="9999999999"

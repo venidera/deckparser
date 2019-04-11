@@ -4,7 +4,7 @@
 			<validate value="RP" />
 		</field>
 		<field c="5" cf="7" name="idArea" type="int" />
-		<field c="10" cf="11" name="diaIni" type="d" />
+		<field c="10" cf="11" name="diaIni" special="I" type="d" />
 		<field c="13" cf="14" name="horaIni" type="h" />
 		<field c="16" name="meiaHoraIni" type="bin" />
 		<field c="18" cf="19" name="diaFim" special="F" type="d" />
@@ -17,7 +17,7 @@
 			<validate value="LM" />
 		</field>
 		<field c="5" cf="7" name="idArea" type="int" />
-		<field c="10" cf="11" name="diaIni" type="d" />
+		<field c="10" cf="11" name="diaIni" special="I" type="d" />
 		<field c="13" cf="14" name="horaIni" type="h" />
 		<field c="16" name="meiaHoraIni" type="bin" />
 		<field c="18" cf="19" name="diaFim" special="F" type="d" />
@@ -34,7 +34,7 @@
 		<field c="13" name="tipoElem" type="string">
 			<validate list="H;T;S" />
 		</field>
-		<field c="15" cf="16" name="diaIni" type="d" />
+		<field c="15" cf="16" name="diaIni" special="I" type="d" />
 		<field c="18" cf="19" name="horaIni" type="h" />
 		<field c="21" name="meiaHoraIni" type="bin" />
 		<field c="23" cf="24" name="diaFim" special="F" type="d" />

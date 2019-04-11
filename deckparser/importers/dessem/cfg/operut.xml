@@ -13,7 +13,7 @@
 		<field c="1" cf="3" name="idUsina" type="int" />
 		<field c="5" cf="16" name="nomeUsina" type="string" />
 		<field c="18" cf="19" name="idUnidade" type="int" />
-		<field c="21" cf="22" name="diaIni" type="d" />
+		<field c="21" cf="22" name="diaIni" special="I" type="d" />
 		<field c="24" cf="25" name="horaIni" type="h" />
 		<field c="27" name="meiaHoraIni" type="bin" />
 		<field c="29" cf="30" name="diaFim" special="F" type="d" />

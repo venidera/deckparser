@@ -19,7 +19,7 @@
 		<field c="20" name="tipoVazao" type="int">
 			<validate range="1;3" />
 		</field>
-		<field c="25" cf="26" name="diaIni" type="d" />
+		<field c="25" cf="26" name="diaIni" special="I" type="d" />
 		<field c="28" cf="29" default="0" name="horaIni" type="h" />
 		<field c="31" default="0" name="meiaHoraIni" type="bin" />
 		<field c="33" cf="34" name="diaFim" special="F" type="d" />
