@@ -168,7 +168,7 @@ class Loader:
                 dsf.readDSFile(fullPath)
                 lg.info('File loaded successfully: %s', dsFileName)
                 break
-            except:
+            except UnicodeDecodeError:
                 lg.info('Exception caught, retrying loading file', exc_info=True)
         else:
             lg.error('Failed loading file: %s', fileType)
