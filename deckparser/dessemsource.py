@@ -121,9 +121,9 @@ class DessemSource(object):
         fList = self.getFileNameList()
         for fn in fList:
             if not fp.matchFileName(fn):
-                self.getLogger().info('File ignored: %s', fn)
+                self.getLogger().debug('File ignored: %s', fn)
                 continue
-            self.getLogger().info('File indexed: %s', fn)
+            self.getLogger().debug('File indexed: %s', fn)
             ps = fp.decodeFileName(fn)
             d = date(ps['ano'], ps['mes'], ps['dia'])
             r = ps['rede']

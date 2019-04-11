@@ -35,7 +35,7 @@ class Loader:
     
     ''' Inicializa as instancias dos importers e os indices de arquivos '''
     def init(self):
-        self.getLogger().info('Loading configuration files')
+        self.getLogger().debug('Loading configuration files')
         m = {}
         m['hidr'] = HIDR()
         m['dessem'] = dessem()

@@ -40,9 +40,7 @@
 		</field>
 		<field c="24" cf="29" name="reatancia" type="real" />
 		<field c="36" cf="40" name="tapNominal" type="real" />
-		<field c="51" cf="55" name="angDefasagem" type="real">
-			<validate min="0.0" />
-		</field>
+		<field c="51" cf="55" name="angDefasagem" type="real" />
 		<field c="61" cf="64" name="capFluxoNorm" type="real">
 			<validate min="0.0" />
 		</field>
@@ -99,9 +97,7 @@
 		<field c="6" default="0" name="codOper" type="int">
 			<validate list="0;1;2" />
 		</field>
-		<field c="8" cf="11" name="idRestr" type="int">
-			<validate range="1;999" />
-		</field>
+		<field c="8" cf="11" name="idRestr" type="int" />
 		<field c="13" cf="22" default="-9999999999" name="limInf"
 			type="real" />
 		<field c="23" cf="32" default="9999999999" name="limSup"
