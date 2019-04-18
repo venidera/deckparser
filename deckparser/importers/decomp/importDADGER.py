@@ -3,7 +3,7 @@ from logging import info,debug
 def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
-        'UH': dict(), 'CT': [], 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': [],
+        'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': [],
         'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': [],
         'RE': dict(), 'AC': dict()
     }
@@ -27,7 +27,7 @@ def importDADGER(data, reg=None):
             elif id == "UH":
                 importUH(line,DADGER["UH"])
             elif id == "CT":
-                DADGER["CT"].append(importCT(line))
+                importCT(line,DADGER["CT"])
             elif id == "UE":
                 DADGER["UE"].append(importUE(line))
             elif id == "DP":
@@ -76,10 +76,14 @@ def importUH(line, UH):
         'VolIni': float(line[14:24].strip())
     }
 
-def importCT(line):
-    return {
-        'CodUte': int(line[4:7].strip()),
-        'Estagio': int(line[24:26].strip()),
+def importCT(line, CT):
+    codUte = int(line[4:7].strip())
+    estagio = int(line[24:26].strip())
+
+    if codUte not in CT:
+        CT[codUte] = dict()
+
+    CT[codUte][estagio] = {
         'GtMin': [float(line[29:34].strip()),
                   float(line[49:54].strip()),
                   float(line[69:74].strip())],
