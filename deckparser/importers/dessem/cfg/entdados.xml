@@ -78,7 +78,7 @@
 		</field>
 		<field c="5" cf="6" name="ssA" type="string" />
 		<field c="10" cf="11" name="ssB" type="string" />
-		<field c="14" cf="15" name="diaIni" type="d" />
+		<field c="14" cf="15" name="diaIni" special="I" type="d" />
 		<field c="17" cf="18" name="horaIni" type="h" />
 		<field c="20" name="meiaHoraIni" type="bin" />
 		<field c="22" cf="23" name="diaFim" special="F" type="d" />
@@ -136,7 +136,7 @@
 		<field c="26" name="flagTipoRestr" type="int">
 			<validate list="1;2" />
 		</field>
-		<field c="28" cf="29" name="diaIni" type="d" />
+		<field c="28" cf="29" name="diaIni" special="I" type="d" />
 		<field c="31" cf="32" name="horaIni" type="h" />
 		<field c="34" name="meiaHoraIni" type="bin" />
 		<field c="36" cf="37" name="diaFim" special="F" type="d" />
@@ -194,7 +194,7 @@
 		<field c="5" cf="7" name="idPeqUsina" type="int" />
 		<field c="10" cf="19" name="nomePeqUsina" type="string" />
 		<field c="20" cf="24" name="idLocalInjecao" type="int" />
-		<field c="25" cf="26" name="diaIni" type="d" />
+		<field c="25" cf="26" name="diaIni" special="I" type="d" />
 		<field c="28" cf="29" name="horaIni" type="h" />
 		<field c="31" name="meiaHoraIni" type="bin" />
 		<field c="33" cf="34" name="diaFim" special="F" type="d" />
@@ -238,7 +238,7 @@
 			<validate value="DP" />
 		</field>
 		<field c="5" cf="6" name="idSubsistema" type="int" />
-		<field c="9" cf="10" name="diaIni" type="d" />
+		<field c="9" cf="10" name="diaIni" special="I" type="d" />
 		<field c="12" cf="13" name="horaIni" type="h" />
 		<field c="15" name="meiaHoraIni" type="bin" />
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />
@@ -254,7 +254,7 @@
 		</field>
 		<field c="4" cf="5" name="idSubsistema" type="int" />
 		<field c="7" cf="8" name="idSegmento" type="int" />
-		<field c="10" cf="11" name="diaIni" type="d" />
+		<field c="10" cf="11" name="diaIni" special="I" type="d" />
 		<field c="13" cf="14" name="horaIni" type="h" />
 		<field c="16" name="meiaHoraIni" type="bin" />
 		<field c="18" cf="19" name="diaFim" special="F" type="d" />
@@ -272,7 +272,7 @@
 			<validate value="VE" />
 		</field>
 		<field c="5" cf="7" name="idUsina" type="int" />
-		<field c="9" cf="10" name="diaIni" type="d" />
+		<field c="9" cf="10" name="diaIni" special="I" type="d" />
 		<field c="12" cf="13" name="horaIni" type="h" />
 		<field c="15" name="meiaHoraIni" type="bin" />
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />
@@ -287,7 +287,7 @@
 			<validate value="VM" />
 		</field>
 		<field c="5" cf="7" name="idUsina" type="int" />
-		<field c="9" cf="10" name="diaIni" type="d" />
+		<field c="9" cf="10" name="diaIni" special="I" type="d" />
 		<field c="12" cf="13" name="horaIni" type="h" />
 		<field c="15" name="meiaHoraIni" type="bin" />
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />
@@ -303,7 +303,7 @@
 			<validate value="DF" />
 		</field>
 		<field c="5" cf="7" name="idUsina" type="int" />
-		<field c="9" cf="10" name="diaIni" type="d" />
+		<field c="9" cf="10" name="diaIni" special="I" type="d" />
 		<field c="12" cf="13" name="horaIni" type="h" />
 		<field c="15" name="meiaHoraIni" type="bin" />
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />
@@ -335,7 +335,7 @@
 			<validate value="DA" />
 		</field>
 		<field c="5" cf="7" name="idUsina" type="int" />
-		<field c="9" cf="10" name="diaIni" type="d" />
+		<field c="9" cf="10" name="diaIni" special="I" type="d" />
 		<field c="12" cf="13" name="horaIni" type="h" />
 		<field c="15" name="meiaHoraIni" type="bin" />
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />
@@ -522,7 +522,7 @@
 		<field c="5" cf="7" name="idUsina" type="int" />
 		<field c="10" cf="11" name="idConjunto" type="int" />
 		<field c="13" cf="14" name="idUG" type="int" />
-		<field c="15" cf="16" name="diaIni" type="d" />
+		<field c="15" cf="16" name="diaIni" special="I" type="d" />
 		<field c="18" cf="19" name="horaIni" type="h" />
 		<field c="21" name="meiaHoraIni" type="bin" />
 		<field c="23" cf="24" name="diaFim" special="F" type="d" />
@@ -549,7 +549,7 @@
 			<validate value="ME" />
 		</field>
 		<field c="5" cf="7" name="idUsinaElev" type="int" />
-		<field c="9" cf="10" name="diaIni" type="d" />
+		<field c="9" cf="10" name="diaIni" special="I" type="d" />
 		<field c="12" cf="13" name="horaIni" type="h" />
 		<field c="15" name="meiaHoraIni" type="bin" />
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />

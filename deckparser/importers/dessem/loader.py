@@ -35,7 +35,7 @@ class Loader:
     
     ''' Inicializa as instancias dos importers e os indices de arquivos '''
     def init(self):
-        self.getLogger().info('Loading configuration files')
+        self.getLogger().debug('Loading configuration files')
         m = {}
         m['hidr'] = HIDR()
         m['dessem'] = dessem()
@@ -102,8 +102,13 @@ class Loader:
     
     ''' Carrega o indice de arquivos do DESSEM '''
     def loadIndex(self):
-        self.loadDessem('dessem.arq')
+        self.loadDessem(self.getFileName('dessem.arq'))
         self.loadEletIndex()
+    
+    def getFileName(self, fn):
+        for f in os.listdir(self.dirDS):
+            if f.lower() == fn.lower():
+                return f
     
     ''' Carrega o indice de arquivos dos dados eletricos '''
     def loadEletIndex(self):
@@ -151,7 +156,6 @@ class Loader:
             return
         
         dsf = self.dsFileMap[fileType]
-        dsf.clearData()
         fullPath = os.path.join(self.dirDS, dsFileName)
         for enc in self.getEncoding():
             try:
@@ -160,10 +164,11 @@ class Loader:
                 lg.info('Loading file: %s (%s, encoding=%s)', dsFileName, fileType, (enc if enc else 'default'))
                 if self.file_filter:
                     dsf.setRecFilter(self.file_filter[fileType])
+                dsf.clearData()
                 dsf.readDSFile(fullPath)
                 lg.info('File loaded successfully: %s', dsFileName)
                 break
-            except:
+            except UnicodeDecodeError:
                 lg.info('Exception caught, retrying loading file', exc_info=True)
         else:
             lg.error('Failed loading file: %s', fileType)

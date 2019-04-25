@@ -6,7 +6,7 @@
 		<field c="8" cf="13" name="tipoEntidade" type="string" />
 		<field c="15" cf="17" name="idEntidade" type="int" />
 		<field c="19" cf="24" name="variavel" type="string" />
-		<field c="26" cf="27" name="diaIni" type="d" />
+		<field c="26" cf="27" name="diaIni" special="I" type="d" />
 		<field c="29" cf="30" name="horaIni" type="h" />
 		<field c="32" name="meiaHoraIni" type="bin" />
 		<field c="34" cf="35" name="diaFim" special="F" type="d" />
