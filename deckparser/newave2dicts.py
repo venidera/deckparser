@@ -18,6 +18,7 @@ from deckparser.importers.newave.importEXPH import importEXPH
 from deckparser.importers.newave.importPATAMAR import importPATAMAR
 from deckparser.importers.newave.importCADTERM import importCADTERM
 from deckparser.importers.newave.importSHIST import importSHIST
+from deckparser.importers.newave.importREE import importREE
 from logging import info
 
 
@@ -60,6 +61,10 @@ def newave2dicts(fn):
         dd.VAZOES, dd.VAZcount, dd.vaz = importVAZOES(fn=dz.extractFile(fnp='vazoes'), hcount=dd.HIDRcount, dger=dd.DGER)
         dd.ENCHVM, dd.MOTORI = importEXPH(dz.openFileExtData(fnp='exph'))
         dd.SHISTANO = importSHIST(dz.openFileExtData(fnp='shist'))
+        try:
+            dd.REE, dd.REElabels = importREE(fobj=dz.openFile(fnp='ree')) 
+        except Exception as e:
+            info('File REE.dat not found.')
 
         # Start parse and processing data
         # Split data into data structs considering the configuration for the planning study

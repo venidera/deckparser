@@ -55,6 +55,9 @@ class NewaveDicted(object):
         self.ENCHVM = None
         self.MOTORI = None
 
+        self.REE = None
+        self.REElabels = None
+
         # Helpers
         self.nss = None
         self.sss = None
