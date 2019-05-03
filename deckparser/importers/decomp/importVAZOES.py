@@ -19,13 +19,10 @@ def importVAZOES(fn,blockSize):
         vazoes["aberturas"].append(int(vazaoData[2+i]['dado']))
         
 
-    # registro 2 - codigo das usinas consideradas
-    vazoes["prevSem"] = dict()
-    listaCodUhe = []
+    # registro 2 - postos para cada usina considerada
+    vazoes["codUhe"] = []
     for i in range(vazoes["numPostos"]):
-        codUhe = int(vazaoData[blockSize+i]['dado'])
-        listaCodUhe.append(codUhe)
-        vazoes["prevSem"][codUhe] = list()
+        vazoes["codUhe"].append(int(vazaoData[blockSize+i]['dado']))
 
 
     # registro 3 - número de semanas completas do estudo, nro de dias excluídos do estagio \
@@ -38,14 +35,15 @@ def importVAZOES(fn,blockSize):
 
     # registro 4 - probabilidades (pula)
 
-    # registro 5 - vazoes 
+    # registro 5 - vazoes para cada posto
     skip = int(vazoes["aberturas"][vazoes["numEstagios"]-1]/blockSize+1)*blockSize + 3*blockSize;
 
     pos = 0
+    vazoes["prevSem"] = []
     for estagio in range(1,vazoes["semanasCompletas"]+1):
+        vazoes["prevSem"].append([])
         for posto in range(1,blockSize+1):
-            if posto in listaCodUhe:
-                vazoes["prevSem"][posto].append(int(vazaoData[skip+pos]['dado']))
+            vazoes["prevSem"][estagio-1].append(int(vazaoData[skip+pos]['dado']))
             pos += 1
 
     return vazoes

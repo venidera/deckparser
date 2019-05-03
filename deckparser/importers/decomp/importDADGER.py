@@ -3,7 +3,7 @@ from logging import info,debug
 def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
-        'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': [],
+        'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': dict(),
         'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': [],
         'RE': dict(), 'AC': dict()
     }
@@ -37,7 +37,7 @@ def importDADGER(data, reg=None):
             elif id == "IT":
                 importIT(line,NumPatamares,DADGER["IT"])
             elif id == "IA":
-                DADGER["IA"].append(importIA(line,NumPatamares))
+                importIA(line,NumPatamares,DADGER["IA"])
             elif id == "TX":
                 DADGER["TX"] = importTX(line)
             elif id == "DT":
@@ -163,20 +163,26 @@ def importIT(line,numPatamares,IT):
         IT[estagio]['Mande'].append(float(line[mandeInit:mandeInit+5].strip()))
         
         
-def importIA(line,numPatamares):
-    IA = {
-        'Estagio': int(line[4:6].strip()),
-        'S1': line[9:11].strip(),
-        'S2': line[14:16].strip(),
-        'Valores': []
-    }
+def importIA(line,numPatamares,IA):
+    estagio = int(line[4:6].strip())
+    if estagio not in IA:
+        IA[estagio] = dict()
+    s1 = line[9:11].strip()
+    s2 = line[14:16].strip()
 
+    if s1 not in IA[estagio]:
+        IA[estagio][s1] = dict()
+
+    if s2 not in IA[estagio]:
+        IA[estagio][s2] = dict()
+
+    IA[estagio][s1][s2] = list()
+    IA[estagio][s2][s1] = list()
+        
     for patamar in range(1,numPatamares+1):
         imedInit = patamar*20-1
-        IA['Valores'].append({
-            'S1S2': int(line[imedInit:imedInit+10].strip()),
-            'S2S1': int(line[imedInit+10:imedInit+20].strip())
-        })
+        IA[estagio][s1][s2].append(int(line[imedInit:imedInit+10].strip()))
+        IA[estagio][s2][s1].append(int(line[imedInit+10:imedInit+20].strip()))
         
     return IA
 
@@ -243,7 +249,7 @@ def importRE(line,RE):
     RE[id] = {
         "EstagioIni": int(line[9:11].strip()),
         "EstagioFim": int(line[14:16].strip()),
-        "LU": [],
+        "LU": dict(),
         "FU": [],
         "FT": [],
         "FI": [],
@@ -253,10 +259,8 @@ def importRE(line,RE):
 def importLU(line,RE,numPatamares):
     id = int(line[4:7].strip())
 
-    LU = {
-        "Estagio": int(line[9:11].strip()),
-        "Valores": []
-    }
+    estagio = int(line[9:11].strip())
+    LU = list()
 
     for patamar in range(1,numPatamares+1):
         init = 14+(patamar-1)*20
@@ -270,9 +274,9 @@ def importLU(line,RE,numPatamares):
         if superior != "":
             limite["Superior"] = float(superior)
 
-        LU["Valores"].append(limite)
+        LU.append(limite)
         
-    RE[id]["LU"].append(LU)
+    RE[id]["LU"][estagio] = LU
 
 def importFU(line, RE):
     id = int(line[4:7].strip())
