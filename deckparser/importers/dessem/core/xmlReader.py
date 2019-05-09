@@ -6,13 +6,15 @@ Created on 23 de jul de 2018
 from deckparser.importers.dessem.core.dataType import parseDataType
 from deckparser.importers.dessem.core.record import record
 from deckparser.importers.dessem.core.table import table
-import deckparser.importers.dessem.cfg as cfg
 import xml.etree.ElementTree as ET
 import os
 
 class xmlReader:
+    def __init__(self, configPath):
+        self.configPath = configPath
+    
     def decodeDsFile(self, df, fileName):
-        fullPath = os.path.join(cfg.__path__[0], fileName)
+        fullPath = os.path.join(self.configPath, fileName)
         tree = ET.parse(fullPath)
         rootNode = tree.getroot()
         

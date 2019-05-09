@@ -20,15 +20,17 @@ from deckparser.importers.dessem.curvtviag import curvtviag
 from deckparser.importers.dessem.ils_tri import ils_tri
 from deckparser.importers.dessem.cotasr11 import cotasr11
 from deckparser.importers.dessem.simul import simul
+from deckparser.importers.dessem.v2.termdat import termdat as termdat_v2
 from datetime import datetime
 import os
 import logging
 
 ''' Classe responsavel por carregar os arquivos do DESSEM usando o pacote importers.'''
 class Loader:
-    def __init__(self, dirDS=None, fileEncoding=None):
+    def __init__(self, dirDS=None, fileEncoding=None, deck_version=1):
         self.dirDS = dirDS
         self.fileEncoding = fileEncoding
+        self.deck_version = deck_version
         self.init()
         if dirDS:
             self.loadIndex()
@@ -37,6 +39,7 @@ class Loader:
     def init(self):
         self.getLogger().debug('Loading configuration files')
         m = {}
+        v = self.deck_version
         m['hidr'] = HIDR()
         m['dessem'] = dessem()
         m['desselet'] = desselet()
@@ -44,7 +47,6 @@ class Loader:
         m['operuh'] = operuh()
         m['dadvaz'] = dadvaz()
         m['deflant'] = deflant()
-        m['termdat'] = termdat()
         m['operut'] = operut()
         m['ptoper'] = ptoper()
         m['areacont'] = areacont()
@@ -53,6 +55,13 @@ class Loader:
         m['curvtviag'] = curvtviag()
         m['ils_tri'] = ils_tri()
         m['cotasr11'] = cotasr11()
+        
+        if v == 1:
+            m['termdat'] = termdat()
+        elif v == 2:
+            m['termdat'] = termdat_v2()
+        else:
+            raise ValueError('Invalid deck version '+str(v))
         
         self.dsFileMap = m
         self.index = {}

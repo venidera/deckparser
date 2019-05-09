@@ -4,6 +4,7 @@ Created on 12 de jul de 2018
 @author: Renan
 '''
 from deckparser.importers.dessem.core.xmlReader import xmlReader
+import deckparser.importers.dessem.cfg as cfg
 
 class dsFile:
     def __init__(self):
@@ -66,8 +67,11 @@ class dsFile:
             ds[k] = t.toDict(df)
         return ds
     
+    def getConfigPath(self):
+        return cfg.__path__[0]
+    
     def loadConfig(self, fileName):
-        xmlReader().decodeDsFile(self, fileName)
+        xmlReader(self.getConfigPath()).decodeDsFile(self, fileName)
         
     def addRec(self, name, r):
         self.records[name] = r

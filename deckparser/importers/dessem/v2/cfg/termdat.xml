@@ -1,0 +1,64 @@
+<dsFile name="termdat">
+	<record name="Campo">
+		<field c="1" cf="8" name="nomeCampo" type="string" />
+	</record>
+	<table name="CADUSIT">
+		<field c="1" cf="7" name="nomeCampo" type="string">
+			<validate value="CADUSIT" />
+		</field>
+		<field c="9" cf="11" name="idUsina" type="int" />
+		<field c="13" cf="24" name="nomeUsina" type="string" />
+		<field c="26" cf="27" name="idSubsistema" type="int" />
+		<field c="29" cf="32" name="anoIni" type="a" />
+		<field c="34" cf="35" name="mesIni" type="m" />
+		<field c="37" cf="38" name="diaIni" type="d" />
+		<field c="40" cf="41" name="horaIni" type="h" />
+		<field c="43" default="0" name="meiaHoraIni" type="bin" />
+		<field c="46" cf="48" name="numUG" type="int">
+			<validate min="0" />
+		</field>
+	</table>
+	<table name="CADUNIDT">
+		<field c="1" cf="8" name="nomeCampo" type="string">
+			<validate value="CADUNIDT" />
+		</field>
+		<field c="10" cf="12" name="idUsina" type="int" />
+		<field c="13" cf="15" name="idUG" type="int" />
+		<field c="17" cf="20" name="anoIni" type="a" />
+		<field c="22" cf="23" name="mesIni" type="m" />
+		<field c="25" cf="26" name="diaIni" type="d" />
+		<field c="28" cf="29" name="horaIni" type="h" />
+		<field c="31" default="0" name="meiaHoraIni" type="bin" />
+		<field c="34" cf="43" name="capacidade" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="45" cf="54" name="gerMin" type="real" />
+		<field c="56" cf="60" name="tempoMinON" type="int" />
+		<field c="62" cf="66" name="tempoMinOFF" type="int" />
+		<field c="68" cf="77" name="custoLiga" type="real" />
+		<field c="90" cf="99" name="custoDesliga" type="real" />
+		<field c="101" cf="110" name="rampaUP" type="real" />
+		<field c="112" cf="121" name="rampaDOWN" type="real" />
+		<field c="123" name="flagRestrGeracao" type="bin" default="0" />
+		<field c="125" cf="126" name="maxOscilacoes" type="int" />
+		<field c="128" cf="130" name="flagUndEquiv" type="int" default="0">
+			<validate list="0;1;2" />
+		</field>
+	</table>
+	<table name="CADCONF">
+		<field c="1" cf="7" name="nomeCampo" type="string">
+			<validate value="CADCONF" />
+		</field>
+		<field c="9" cf="11" name="idUsina" type="int" />
+		<field c="13" cf="15" name="idUndEquiv" type="int" />
+		<field c="17" cf="19" name="idUG" type="int" />
+	</table>
+	<table name="CADMIN">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="CADMIN" />
+		</field>
+		<field c="9" cf="11" name="idUsina" type="int" />
+		<field c="13" cf="15" name="idUndEquiv" type="int" />
+		<field c="17" cf="19" name="numUgMin" type="int" />
+	</table>
+</dsFile>
