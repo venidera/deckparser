@@ -55,7 +55,7 @@ def importSISTEMA(fdata,dger):
             #if fdata[line][0:2] == '  ' and fdata[line].strip() != '':
             if fdata[line].strip() != '' and int(fdata[line].split()[0]) < 1900:
                 IORI = fdata[line].split()[0]
-                IDES = fdata[line].split()[-1]
+                IDES = fdata[line].split()[1]
                 limites = list()
                 limites = [ 0 for i in range(dger['ni']) ]
             #elif fdata[line][0:4].strip() != '' and int(fdata[line][0:4].strip()) in dger['yph']:
