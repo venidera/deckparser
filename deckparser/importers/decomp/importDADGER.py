@@ -4,7 +4,7 @@ def importDADGER(data, reg=None):
     NumPatamares = 3
     DADGER = {
         'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': dict(),
-        'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': [],
+        'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': dict(),
         'RE': dict(), 'AC': dict()
     }
 
@@ -47,7 +47,7 @@ def importDADGER(data, reg=None):
             elif id == "MT":
                 DADGER["MT"].append(importMT(line))
             elif id == "VI":
-                DADGER["VI"].append(importVI(line))
+                importVI(line,DADGER["VI"])
             elif id == "RE":
                 importRE(line,DADGER["RE"])
             elif id == "LU":
@@ -233,16 +233,15 @@ def importMT(line):
         i+=1
     return MT
             
-def importVI(line):
-    VI = {
-        "CodUhe": int(line[4:7].strip()),
+def importVI(line,VI):
+    codUhe = int(line[4:7].strip())
+    VI[codUhe] = {
         "Duracao": int(line[9:12].strip()),
         "VazDef": []
     }
 
     for i in range(0,5):
-        VI["VazDef"].append(float(line[14+i*5:14+i*5+5].strip()))
-    return VI
+        VI[codUhe]["VazDef"].append(float(line[14+i*5:14+i*5+5].strip()))
 
 def importRE(line,RE):
     id = int(line[4:7].strip())

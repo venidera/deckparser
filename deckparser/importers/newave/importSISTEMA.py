@@ -28,21 +28,23 @@ def importSISTEMA(fdata,dger):
     SISTEMA['deficit'] = odict()
     for i in SISTEMA['sss'].keys():
         if SISTEMA['sss'][i]['fict'] == 0:
-            SISTEMA['deficit'][i] = odict()
+            SISTEMA['deficit'][int(i)] = odict()
     strsearch = searchInList(fdata,'CUSTO DO DEFICIT')
     if strsearch['line']:
-        lineref = int(strsearch['line'] + 3)
-        for line in range(lineref,lineref+ SISTEMA['npdef']):
+        line = int(strsearch['line'] + 3)
+        while fdata[line][0:4].strip() != '999':
             ssis = int(fdata[line][0:3].strip())
-            defpat1 = fdata[line][19:27].strip()
-            defpat2 = fdata[line][27:35].strip()
-            defpat3 = fdata[line][35:43].strip()
-            defpat4 = fdata[line][43:51].strip()
-            pucortepat1 = fdata[line][51:57].strip()
-            pucortepat2 = fdata[line][57:63].strip()
-            pucortepat3 = fdata[line][63:69].strip()
-            pucortepat4 = fdata[line][69:75].strip()
-            SISTEMA['deficit'][ssis] = {'defpat1':defpat1,'defpat2':defpat2,'defpat3':defpat3,'defpat4':defpat4,'pucortepat1':pucortepat1,'pucortepat2':pucortepat2,'pucortepat3':pucortepat3,'pucortepat4':pucortepat4}
+            if SISTEMA['sss'][str(ssis)]['fict'] == 0:
+                defpat1 = fdata[line][19:27].strip()
+                defpat2 = fdata[line][27:35].strip()
+                defpat3 = fdata[line][35:43].strip()
+                defpat4 = fdata[line][43:51].strip()
+                pucortepat1 = fdata[line][51:57].strip()
+                pucortepat2 = fdata[line][57:63].strip()
+                pucortepat3 = fdata[line][63:69].strip()
+                pucortepat4 = fdata[line][69:75].strip()
+                SISTEMA['deficit'][ssis] = {'defpat1':defpat1,'defpat2':defpat2,'defpat3':defpat3,'defpat4':defpat4,'pucortepat1':pucortepat1,'pucortepat2':pucortepat2,'pucortepat3':pucortepat3,'pucortepat4':pucortepat4}
+            line += 1
     # Ler limites de intercambio
     SISTEMA['liminter'] = list()
     strsearch = searchInList(fdata,'LIMITES DE INTERCAMBIO')
