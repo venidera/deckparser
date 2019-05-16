@@ -1,9 +1,7 @@
 
 
-def importMODIF(fobj, uhes):
+def importMODIF(fobj):
     MODIF = dict()
-    for i in uhes:
-        MODIF[i] = list()
     CodUHE = ''
     for i, rv in enumerate(fobj):
         v = rv.decode('utf-8')
@@ -34,5 +32,7 @@ def importMODIF(fobj, uhes):
             else:
                 # NUMMAQ, POTEFE, COTAREA, VOLCOTA
                 modif = ' '.join([x.strip() for x in cols[1:]])
+            if CodUHE not in MODIF:
+                MODIF[CodUHE] = list()
             MODIF[CodUHE].append({'tipo': tipo, 'modif': modif, 'mes': mes, 'ano': ano, 'indice': indice})
     return MODIF

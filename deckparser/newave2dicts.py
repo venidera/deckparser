@@ -54,7 +54,7 @@ def newave2dicts(fn):
             try:
                 fobj = dz.openFile(fnp=modiff)
                 if fobj:
-                    dd.MODIF = importMODIF(fobj=fobj, uhes=dd.CONFHD.keys())
+                    dd.MODIF = importMODIF(fobj=fobj)
             except Exception as e:
                 info('File {} not found.'.format(modiff))
         dd.DSVAGUA = importDSVAGUA(dz.openFileExtData(fnp='dsvagua'), uhes=dd.CONFHD.keys(), dger=dd.DGER)
