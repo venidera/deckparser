@@ -5,7 +5,7 @@ def importDADGER(data, reg=None):
     DADGER = {
         'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': dict(),
         'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': dict(),
-        'RE': dict(), 'AC': dict()
+        'RE': dict(), 'AC': dict(), 'TE': ''
     }
 
     lineNum = 0
