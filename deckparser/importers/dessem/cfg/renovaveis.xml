@@ -1,0 +1,26 @@
+<dsFile name="renovaveis">
+	<table name="EOLICA">
+		<field c="1" cf="6" name="nomeCampo" type="string" />
+		<field c="9" cf="13" name="idRenovavel" type="int" />
+		<field c="16" cf="27" name="nomeRenovavel" type="string" />
+		<field c="30" cf="39" name="potMax" type="real" />
+		<field c="42" cf="44" name="fatCap" type="real" />
+		<field c="47" cf="56" name="constrOff" type="bool" />
+	</table>
+	<table name="EOLICASUBM">
+		<field c="1" cf="10" name="nomeCampo" type="string" />
+		<field c="13" cf="17" name="idRenovavel" type="int" />
+		<field c="20" cf="21" name="siglaSubsistema" type="string" />
+	</table>
+	<table name="EOLICA-GERACAO">
+		<field c="1" cf="14" name="nomeCampo" type="string" />
+		<field c="17" cf="21" name="idRenovavel" type="int" />
+		<field c="24" cf="25" name="diaIni" special="I" type="d" />
+		<field c="28" cf="29" name="horaIni" type="h" />
+		<field c="32" name="meiaHoraIni" type="bin" />
+		<field c="35" cf="36" name="diaFim" special="F" type="d" />
+		<field c="39" cf="40" name="horaFim" type="h" />
+		<field c="43" name="meiaHoraFim" type="bin" />
+		<field c="46" cf="55" name="geracao" type="real" />
+	</table>
+</dsFile>

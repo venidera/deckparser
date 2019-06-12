@@ -20,6 +20,7 @@ from deckparser.importers.dessem.curvtviag import curvtviag
 from deckparser.importers.dessem.ils_tri import ils_tri
 from deckparser.importers.dessem.cotasr11 import cotasr11
 from deckparser.importers.dessem.simul import simul
+from deckparser.importers.dessem.renovaveis import renovaveis
 from deckparser.importers.dessem.v2.termdat import termdat as termdat_v2
 from datetime import datetime
 import os
@@ -55,6 +56,7 @@ class Loader:
         m['curvtviag'] = curvtviag()
         m['ils_tri'] = ils_tri()
         m['cotasr11'] = cotasr11()
+        m['renovaveis'] = renovaveis()
         
         if v == 1:
             m['termdat'] = termdat()
@@ -66,7 +68,7 @@ class Loader:
         self.dsFileMap = m
         self.index = {}
         self.indexMap = {'entdados': 'dadger', 'dadvaz': 'vazoes', 'hidr': 'cadusih', 
-                         'termdat': 'cadterm', 'desselet': 'indelet'}
+                         'termdat': 'cadterm', 'desselet': 'indelet', 'renovaveis': 'eolica'}
         
         self.eletIndex = {'base': {}, 'modif': {}}
         self.eletData = {'base': {}, 'modif': {}}
