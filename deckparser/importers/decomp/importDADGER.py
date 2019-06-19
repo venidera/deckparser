@@ -1,11 +1,12 @@
 from logging import info,debug
 
 def importDADGER(data, reg=None):
-    NumPatamares = 3
+    numPatamares = 3
     DADGER = {
-        'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(), 'IT': dict(), 'IA': dict(),
-        'MP': dict(), 'VE': dict(), 'VM': dict(), 'DF': dict(), 'TI': dict(), 'MT': [], 'VI': dict(),
-        'RE': dict(), 'AC': dict(), 'TE': ''
+        'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(),
+        'IT': dict(), 'IA': dict(), 'MP': dict(), 'VE': dict(), 'VM': dict(),
+        'DF': dict(), 'TI': dict(), 'MT': [], 'VI': dict(), 'RE': dict(),
+        'AC': dict(), 'TE': '', 'HQ': dict()
     }
 
     lineNum = 0
@@ -35,9 +36,9 @@ def importDADGER(data, reg=None):
             elif id == "PQ":
                 importPQ(line,DADGER["PQ"])
             elif id == "IT":
-                importIT(line,NumPatamares,DADGER["IT"])
+                importIT(line,numPatamares,DADGER["IT"])
             elif id == "IA":
-                importIA(line,NumPatamares,DADGER["IA"])
+                importIA(line,numPatamares,DADGER["IA"])
             elif id == "TX":
                 DADGER["TX"] = importTX(line)
             elif id == "DT":
@@ -51,7 +52,7 @@ def importDADGER(data, reg=None):
             elif id == "RE":
                 importRE(line,DADGER["RE"])
             elif id == "LU":
-                importLU(line,DADGER["RE"],NumPatamares)
+                importLU(line,DADGER["RE"],numPatamares)
             elif id == "FU":
                 importFU(line,DADGER["RE"])
             elif id == "FT":
@@ -60,6 +61,12 @@ def importDADGER(data, reg=None):
                 importFI(line,DADGER["RE"])
             elif id == "AC":
                 importAC(line,DADGER['AC'])
+            elif id == "HQ":
+                importHQ(line,DADGER["HQ"])
+            elif id == "LQ":
+                importLQ(line,DADGER["HQ"],numPatamares)
+            elif id == "CQ":
+                importCQ(line,DADGER["HQ"])
         except ValueError as e:
             info(str(e)+" linha: "+str(lineNum))
             
@@ -244,7 +251,7 @@ def importVI(line,VI):
         VI[codUhe]["VazDef"].append(float(line[14+i*5:14+i*5+5].strip()))
 
 def importRE(line,RE):
-    id = int(line[4:7].strip())
+    id = int(line[4:8].strip())
     RE[id] = {
         "EstagioIni": int(line[9:11].strip()),
         "EstagioFim": int(line[14:16].strip()),
@@ -256,19 +263,19 @@ def importRE(line,RE):
     }
 
 def importLU(line,RE,numPatamares):
-    id = int(line[4:7].strip())
+    id = int(line[4:8].strip())
 
     estagio = int(line[9:11].strip())
     LU = list()
 
-    for patamar in range(1,numPatamares+1):
-        init = 14+(patamar-1)*20
+    for patamar in range(numPatamares):
+        init = 14+patamar*20
         inferior =  line[init:init+10].strip()
         limite = {}
         if inferior != "":
             limite["Inferior"] = float(inferior)
 
-        init = 24+(patamar-1)*20
+        init = 24+patamar*20
         superior = line[init:init+10].strip()
         if superior != "":
             limite["Superior"] = float(superior)
@@ -278,7 +285,7 @@ def importLU(line,RE,numPatamares):
     RE[id]["LU"][estagio] = LU
 
 def importFU(line, RE):
-    id = int(line[4:7].strip())
+    id = int(line[4:8].strip())
     RE[id]["FU"].append({
         "Estagio": int(line[9:11].strip()),
         "CodUhe": int(line[14:17].strip()),
@@ -286,7 +293,7 @@ def importFU(line, RE):
     })
 
 def importFT(line, RE):
-    id = int(line[4:7].strip())
+    id = int(line[4:8].strip())
     RE[id]["FT"].append({
         "Estagio": int(line[9:11].strip()),
         "CodUte": int(line[14:17].strip()),
@@ -294,7 +301,7 @@ def importFT(line, RE):
     })
 
 def importFI(line, RE):
-    id = int(line[4:7].strip())
+    id = int(line[4:8].strip())
     RE[id]["FI"].append({
         "Estagio": int(line[9:11].strip()),
         "SSOrigem": line[14:16].strip(),
@@ -347,3 +354,44 @@ def importAC(line, AC):
     if codUhe not in AC:
         AC[codUhe] = []
     AC[codUhe].append(reg)
+
+
+def importHQ(line,HQ):
+    id = int(line[4:7].strip())
+    HQ[id] = {
+        "EstagioIni": int(line[9:11].strip()),
+        "EstagioFim": int(line[14:16].strip()),
+        "LQ": dict(),
+        "CQ": dict()
+    }
+
+def importLQ(line,HQ,numPatamares):
+    id = int(line[4:7].strip())
+    estagio = int(line[9:11].strip())
+    LQ = list()
+
+    for patamar in range(numPatamares):
+        init = 14+patamar*20
+        inferior =  line[init:init+10].strip()
+        limite = {}
+        if inferior != "":
+            limite["Inferior"] = float(inferior)
+
+        init = 24+patamar*20
+        superior = line[init:init+10].strip()
+        if superior != "":
+            limite["Superior"] = float(superior)
+
+        LQ.append(limite)
+        
+    HQ[id]["LQ"][estagio] = LQ
+    
+    
+def importCQ(line,HQ):
+    id = int(line[4:7].strip())
+    estagio = int(line[9:11].strip())
+    HQ[id]['CQ'][estagio] = {
+        'codUhe': int(line[14:17].strip()),
+        'coef': float(line[19:29].strip()),
+        'tipo': line[34:38].strip()
+    }
