@@ -362,12 +362,12 @@
 			"desc": "Altura de Queda"
          },
          {
-            "name": "produtib",
+            "name": "produtividade",
             "type": "real",
             "c": 90,
             "cf": 99,
             "unit": "MW/(m3/s)",
-			"desc": "Produtibilidade média"
+			"desc": "Produtividade média"
          }
       ]
    },
