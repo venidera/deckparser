@@ -8,7 +8,8 @@ O importador consiste numa biblioteca que realiza a extração dos dados
 contidos em um deck DESSEM e os converte para objetos na linguagem
 Python, que podem ser utilizados para submissão como entrada em
 modelos de simulação e otimização, e também podem ser exportados para
-formatos mais amigáveis ou transacionais.
+formatos mais amigáveis ou transacionais. Também é possível realizar a 
+leitura dos resultados do modelo DESSEM.
 
 Neste documento estaremos utilizando o conjunto de decks DESSEM CCEE
 [*DES_201805.zip*](https://www.ccee.org.br/ccee/documentos/CCEE_640604)
@@ -33,81 +34,83 @@ abaixo:
 > Uma alternativa é usar o comando `python dessem2json`.
 
 ```
-$ dessem2json 
---------------------------------------------------
-Conversor do deck de dados do DESSEM para formato JSON
---------------------------------------------------
-- Sintaxe
->>>> dessem2json [list_files | list_records <arquivo> | list_cases] <deck-file-path> [dia [rede [arquivo [registro [intervalo de tempo]]]]]
+$ dessem2json -h
+usage: dessem2json [-h] [-list_files] [-list_records dsfile] [-file ZIP_FILE]
+                   [-list_cases] [-load_results] [-days d [d ...]]
+                   [-grid_option {on,off,all}] [-ds_files rec [rec ...]]
+                   [-ds_records rec [rec ...]] [-grid_intervals t [t ...]]
+                   [-outfile f]
 
-Comando list_files: lista os tipos de arquivos disponíveis para leitura
-Comando list_records <arquivo>: lista os registros para o tipo de arquivo dado
-Comando list_cases <deck-file-path>: lista os decks (casos) disponíveis no arquivo fonrnecido
+DESSEM deck files importer
 
-Dia (int):  dia do mes correspondente ao caso
-Rede (bool): opcao de caso com rede elétrica (True) ou sem rede (False)
-Arquivo (string): tipo de arquivo a ser lido (use o comando list_files para conhecer)
-Registro (string): registro a ser exportado (use o comando list_records <arquivo> para conhecer)
-Intervalo de tempo (int): índice do intervalo de tempo que deve ser lido (executa a leitura do arquivo desselet para conhecer)
-
-- Para qualquer das opções acima pode-se ser fornecida uma lista (não usar espaços), exemplo
->>>> dessem2json <deck-file-path> [2,3] [True,False] [entdados,operuh] [UH,ELEM]
-- Na ausencia do parâmetro ou utilizando a opção all, todos os elementos encontrados sao exportados, exemplo
->>>> dessem2json <deck-file-path> 2 all [entdados]
-
---------------------------------------------------
-Arquivos disponíveis para leitura
---------------------------------------------------
-- Arquivos de índice
->>>> dessem, desselet
-- Arquivo com dados gerais do caso
->>>> entdados
-- Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis
->>>> hidr, operuh, dadvaz, curvtviag, cotasr11, ils_tri
-- Arquivos com dados para simulação
->>>> simul, deflant
-- Arquivos com dados sobre área de controle e reserva de potência
->>>> areacont, respot
-- Arquivos com dados da rede elétrica
->>>> eletbase, eletmodif
-- Arquivos com dados das usinas termelétricas
->>>> termdat, operut, ptoper
-- Outros arquivos
->>>> infofcf, tolperd
-
+optional arguments:
+  -h, --help            show this help message and exit
+  -list_files           List file that can be read
+  -list_records dsfile  List records that can be read from the file type
+                        "dsfile"
+  -file ZIP_FILE        File containing DESSEM cases (decks)
+  -list_cases           List cases contained in the given file
+  -load_results         Load DESSEM results from the given file
+  -days d [d ...]       Read only cases with dates corresponding to days
+                        (default: all)
+  -grid_option {on,off,all}
+                        Read only cases containing grid data (on) or not (off)
+                        (default: all)
+  -ds_files rec [rec ...]
+                        File types to be read (default: all)
+  -ds_records rec [rec ...]
+                        Records to be read (default: all)
+  -grid_intervals t [t ...]
+                        Grid data time intervals to be read (default: all)
+  -outfile f            File to save imported data
 --------------------------------------------------
 Exemplos
 --------------------------------------------------
 - Lista de arquivos que podem ser lidos
->>>> dessem2json list_files
+>>>> dessem2json -list_files
 - Lista de registros que podem ser lidos de um dado arquivo
->>>> dessem2json list_records arquivo
+>>>> dessem2json -list_records arquivo
 - Lista de casos contidos no arquivo
->>>> dessem2json DES_201805.zip list_cases
+>>>> dessem2json -list_cases -file DES_201805.zip
 - Exportação de todos os decks contidos no arquivo fornecido
->>>> dessem2json DES_201805.zip
+>>>> dessem2json -file DES_201805.zip
 - Exportação dos decks com data 02/05/2018
->>>> dessem2json DES_201805.zip 2
+>>>> dessem2json -file DES_201805.zip -days 2
 - Exportação dos decks com datas 02/05/2018 e 05/05/2018
->>>> dessem2json DES_201805.zip [2,5]
+>>>> dessem2json -file DES_201805.zip -days 2 5
 - Exportação do deck com rede elétrica
->>>> dessem2json DES_201805.zip 2 True
+>>>> dessem2json -file DES_201805.zip -days 2 -grid_option on
 - Exportação do arquivo entdados, contido no deck especificado
->>>> dessem2json DES_201805.zip 2 True entdados
+>>>> dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files entdados
 - Exportação do registro UH do arquivo entdados
->>>> dessem2json DES_201805.zip 2 True entdados UH
+>>>> dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files entdados -ds_records UH
 - Exportação dos dados de barramentos da rede elétrica básica* para o primeiro intervalo de tempo
->>>> dessem2json DES_201805.zip 2 True eletbase DBAR 1
+>>>> dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files eletbase -ds_records DBAR -grid_intervals 1
 - Exportação dos dados de modificação de barramentos da rede elétrica básica para o primeiro intervalo de tempo
->>>> dessem2json DES_201805.zip 2 True eletmodif DBAR 1
+>>>> dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files eletmodif -ds_records DBAR -grid_intervals 1
+- Exportação de resultados
+>>>> dessem2json -file DES_201805.zip -load_results
 
 * Rede elétrica básica é aquela que não contém as modificações específicas para o intervalo de tempo dado
+--------------------------------------------------
+Arquivos disponíveis para leitura
+--------------------------------------------------
+Arquivos de índice: dessem, desselet
+Arquivo com dados gerais do caso: entdados
+Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis: hidr, operuh, dadvaz, curvtviag, cotasr11, ils_tri
+Arquivos com dados para simulação: simul, deflant
+Arquivos com dados sobre área de controle e reserva de potência: areacont, respot
+Arquivos com dados da rede elétrica: eletbase, eletmodif
+Arquivos com dados das usinas termelétricas: termdat, operut, ptoper
+Arquivos com dados outras usinas: renovaveis
+Outros arquivos: infofcf, tolperd
+Arquivos com resultados: pdo_operacao, pdo_sist, pdo_sumaoper
 ```
 
 Por exemplo, a saída para a extração do registro *UH* do arquivo *entdados*, do dia 02/05/2018 (sem rede) fica:
 
 ```
-$ dessem2json DES_201805.zip 2 False entdados UH
+$ dessem2json DES_201805.zip -days 2 -grid_option off -ds_files entdados -ds_records UH
 Loading case for date 2018-05-02 Sem Rede
 {
  "2018-05-02": {
@@ -220,6 +223,9 @@ de um arquivo específico. O conjunto de arquivos que podem ser lidos é:
 		(atualmente somente a leitura dos dados sobre a geração termelétrica antecipada 
 		está configurada);
 
+- Arquivos com dados de outras usinas:
+	- *renovaveis*: dados cadastrais de usinas e geração a partir de fontes renováveis;
+
 - Outros arquivos:
 	- *infofcf*: dados sobre a função de custo futuro do DECOMP;
 	- *tolperd*: dados sobre a tolerência para convergência do valor das perdas elétricas;
@@ -227,6 +233,13 @@ de um arquivo específico. O conjunto de arquivos que podem ser lidos é:
 - Arquivos cuja leitura não está implementada (codificados):
 	- *mlt*: dados sobre média de longo termo das vazões naturais afluentes;
 	- *mapcut*: dados sobre a função de custo futuro do DECOMP;
+
+- Pacote *out*: cotém os módulos que realizam a leitura dos arquivos com resultados, sendo
+possível a leitura dos seguintes arquivos:
+	- *pdo_operacao*: conjunto de resultados da solução obtida com o modelo DESSEM, 
+	fornecidas para cada intervalo de tempo;
+	- *pdo_sist*: resultados referentes a cada subsistema, por intervalo de tempo;
+	- *pdo_sumaoper*: resultados agregados por dia e por semana;
 
 O módulo *util* contém alguns métodos destinados a realizar testes.
 O módulo *teste* contém exemplos de testes. 
@@ -237,7 +250,7 @@ A importação dos dados em objetos do tipo `dict` é realizada utilizando o mé
 *desssem2dicts*, a sintaxe deste é método é a seguinte:
 ```python
 >>>> from deckparser.dessem2dicts import dessem2dicts
->>>> dc = desssem2dicts(fn, dia, rd, [file_filter, [interval_list]])
+>>>> dc = desssem2dicts(fn, dia, rd, [file_filter, interval_list, file_encoding, load_results])
 ```
 
 Onde:
@@ -265,6 +278,9 @@ seja feita a leitura dos arquivos do tipo *eletbase* deve-se notar que o resulta
 fornecido com os índices correspondentes a cada caso base selecionado, por exemplo, 
 os índices [1,2] podem corresponder ao mesmo caso base de índice 1 
 
+- `file_encoding`: especifica a codificação para leitura dos arquivos (`str` ou `list(str)`)
+- `load_results`: determina que devem ser lidos os arquivos de saída, resultados do modelo DESSEM
+
 O arquivo (compactado) fornecido deve conter arquivos também compactados (casos), 
 cada um destes contendo os arquivos do deck. Cada caso deve possuir nome conforme o 
 padrão:
@@ -291,6 +307,10 @@ Onde:
 - `r`: é a revisão do PMO;
 
 - `COM` (`SEM`): indica se o caso considera (ou não) a rede elétrica.
+
+Quando a opção de leitura dos arquivos de saída está ativa, são lidos os
+arquivos com nome em padrão semelhante, porém iniciados com o prefixo
+`Resultado_`.
 
 O resultado da leitura é o um objeto `dict` com a seguinte estrutura:
 ```

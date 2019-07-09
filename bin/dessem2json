@@ -1,47 +1,109 @@
-import sys,logging,json
+import os,logging,json
+from argparse import ArgumentParser
+from io import UnsupportedOperation
 from deckparser.dessem2dicts import dessem2dicts
 from deckparser.importers.dessem.loader import Loader
 from deckparser.dessemsource import dessem_source
+from deckparser.importers.dessem.out.result_loader import ResultLoader
+
+class CustomArgParser(ArgumentParser):
+    def print_help(self, *args):
+        super().print_help(*args)
+        print_sample()
+        files_desc()
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
-    dia,rede = None,None
-    arq,rec = None,None
-    itv = None
-    args = sys.argv
-    n = len(args)
-    try:
-        if n == 1:
-            usage()
-            return True
-        if n > 1:
-            if args[1] == 'list_files':
-                list_files()
-                return True
-        if n > 2:
-            if args[1] == 'list_records':
-                f = args[2]
-                list_records(f)
-                return True
-            if args[1] == 'list_cases':
-                fn = args[2]
-                list_cases(fn)
-                return True
-            dia = parse_int_arr(args[2])
-        if n > 3: rede = parse_bool_arr(args[3])
-        if n > 4: arq = parse_str_arr(args[4])
-        if n > 5: rec = parse_str_arr(args[5])
-        if n > 6: itv = parse_int_arr(args[6])
-    except ValueError as error:
-        logging.info(error)
-        usage()
+    
+    parser = init_argument_parser()
+    args = parser.parse_args()
+    if not validate_args(args):
+        parser.print_help()
+        return False
+    
+    elif args.list_files:
+        list_files()
+        list_result_files()
+        return True
+    elif args.list_records:
+        list_records(args.list_records[0])
+        return True
+    elif args.list_cases:
+        list_cases(args.file[0])
+        return True
+    elif args.file:
+        if not check_files_access(args):
+            return False
+        deck = dessem2dicts(fn = args.file[0],
+                            dia = args.days,
+                            rd = compose_grid_option(args),
+                            file_filter = compose_filter(args.load_results, args.ds_files, args.ds_records),
+                            interval_list = args.grid_intervals,
+                            load_results = args.load_results)
+        fdeck = format_data(deck)
+        
+        if args.outfile:
+            try:
+                with open(args.outfile[0], 'w') as f:
+                    json.dump(fdeck,f,indent=3)
+            except UnsupportedOperation:
+                print('Could not write to ' + args.outfile[0])
+                raise
+        else:
+            print(json.dumps(fdeck,indent=1))
+        return True
+
+def init_argument_parser():
+    parser = CustomArgParser(description='DESSEM deck files importer')
+    parser.add_argument('-list_files', action='store_true', help='List file that can be read')
+    parser.add_argument('-list_records', nargs=1, metavar='dsfile', type=str, help='List records that can be read from the file type "dsfile"')
+    parser.add_argument('-file', nargs=1, metavar='ZIP_FILE', type=str, help='File containing DESSEM cases (decks)')
+    parser.add_argument('-list_cases', action='store_true', help='List cases contained in the given file')
+    parser.add_argument('-load_results', action='store_true', help='Load DESSEM results from the given file')
+    parser.add_argument('-days', nargs='+', metavar='d', type=int, help='Read only cases with dates corresponding to days (default: all)')
+    parser.add_argument('-grid_option', nargs=1, type=str, choices=['on','off','all'], help='Read only cases containing grid data (on) or not (off) (default: all)')
+    parser.add_argument('-ds_files', nargs='+', metavar='rec', type=str, help='File types to be read (default: all)')
+    parser.add_argument('-ds_records', nargs='+', metavar='rec', type=str, help='Records to be read (default: all)')
+    parser.add_argument('-grid_intervals', nargs='+', metavar='t', type=int, help='Grid data time intervals to be read (default: all)')
+    parser.add_argument('-outfile', nargs=1, metavar='f', type=str, help='File to save imported data')
+    return parser
+
+def validate_args(args):
+    if args.list_files and args.list_records:
+        print('list_files and list_records are complementary arguments')
+        return False
+    if not args.file:
+        if any([args.list_cases, args.load_results, args.days, args.grid_option, 
+                args.ds_records, args.grid_intervals, args.outfile]):
+            print('Must provide file for reading optional arguments')
+            return False
+    return True
+
+def check_files_access(args):
+    fp = args.file[0]
+    if not os.path.exists(fp):
+        print('File doesn\'t exists ' + fp)
+        return False
+    if not os.access(fp, os.R_OK):
+        print('Cannot read from ' + fp)
+        return False
+    return True
+    
+def compose_grid_option(args):
+    if not args.grid_option:
+        return None
+    go = args.grid_option[0]
+    if go == 'on':
+        return True
+    elif go == 'off':
         return False
 
-    deck = dessem2dicts(fn=args[1],dia=dia,rd=rede,file_filter=compose_filter(arq,rec),interval_list=itv)
-    fdeck = format_data(deck)
-    print(json.dumps(fdeck,indent=1))
-
-def compose_filter(arqList, recList):
+def compose_filter(load_results, arqList, recList):
+    if load_results:
+        resFiles = ResultLoader().listFiles()
+        if not arqList:
+            return resFiles
+        return [f for f in resFiles if f in arqList]
     ft = {}
     if not arqList:
         arqList = Loader().listFiles()
@@ -67,64 +129,33 @@ def format_data(deck):
             fdeck[sd][sr] = deck[d][r]
     return fdeck
 
-def parse_int_arr(sd):
-    a = parse_str_arr(sd)
-    if not a: return None
-    return [int(d) for d in a]
-
-def parse_bool_arr(sd):
-    a = parse_str_arr(sd)
-    if not a: return None
-    return [to_bool(d) for d in a]
-
-def to_bool(s):
-    if s == 'True': return True
-    if s == 'False': return False
-    return bool(s)
-
-def usage():
-    print_header('Conversor do deck de dados do DESSEM para formato JSON')
-    __print_desc('Sintaxe', 'dessem2json [list_files | list_records <arquivo> | list_cases] <deck-file-path> [dia [rede [arquivo [registro [intervalo de tempo]]]]]')
-    print('\nComando list_files: lista os tipos de arquivos disponíveis para leitura')
-    print('Comando list_records <arquivo>: lista os registros para o tipo de arquivo dado')
-    print('Comando list_cases <deck-file-path>: lista os decks (casos) disponíveis no arquivo fonrnecido')
-    print('\nDia (int):  dia do mes correspondente ao caso')
-    print('Rede (bool): opcao de caso com rede elétrica (True) ou sem rede (False)')
-    print('Arquivo (string): tipo de arquivo a ser lido (use o comando list_files para conhecer)')
-    print('Registro (string): registro a ser exportado (use o comando list_records <arquivo> para conhecer)')
-    print('Intervalo de tempo (int): índice do intervalo de tempo que deve ser lido (executa a leitura do arquivo desselet para conhecer)')
-    print('')
-    __print_desc('Para qualquer das opções acima pode-se ser fornecida uma lista (não usar espaços), exemplo', 'dessem2json <deck-file-path> [2,3] [True,False] [entdados,operuh] [UH,ELEM]')
-    __print_desc('Na ausencia do parâmetro ou utilizando a opção "all", todos os elementos encontrados sao exportados, exemplo', 'dessem2json <deck-file-path> 2 all [entdados]')
-    print('')
-    files_desc()
-    print('')
-    print_sample()
-
 def files_desc():
     print_header('Arquivos disponíveis para leitura')
-    __print_desc('Arquivos de índice', 'dessem, desselet')
-    __print_desc('Arquivo com dados gerais do caso', 'entdados')
-    __print_desc('Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis', 'hidr, operuh, dadvaz, curvtviag, cotasr11, ils_tri')
-    __print_desc('Arquivos com dados para simulação', 'simul, deflant')
-    __print_desc('Arquivos com dados sobre área de controle e reserva de potência', 'areacont, respot')
-    __print_desc('Arquivos com dados da rede elétrica', 'eletbase, eletmodif')
-    __print_desc('Arquivos com dados das usinas termelétricas', 'termdat, operut, ptoper')
-    __print_desc('Outros arquivos', 'infofcf, tolperd')
+    print('Arquivos de índice: dessem, desselet')
+    print('Arquivo com dados gerais do caso: entdados')
+    print('Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis: hidr, operuh, dadvaz, curvtviag, cotasr11, ils_tri')
+    print('Arquivos com dados para simulação: simul, deflant')
+    print('Arquivos com dados sobre área de controle e reserva de potência: areacont, respot')
+    print('Arquivos com dados da rede elétrica: eletbase, eletmodif')
+    print('Arquivos com dados das usinas termelétricas: termdat, operut, ptoper')
+    print('Arquivos com dados outras usinas: renovaveis')
+    print('Outros arquivos: infofcf, tolperd')
+    print('Arquivos com resultados: pdo_operacao, pdo_sist, pdo_sumaoper')
 
 def print_sample():
     print_header('Exemplos')
-    __print_desc('Lista de arquivos que podem ser lidos', 'dessem2json list_files')
-    __print_desc('Lista de registros que podem ser lidos de um dado arquivo', 'dessem2json list_records arquivo')
-    __print_desc('Lista de casos contidos no arquivo', 'dessem2json list_cases DES_201805.zip')
-    __print_desc('Exportação de todos os decks contidos no arquivo fornecido', 'dessem2json DES_201805.zip')
-    __print_desc('Exportação dos decks com data 02/05/2018', 'dessem2json DES_201805.zip 2')
-    __print_desc('Exportação dos decks com datas 02/05/2018 e 05/05/2018', 'dessem2json DES_201805.zip [2,5]')
-    __print_desc('Exportação do deck com rede elétrica', 'dessem2json DES_201805.zip 2 True')
-    __print_desc('Exportação do arquivo entdados, contido no deck especificado', 'dessem2json DES_201805.zip 2 True entdados')
-    __print_desc('Exportação do registro UH do arquivo entdados', 'dessem2json DES_201805.zip 2 True entdados UH')
-    __print_desc('Exportação dos dados de barramentos da rede elétrica básica* para o primeiro intervalo de tempo', 'dessem2json DES_201805.zip 2 True eletbase DBAR 1')
-    __print_desc('Exportação dos dados de modificação de barramentos da rede elétrica básica para o primeiro intervalo de tempo', 'dessem2json DES_201805.zip 2 True eletmodif DBAR 1')
+    __print_sample('Lista de arquivos que podem ser lidos', 'dessem2json -list_files')
+    __print_sample('Lista de registros que podem ser lidos de um dado arquivo', 'dessem2json -list_records arquivo')
+    __print_sample('Lista de casos contidos no arquivo', 'dessem2json -list_cases -file DES_201805.zip')
+    __print_sample('Exportação de todos os decks contidos no arquivo fornecido', 'dessem2json -file DES_201805.zip')
+    __print_sample('Exportação dos decks com data 02/05/2018', 'dessem2json -file DES_201805.zip -days 2')
+    __print_sample('Exportação dos decks com datas 02/05/2018 e 05/05/2018', 'dessem2json -file DES_201805.zip -days 2 5')
+    __print_sample('Exportação do deck com rede elétrica', 'dessem2json -file DES_201805.zip -days 2 -grid_option on')
+    __print_sample('Exportação do arquivo entdados, contido no deck especificado', 'dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files entdados')
+    __print_sample('Exportação do registro UH do arquivo entdados', 'dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files entdados -ds_records UH')
+    __print_sample('Exportação dos dados de barramentos da rede elétrica básica* para o primeiro intervalo de tempo', 'dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files eletbase -ds_records DBAR -grid_intervals 1')
+    __print_sample('Exportação dos dados de modificação de barramentos da rede elétrica básica para o primeiro intervalo de tempo', 'dessem2json -file DES_201805.zip -days 2 -grid_option on -ds_files eletmodif -ds_records DBAR -grid_intervals 1')
+    __print_sample('Exportação de resultados', 'dessem2json -file DES_201805.zip -load_results')
     print('\n* Rede elétrica básica é aquela que não contém as modificações específicas para o intervalo de tempo dado')
     
 def print_header(h):
@@ -132,7 +163,7 @@ def print_header(h):
     print(h)
     print('-'*50)
 
-def __print_desc(header, code):
+def __print_sample(header, code):
     print('- '+header)
     print('>>>> '+code)
     
@@ -145,7 +176,14 @@ def list_files():
     lst.sort()
     for f in lst:
         print(f)
-        
+
+def list_result_files():
+    print_header('Lista de arquivos (resultado)')
+    lst = ResultLoader().listFiles()
+    lst.sort()
+    for f in lst:
+        print(f)
+
 def list_records(f):
     print_header('Lista de registros do arquivo: '+f)
     lst = Loader().listRecords(f)
@@ -154,15 +192,6 @@ def list_records(f):
     lst.sort()
     for f in lst:
         print(f)
-
-def parse_str_arr(sd):
-    if sd == 'all':
-        return None
-    
-    if sd[0]=='[' and sd[-1] == ']':
-        return [d for d in sd[1:-1].split(',')]
-    else:
-        return [sd]
 
 if __name__ == '__main__':
     main()
