@@ -1,6 +1,13 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from deckparser.importers.dessem.out.pdo_base_oper import pdo_base_oper
+
+def init_datetime(y, m, d, h, mn):
+    delta_d = 0
+    if h == 24:
+        h = 0
+        delta_d = 1
+    return datetime(y,m,d,h,mn) + timedelta(days=delta_d)
 
 class pdo_operacao(pdo_base_oper):
     def __init__(self):
@@ -14,16 +21,16 @@ class pdo_operacao(pdo_base_oper):
         if not m:
             return False
         d = int(m.group(1))
-        dts = datetime(int(m.group(4)),
-                       int(m.group(3)),
-                       int(m.group(2)),
-                       int(m.group(5)),
-                       int(m.group(6)))
-        dte = datetime(int(m.group(9)),
-                       int(m.group(8)),
-                       int(m.group(7)),
-                       int(m.group(10)),
-                       int(m.group(11)))
+        dts = init_datetime(int(m.group(4)),
+                           int(m.group(3)),
+                           int(m.group(2)),
+                           int(m.group(5)),
+                           int(m.group(6)))
+        dte = init_datetime(int(m.group(9)),
+                           int(m.group(8)),
+                           int(m.group(7)),
+                           int(m.group(10)),
+                           int(m.group(11)))
         dtf = '%Y-%m-%dT%H:%M'
         bidx = [dts.strftime(dtf), dte.strftime(dtf)]
         self.setOpenBlock('interval', d)
