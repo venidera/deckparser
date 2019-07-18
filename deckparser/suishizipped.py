@@ -1,10 +1,12 @@
 import zipfile
 import os
 from uuid import uuid4 as hasher
+# from datetime import datetime
 from logging import info
+# from os.path import realpath, dirname
 
 
-class NewaveZipped(object):
+class SuishiZipped(object):
     def __init__(self, fn=None):
         # arquivo zipado que sera aberto
         self.z = None
@@ -59,7 +61,7 @@ class NewaveZipped(object):
                     key = evfn
                 self.fns_set[key] = fn
             # Check if it is a deck
-            deckfiles = ['dger', 'sistema', 'confh']
+            deckfiles = ['caso', 'dger', 'sistema', 'confh']
             zipfiles = list(self.fns_set.keys())
             if not all([fd.upper() in str(zipfiles) for fd in deckfiles]):
                 # if not set([fd.lower() for fd in deckfiles]).issubset(set([fz.lower() for fz in zipfiles])):
@@ -84,7 +86,6 @@ class NewaveZipped(object):
                     self.openZip()
                 else:
                     raise Exception('The file opened is not a deck file and doesn\'t have a deck in its files.')
-
         else:
             info(self.fn + " is not a zip file")
 
@@ -95,6 +96,14 @@ class NewaveZipped(object):
             return f
         except Exception:
             info('Fail to open ', fnp)
+            return False
+
+    def openFileName(self, fname):
+        try:
+            f = self.z.open(fname)
+            return f
+        except Exception:
+            info('Fail to open ', fname)
             return False
 
     def openFileExtData(self, fnp):
@@ -111,8 +120,8 @@ class NewaveZipped(object):
             f.close()
             os.remove(destfile)
             return data
-        except Exception:
-            info('Fail to extract ', fnp)
+        except Exception as e:
+            info('Fail to extract {} erro: {}'.format(fnp, e.strerror))
             return False
 
     def extractFile(self, fnp):
@@ -122,6 +131,6 @@ class NewaveZipped(object):
             destfile = self.dirname + "/" + self.fhash + '_' + fname
             os.rename(self.dirname + "/" + fname, destfile)
             return destfile
-        except Exception:
-            info('Fail to extract ', fnp)
+        except Exception as e:
+            info('Fail to extract {} erro: {}'.format(fnp, e))
             return False

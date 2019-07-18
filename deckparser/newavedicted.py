@@ -1,4 +1,4 @@
-from logging import info
+# from logging import info
 
 # Chaves do MODIF Processadas:
 # VOLMIN   : ok
@@ -20,6 +20,7 @@ from logging import info
 # NUMBAS   : ok
 # VMINP    : nao tratado
 # VAZMINT  : ok
+
 
 class NewaveDicted(object):
     def __init__(self):
