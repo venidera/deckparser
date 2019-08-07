@@ -16,8 +16,16 @@ def importDGER(fobj):
             DGER['durper'] = int(line[21:26].strip())
         elif line.rfind('No. DE ANOS DO EST') != -1:
             DGER['nyears'] = int(line[21:26].strip())
+        # elif line.rfind('MES INICIO PRE-EST') != -1:
+        #     DGER['nmpre'] = int(line[21:26].strip())
         elif line.rfind('MES INICIO PRE-EST') != -1:
-            DGER['nmpre'] = int(line[21:26].strip())
+            DGER['mipre'] = int(line[21:26].strip())
+        elif line.rfind('No. DE ANOS PRE') != -1:
+            DGER['nypre'] = int(line[21:26].strip())
+        elif line.rfind('No. DE ANOS POS FINAL') != -1:
+            DGER['nyposf'] = int(line[21:26].strip())
+        elif line.rfind('No. DE ANOS POS') != -1:
+            DGER['nypos'] = int(line[21:26].strip())
         elif line.rfind('MES INICIO DO ESTUDO') != -1:
             DGER['mi'] = int(line[21:26].strip())
         elif line.rfind('ANO INICIO DO ESTUDO') != -1:
@@ -61,6 +69,7 @@ def importDGER(fobj):
             DGER['cvar'] = int(line[22:26].strip())
         elif line.rfind('TAXA DE DESCONTO') != -1:
             DGER['txdesc'] = float(line[20:26].strip())
+
     DGER['ni'] = (12 - int(DGER['mi'])+1) + (int(DGER['nyears']) - 1) * 12
     anosplan = list()
     ano_ini = DGER['yi']
