@@ -7,7 +7,7 @@ def usage():
     print('Conversor do deck de dados do DECOMP para formato JSON')
     print('Sintaxe: decomp2json <deck-file-path> [semana [registro]]')
     print('Semana: Número da semana (revisões), começando por 1')
-    print('Registros: TE, UH, CT, UE, DP, PQ, IT, IA, TX, DT, MP, VE, VM, DF, TI, MT, VI, RE, AC, HQ')
+    print('Registros: TE, UH, CT, UE, DP, PQ, IT, IA, TX, DT, MP, VE, VM, DF, TI, MT, VI, RE, AC, HQ, RELATO')
     print('Exemplos:')
     print('decomp2json DC201805.zip')
     print('decomp2json DC201805.zip 2')

@@ -135,7 +135,6 @@ def importDP(line, DP):
             mercado.append(carga)
 
         DP[estagio][codSubsistema]['Duracao'].append(float(line[startPos+10:startPos+20].strip()))
-        #    DuracaoTotal += Duracao[Patamar-1];
 
     if len(mercado)>0:
         DP[estagio][codSubsistema]['MMED'] = mercado
