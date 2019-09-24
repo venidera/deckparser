@@ -345,6 +345,10 @@ def importAC(line, AC):
     elif reg["Mnemonico"] == "COTVOL" or reg["Mnemonico"] == "COTARE":
         reg["Indice"] = int(line[19:24].strip())
         reg["Valor"] = float(line[24:39].strip())
+    elif reg["Mnemonico"] == "COTVAZ":
+        reg["Numero"] = int(line[19:24].strip())
+        reg["Indice"] = int(line[24:29].strip())
+        reg["Valor"] = float(line[29:44].strip())        
     elif reg["Mnemonico"] == "COFEVA" or reg["Mnemonico"] == "NUMMAQ" or \
          reg["Mnemonico"] == "VAZEFE":
         reg["Indice"] = int(line[19:24].strip())
