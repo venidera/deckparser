@@ -39,7 +39,7 @@ def importRELATO(data):
             'eline': 2,
             'hlines': 11,
             'rows': [ { 'name': 'No', 'parser': int },
-                      { 'name': 'Usina', 'parser': lambda val: val[:-4].strip() },
+                      { 'name': 'Usina', 'parser': lambda val: val[:-5].strip() },
                       { 'name': 'VolIni', 'parser': float },
                       { 'name': 'VolFin', 'parser': float },
                       { 'name': 'VolEsp', 'parser': float },
