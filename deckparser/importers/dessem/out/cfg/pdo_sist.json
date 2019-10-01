@@ -2,14 +2,17 @@
    "pdo_sist": [
       {
          "name": "intervalo",
+         "header": "iper",
          "type": "int"
       },
       {
          "name": "patamar",
+         "header": "pat",
          "type": "string"
       },
       {
          "name": "subSistema",
+         "header": "sist",
          "type": "string"
       },
       {
@@ -32,18 +35,28 @@
       },
       {
          "name": "gerPeq",
+         "header": "GpQusi",
          "type": "real",
          "unit": "MW",
 		 "desc": "Geração de Usinas não Simuladas"
       },
       {
          "name": "gerFixBar",
+         "header": "GfixBar",
          "type": "real",
          "unit": "MW",
 		 "desc": "Geração FixBar"
       },
       {
+         "name": "gerRenova",
+         "header": "Grenova",
+         "type": "real",
+         "unit": "MW",
+		 "desc": "Geração de Fontes Renováveis"
+      },
+      {
          "name": "gerHidrTot",
+         "header": "SomatGH",
          "type": "real",
          "unit": "MW",
 		 "desc": "Geração Hidrelétrica Total",
@@ -51,6 +64,7 @@
       },
       {
          "name": "gerTermTot",
+         "header": "SomatGT",
          "type": "real",
          "unit": "MW",
 		 "desc": "Geração Termelétrica Total",
@@ -58,24 +72,28 @@
       },
       {
          "name": "consumoBomb",
+         "header": "ConsEleva",
          "type": "real",
          "unit": "MW",
 		 "desc": "Consumo com Bombeamento"
       },
       {
          "name": "importacao",
+         "header": "Import",
          "type": "real",
          "unit": "MW",
 		 "desc": "Importação de Energia"
       },
       {
          "name": "exportacao",
+         "header": "Export",
          "type": "real",
          "unit": "MW",
 		 "desc": "Exportação de Energia"
       },
       {
          "name": "deficit",
+         "header": "CortCarg",
          "type": "real",
          "unit": "MW",
 		 "desc": "Déficit de Energia"
@@ -94,12 +112,14 @@
       },
       {
          "name": "gerTermMinTot",
+         "header": "SomaGTMin",
          "type": "real",
          "unit": "MW",
 		 "desc": "Geração Termelétrica Mínima Total"
       },
       {
          "name": "gerTermMaxTot",
+         "header": "SomatGTMax",
          "type": "real",
          "unit": "MW",
 		 "desc": "Geração Termelétrica Máxima Total"
