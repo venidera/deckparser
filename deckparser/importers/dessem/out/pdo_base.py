@@ -77,8 +77,9 @@ class pdo_base:
         rdt = self.splitLine(line)
         dt = {}
         for i in range(len(rdt)):
-            cd = self.hd_config[i]
-            dt[cd.name] = parseValue(rdt[i], cd.type)
+            cd = self.hd_config.get(i)
+            if cd:
+                dt[cd.name] = parseValue(rdt[i], cd.type)
         
         self.data.append(dt)
     
