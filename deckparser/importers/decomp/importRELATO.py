@@ -4,7 +4,7 @@ from logging import info,debug
 def importRELATO(data):
     # definicoes
     ws = '\s+'
-    estagio = '([0-9])'
+    estagioExp = '([0-9])'
     floatExp = '([-+]?[0-9]*\.?[0-9]*)'
     linhaTabela = ws+'[X\-]+'+ws
 
@@ -22,13 +22,48 @@ def importRELATO(data):
         return {
             'value': val[0],
             'pMLT': val[1]
+        }
+    
+    def parsePerdHidr(val):
+        val = val.split(' ')
+        
+        return {
+            'valor': float(val[0]),
+            'unidade': val[1]
         }        
     
     tableRefs = {
+        'REL_DADOS_CAD_HIDR': {
+            'hexp': [ws+'Relatorio'+ws+'dos'+ws+'Dados'+ws+'do'+ws+'Cadastro'+ws+'.+'+ws+'do'+ws+'estagio:'+ws+estagioExp+ws+'\(ALTCAD\)'],
+            'eline': 0,
+            'hlines': 5,
+            'rows': [ { 'name': 'Num', 'parser': int },
+                      { 'name': 'Nome'},
+                      { 'name': 'Ssis'},
+                      { 'name': 'PosVaz', 'parser': int },
+                      { 'name': 'UsiJusOpe', 'parser': int },
+                      { 'name': 'UsiDesOpe', 'parser': int },
+                      { 'name': 'UsiJusEne', 'parser': int },
+                      { 'name': 'VolumeMaximo', 'parser': float },
+                      { 'name': 'VolumeMinimo', 'parser': float },
+                      { 'name': 'VutilInic', 'parser': float },
+                      { 'name': 'PrevisOper' },
+                      { 'name': 'Pinst', 'parser': float },
+                      { 'name': 'PerdasHid', 'parser': parsePerdHidr },
+                      { 'name': 'QturMaxima', 'parser': float },
+                      { 'name': 'QdefMinima', 'parser': float },
+                      { 'name': 'VertMaximo', 'parser': float },
+                      { 'name': 'ProdutEqv', 'parser': float },
+                      { 'name': 'SomprdEqv', 'parser': float },
+                      { 'name': 'Produt65VU', 'parser': float },
+                      { 'name': 'Somprd65VU', 'parser': float },
+                      { 'name': 'TIP'} ],
+            'type': 'x_delimited'
+        },        
         'REL_OP_HIDR': {
             'hexp': ['RELATORIO'+ws+'DA'+ws+'OPERACAO',
                      ws,
-                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagio+ws+'\/'+ws+'.*',
+                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagioExp+ws+'\/'+ws+'.*',
                      ws,
                      re.escape('# Aproveitamento(s) com evaporacao'),
                      re.escape('* Aproveitamento(s) com tempo de viagem da afluencia'),
@@ -59,7 +94,7 @@ def importRELATO(data):
         'REL_BAL_HIDR': {
             'hexp': ['RELATORIO'+ws+'DO'+ws+'BALANCO'+ws+'HIDRAULICO',
                      ws,
-                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagio+ws+'\/'+ws+'.*',
+                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagioExp+ws+'\/'+ws+'.*',
                      ws,
                      linhaTabela,
                      'Usina'+ws+'Qinc'+ws+'Qafl'+ws+'Qtur'+ws+'Qver'+ws+'Qdes'+ws+'Qirr\+Qbb'+ws+'Qda'+ws+'Qret'+ws+'Qevp'+ws+'Qarm'+ws+'Montante'+ws+'Qdef'+ws+'Qdes'+ws+'Lag'+ws+'Fator'],
@@ -85,7 +120,7 @@ def importRELATO(data):
         'REL_BAL_ENER': {
             'hexp': ['RELATORIO'+ws+'DO'+ws+'BALANCO'+ws+'ENERGETICO',
                      ws,
-                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagio+ws+'\/'+ws+'.*'],
+                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagioExp+ws+'\/'+ws+'.*'],
             'eline': 2,
             'hlines': 3,
             'type': 'bal_ener'
@@ -93,19 +128,24 @@ def importRELATO(data):
         'REL_OPERACAO': {
             'hexp': ['RELATORIO'+ws+'DA'+ws+'OPERACAO',
                      ws,
-                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagio+ws+'\/'+ws+'.*',
+                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagioExp+ws+'\/'+ws+'.*',
                      ws,
                      ws,
                      'Valor'+ws+'esperado'+ws+'do'+ws+'custo'+ws+'futuro'+'.*'],
             'eline': 2,
             'hlines': 22,
             'type': 'rel_oper'
+        },
+        'FLUXO_NOS_INTERCAMBIOS': {
+            'hexp': ['FLUXO'+ws+'NOS'+ws+'INTERCAMBIOS'+ws+'.*'],
+            'hlines': 0,
+            'type': 'fluxo_int'
         }
     }
 
 
     currTable = None
-    currLimits = list()
+    currLimits = None
     estagio = None
     row = None
     l = 0
@@ -124,7 +164,7 @@ def importRELATO(data):
                     if not search:
                         found = False
                         break
-                    if search and eId==table['eline']:
+                    if search and 'eline' in table and eId==table['eline']:
                         estagio = int(search.group(1))
                 if found:
                     currTable = tableId
@@ -142,12 +182,13 @@ def importRELATO(data):
         # já encontrou tabela, importa linhas
         
         # verifica e ajusta estrutura de retorno (relato)
-        if currTable not in relato:
-            relato[currTable] = dict()
-        if estagio not in relato[currTable]:
-            relato[currTable][estagio] = list()
-            
         table = tableRefs[currTable]
+        if 'eline' in table:
+            if currTable not in relato:
+                relato[currTable] = dict()
+            if estagio not in relato[currTable]:
+                relato[currTable][estagio] = list()
+            
 
 
         # ações de leitura conforme tipo
@@ -157,6 +198,7 @@ def importRELATO(data):
             search = re.search(linhaTabela,data[l])
             if search:
                 currTable = None
+                currLimits = None
                 l +=1
                 continue
 
@@ -240,8 +282,7 @@ def importRELATO(data):
                 continue                                                           
             l += 1
             continue
-        if table['type']=='rel_oper':
-                
+        if table['type']=='rel_oper':                
             search = re.search(ws+'Custo'+ws+'marginal'+ws+'de'+ws+'operacao'+
                                ws+'do'+ws+'subsistema'+
                                ws+'(SE|S|NE|N|FC)\s*:'+
@@ -254,6 +295,60 @@ def importRELATO(data):
                 })
                 if search.group(1)=='FC':
                     currTable = None
+            l += 1
+            continue
+        
+        if table['type']=='fluxo_int':            
+            # primeira linha da tabela, define limites dos campos
+            if currLimits == None:
+                currLimits = data[l].split('X')
+                table['rows'] = list()
+                l += 1
+                continue
+
+            # segunda linha da tabela, define nome dos campos
+            if len(table['rows'])==0:
+                ini = 0
+                for f in range(len(currLimits)-2):
+                    ini += len(currLimits[f])+1
+                    fim = ini + len(currLimits[f+1])
+                    field = data[l][ini:fim].strip()
+                    table['rows'].append(field)
+                l += 1
+                continue
+
+            # linha logo antes dos dados
+            if currTable not in relato:
+                relato[currTable] = list()
+                l += 1
+                continue
+
+            # verifica se é ultima linha para finalizar
+            search = re.search(linhaTabela,data[l])
+            if search:
+                currTable = None
+                currLimits = None
+                l += 1
+                continue
+                
+            
+            # carrega linha
+            f = 0
+            ini = 0
+            row = dict()
+            for rowname in table['rows']:
+                ini += len(currLimits[f])+1
+                fim = ini + len(currLimits[f+1])
+                field = data[l][ini:fim].strip()
+                try:
+                    row[rowname] = int(field)
+                except:
+                    try:
+                        row[rowname] = float(field)
+                    except:
+                        row[rowname] = field
+                f += 1
+            relato[currTable].append(row)
             l += 1
             continue
     return relato

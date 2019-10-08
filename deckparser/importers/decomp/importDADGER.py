@@ -5,7 +5,7 @@ def importDADGER(data, reg=None):
     DADGER = {
         'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(),
         'IT': dict(), 'IA': dict(), 'MP': dict(), 'VE': dict(), 'VM': dict(),
-        'DF': dict(), 'TI': dict(), 'MT': [], 'VI': dict(), 'RE': dict(),
+        'DF': dict(), 'TI': dict(), 'MT': dict(), 'VI': dict(), 'RE': dict(),
         'AC': dict(), 'TE': '', 'HQ': dict()
     }
 
@@ -46,7 +46,7 @@ def importDADGER(data, reg=None):
             elif id == "MP" or id == "VE" or id == "VM" or id == "DF" or id == "TI":
                 importMPVEVMDFTI(line, id, DADGER[id])
             elif id == "MT":
-                DADGER["MT"].append(importMT(line))
+                importMT(line, DADGER["MT"])
             elif id == "VI":
                 importVI(line,DADGER["VI"])
             elif id == "RE":
@@ -224,20 +224,18 @@ def importMPVEVMDFTI(line,id,obj):
 
     obj[codUhe] = Reg
 
-def importMT(line):
-    MT = {
-	"CodUte": int(line[4:7].strip()),
-        "Valores": []
-    }
+def importMT(line,MT):
+    codUte = int(line[4:7].strip())
+    valores = []
 
     i = 0
     while True:
-        Valor = line[14+i*5:14+i*5+5].strip()
-        if i == 17 or Valor == "":
+        valor = line[14+i*5:14+i*5+5].strip()
+        if i == 17 or valor == "":
             break
-        MT["Valores"].append(float(Valor))
+        valores.append(float(valor))
         i+=1
-    return MT
+    MT[codUte] = valores
             
 def importVI(line,VI):
     codUhe = int(line[4:7].strip())

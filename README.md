@@ -36,7 +36,7 @@ $ pip install git+https://git@github.com/venidera/deckparser.git
 
 “Este trabalho faz parte dos projetos intitulados 'Análise de Portfólio de Usinas de Geração para Atendimento da Carga Futura do Sistema Interligado Nacional - Matriz Robusta' e 'Metodologia de Despacho Hidrotérmico Horário do Sistema Interligado Nacional', ambos financiados pela EDP no âmbito do Programa de P&D da ANEEL (PD-07267-0012/2018 e PD-07267-0011/2018).”
 
-“This research is part of the projects entitled 'Portfolio Analysis of Generation Plants to Meet Future Load of the National Interconnected System - Robust Energy Matrix' and 'Methodology of Hourly Hydrothermal Programming of the National Interconnected System', financed by EDP under the ANEEL R&D Program (PD-07267-0012/2018 ande PD-07267-0011/2018).”
+“This research is part of the projects entitled 'Portfolio Analysis of Generation Plants to Meet Future Load of the National Interconnected System - Robust Energy Matrix' and 'Methodology of Hourly Hydrothermal Programming of the National Interconnected System', financed by EDP under the ANEEL R&D Program (PD-07267-0012/2018 and PD-07267-0011/2018).”
 
 ## Time de desenvolvimento
 
