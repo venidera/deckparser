@@ -42,7 +42,7 @@ def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, out
                         dd[d][r] = dt
                 else:
                     if isinstance(d, date):
-                        getLogger().warning('Date not indexed: %s', str(d))
+                        getLogger().warning('Case not indexed: %s %s', str(d), optGridToStr(r))
                     else:
                         getLogger().warning('Invalid date object (use datetime.date): %s', str(d))
         return dd
