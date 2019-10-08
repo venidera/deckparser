@@ -6,7 +6,9 @@ import io
 
 class ColumnDef:
     def __init__(self, f):
+        self.raw = f
         self.name = f['name']
+        self.header = f.get('header')
         self.type = f['type']
         self.unit = f.get('unit')
         self.desc = f.get('desc')
@@ -24,6 +26,22 @@ class TableDef:
             if f['name'] == nm:
                 return ColumnDef(f)
     
+    def getColByHeader(self, h):
+        h = h.strip(' .')
+        for f in self.fields:
+            if self.matchHeader(f.get('header'), h) or self.matchHeader(f['name'], h):
+                return ColumnDef(f)
+    
+    def matchHeader(self, hd, h):
+        if hd is None:
+            return False
+        hd = hd.lower()
+        h = h.lower()
+        if h == hd:
+            return True
+        #if h.index(hd) == 0:
+        #    return True
+    
     def getColDef(self, i):
         return ColumnDef(self.fields[i])
 
@@ -32,6 +50,7 @@ class pdo_base:
         self.tableName = tableName
         self.tableDef = self.loadTableDef()
         self.data = []
+        self.header = []
     
     def loadTableDef(self):
         fPath = os.path.join(cfg.__path__[0], self.tableName+'.json')
@@ -41,15 +60,26 @@ class pdo_base:
         return TableDef(d[self.tableName])
     
     def readHeaderLine(self, line):
-        pass
+        hd = [h.strip() for h in self.splitLine(line)]
+        self.header.append(hd)
+    
+    def composeHeaderConfig(self):
+        self.hd_config = {}
+        for hd in self.header:
+            for i in range(len(hd)):
+                cd = self.tableDef.getColByHeader(hd[i])
+                if cd:
+                    if i in self.hd_config.keys():
+                        raise Exception('Column conflict: (field: {:s}, column1: {:s}, column2: {:s})'.format(hd[i], self.hd_config[i], cd))
+                    self.hd_config[i] = cd
     
     def readDataLine(self, line):
         rdt = self.splitLine(line)
-        td = self.tableDef
         dt = {}
-        for i in range(td.numOfCols()):
-            cd = td.getColDef(i)
-            dt[cd.name] = parseValue(rdt[i], cd.type)
+        for i in range(len(rdt)):
+            cd = self.hd_config.get(i)
+            if cd:
+                dt[cd.name] = parseValue(rdt[i], cd.type)
         
         self.data.append(dt)
     
@@ -78,6 +108,7 @@ class pdo_base:
                     if not modo:
                         modo = 'header'
                     elif modo == 'header':
+                        self.composeHeaderConfig()
                         modo = 'data'
                 elif modo == 'header':
                     self.readHeaderLine(line)
