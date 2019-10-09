@@ -60,6 +60,9 @@
 		<field c="131" cf="136" name="nivel19" type="real">
 			<validate min="0.0" />
 		</field>
+		<field c="138" cf="143" name="nivel20" type="real">
+			<validate min="0.0" />
+		</field>
 	</record>
 	<table name="Vazoes">
 		<field c="1" cf="3" name="desnivel" type="int">
@@ -122,5 +125,73 @@
 		<field c="131" cf="136" name="vazao19" type="real">
 			<validate min="0.0" />
 		</field>
+		<field c="138" cf="143" name="vazao20" type="real">
+			<validate min="0.0" />
+		</field>
 	</table>
+	<record name="VazoesMax">
+		<field c="1" cf="3" name="nomeCampo" type="string">
+			<validate value="MAX" />
+		</field>
+		<field c="5" cf="10" name="vazao1" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="12" cf="17" name="vazao2" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="19" cf="24" name="vazao3" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="26" cf="31" name="vazao4" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="33" cf="38" name="vazao5" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="40" cf="45" name="vazao6" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="47" cf="52" name="vazao7" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="54" cf="59" name="vazao8" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="61" cf="66" name="vazao9" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="68" cf="73" name="vazao10" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="75" cf="80" name="vazao11" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="82" cf="87" name="vazao12" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="89" cf="94" name="vazao13" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="96" cf="101" name="vazao14" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="103" cf="108" name="vazao15" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="110" cf="115" name="vazao16" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="117" cf="122" name="vazao17" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="124" cf="129" name="vazao18" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="131" cf="136" name="vazao19" type="real">
+			<validate min="0.0" />
+		</field>
+		<field c="138" cf="143" name="vazao20" type="real">
+			<validate min="0.0" />
+		</field>
+	</record>
 </dsFile>

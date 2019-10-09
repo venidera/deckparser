@@ -24,6 +24,9 @@ class ils_tri(dsFile):
                 if nRec == 2:
                     self.getRec('Nivel').parse(line)
                 elif nRec >= 3:
-                    self.getTable('Vazoes').parseLine(line)
+                    if len(line) > 3 and line[:3] == 'MAX':
+                        self.getRec('VazoesMax').parse(line)
+                    else:
+                        self.getTable('Vazoes').parseLine(line)
         f.close()
     
