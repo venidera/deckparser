@@ -68,7 +68,8 @@ class Loader:
         self.dsFileMap = m
         self.index = {}
         self.indexMap = {'entdados': 'dadger', 'dadvaz': 'vazoes', 'hidr': 'cadusih', 
-                         'termdat': 'cadterm', 'desselet': 'indelet', 'renovaveis': 'eolica'}
+                         'termdat': 'cadterm', 'desselet': 'indelet', 'renovaveis': 'eolica',
+                         'ils_tri': 'ilstri'}
         
         self.eletIndex = {'base': {}, 'modif': {}}
         self.eletData = {'base': {}, 'modif': {}}
