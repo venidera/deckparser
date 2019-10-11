@@ -54,7 +54,12 @@ class ResultLoader:
         try:
             self.resultLoaders[fk].readFile(fp)
         except FileNotFoundError:
-            self.getLogger().warn('Missing file: %s', str(fp))
+            self.getLogger().info('Missing file: %s (retrying lower case named)', str(fp))
+            fp_alt = os.path.join(self.dirDS, fn.lower())
+            try:
+                self.resultLoaders[fk].readFile(fp_alt)
+            except FileNotFoundError:
+                self.getLogger().warn('Missing file: %s', str(fp_alt))
     
     def getData(self, fmt=None):
         dd = {}
