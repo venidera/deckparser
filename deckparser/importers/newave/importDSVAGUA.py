@@ -14,10 +14,10 @@ def importDSVAGUA(fdata, uhes, dger):
         if ano in str(dger['yph']):
             CodUHE = fdata[cline][5:9].strip()
             # Verificar se eh linha de tipagem, se nao for vai seguir com o tipo anterior.
-            if len(fdata[cline]) > 100:
+            if len(fdata[cline]) > 102:
                 # linha de tipo
                 valores = list()
-                tipo = fdata[cline][102:119].strip()
+                tipo = fdata[cline][102:120].strip()
                 if (tipo == 'Usos_Consuntivos'):
                     txttipo = 'usocon'
                 else:
