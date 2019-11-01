@@ -48,18 +48,20 @@ class ResultLoader:
             if self.filterFile(f):
                 self.load(f)
     
+    def __get_matching_filename(self, fk):
+        for f in os.listdir(self.dirDS):
+            if f.lower() == fk.lower() + '.dat':
+                return f
+    
     def load(self, fk):
-        fn = fk.upper() + '.DAT'
+        fn = self.__get_matching_filename(fk)
+        if not fn:
+            self.getLogger().warn('Missing file: %s', str(fk))
         fp = os.path.join(self.dirDS, fn)
         try:
             self.resultLoaders[fk].readFile(fp)
         except FileNotFoundError:
-            self.getLogger().info('Missing file: %s (retrying lower case named)', str(fp))
-            fp_alt = os.path.join(self.dirDS, fn.lower())
-            try:
-                self.resultLoaders[fk].readFile(fp_alt)
-            except FileNotFoundError:
-                self.getLogger().warn('Missing file: %s', str(fp_alt))
+            self.getLogger().warn('Missing file: %s', str(fp))
     
     def getData(self, fmt=None):
         dd = {}
