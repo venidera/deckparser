@@ -57,6 +57,7 @@ class ResultLoader:
         fn = self.__get_matching_filename(fk)
         if not fn:
             self.getLogger().warn('Missing file: %s', str(fk))
+            return
         fp = os.path.join(self.dirDS, fn)
         try:
             self.resultLoaders[fk].readFile(fp)
