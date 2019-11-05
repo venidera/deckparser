@@ -15,8 +15,8 @@ def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, fi
 def getLogger():
     return logging.getLogger(__name__)
 
-def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None, load_results=False, deck_version=1):
-    dz = dessem_source(fn, load_results)
+def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None, load_results=False, deck_version=1, pmo_date=None):
+    dz = dessem_source(fn, load_results, pmo_date)
     if dz.validSource():
         rd = casesRede(rd)
         dia = casesDia(dia, dz.dias.keys())

@@ -49,9 +49,9 @@ class DessemFilePattern:
                 return None
             m,y = self.pmo_date.month, self.pmo_date.year
             if rv > 3:
-                return date(d, m, y)
+                return date(y, m, d)
             if rv == 0:
-                return date(d, m, y) - timedelta(months=1)
+                return date(y, m, d) - timedelta(months=1)
     
     def fixDate(self, rv, dt):
         d = dt.day
