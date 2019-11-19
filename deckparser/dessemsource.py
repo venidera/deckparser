@@ -5,19 +5,20 @@ Created on 2 de nov de 2018
 '''
 import zipfile, os, re, shutil
 from uuid import uuid4 as hasher
-from datetime import date
+from datetime import date, timedelta
 import logging
 
-def dessem_source(fn, open_results=False):
+def dessem_source(fn, open_results=False, pmo_date=None):
     if os.path.isdir(fn):
-        return DessemDir(fn, open_results)
+        return DessemDir(fn, open_results, pmo_date)
     if zipfile.is_zipfile(fn):
-        return DessemZipped(fn, open_results)
+        return DessemZipped(fn, open_results, pmo_date)
 
 class DessemFilePattern:
-    def __init__(self, rex, open_results):
+    def __init__(self, rex, open_results, pmo_date):
         self.fileReExpr = rex
         self.open_results = open_results
+        self.pmo_date = pmo_date
     
     def matchFileName(self, fn):
         return re.match(self.getRegex(),fn)
@@ -27,22 +28,49 @@ class DessemFilePattern:
         if m:
             return self.capture(m)
     
-    def realMonth(self, rv, d, m, y):
+    def realDate(self, rv, d, m, y):
+        dt = None
+        try:
+            dt = date(y,m,d)
+        except:
+            self.getLogger().warn('Invalid deck date: {:d}-{:d}-{:d} rv {:d}'.format(y,m,d,rv))
+            dt = self.fixInvalidDate(rv, d, m, y)
+            if not dt:
+                raise ValueError('Could not fix deck date: {:d}-{:d}-{:d} rv {:d}'.format(y,m,d,rv))
+        
+        dt_fix = self.fixDate(rv, dt)
+        if dt_fix != dt:
+            self.getLogger().warn('Fixed deck date: {:s} rv {:d} PMO {:s}, was {:s}'.format(
+                dt_fix.isoformat(), rv, self.pmo_date.strftime('%Y-%m'), dt.isoformat()))
+        return dt_fix
+    
+    def fixInvalidDate(self, rv, d, m, y):
+        if d > 28:
+            if not self.pmo_date:
+                return None
+            m,y = self.pmo_date.month, self.pmo_date.year
+            if rv > 3:
+                return date(y, m, d)
+            if rv == 0:
+                return date(y, m, d) - timedelta(months=1)
+    
+    def fixDate(self, rv, dt):
+        if not self.pmo_date:
+            return dt
+        d = dt.day
+        dt_ref = date(self.pmo_date.year, self.pmo_date.month, d)
         if rv == 0 and d > 20:
-            m = m - 1
-            if m < 1:
-                m = 12
-                y = y - 1
+            return dt_ref - timedelta(months=1)
         elif rv > 3 and d < 10:
-            m = m + 1
-            if m > 12:
-                m = 1
-                y = y
-        return m,y
+            return dt_ref + timedelta(months=1)
+        return dt_ref
+    
+    def getLogger(self):
+        return logging.getLogger(__name__)
 
 class DessemFilePattern_CCEE1(DessemFilePattern):
-    def __init__(self, open_results):
-        super().__init__("DES_CCEE_([0-9]{4})([0-9]{2})([0-9]{2})_(Sem|Com)Rede.zip", open_results)
+    def __init__(self, open_results, pmo_date):
+        super().__init__("DES_CCEE_([0-9]{4})([0-9]{2})([0-9]{2})_(Sem|Com)Rede.zip", open_results, pmo_date)
     
     def getRegex(self):
         if self.open_results:
@@ -54,8 +82,8 @@ class DessemFilePattern_CCEE1(DessemFilePattern):
         return {'ano': int(rr.group(1)), 'mes': int(rr.group(2)), 'dia': int(rr.group(3)), 'rede': r}
 
 class DessemFilePattern_CCEE2(DessemFilePattern):
-    def __init__(self, open_results):
-        super().__init__("DS_CCEE_([0-9]{2})([0-9]{4})_(SEM|COM)REDE_RV([0-9]{1})D([0-9]{2}).zip", open_results)
+    def __init__(self, open_results, pmo_date):
+        super().__init__("DS_CCEE_([0-9]{2})([0-9]{4})_(SEM|COM)REDE_RV([0-9]{1})D([0-9]{2}).zip", open_results, pmo_date)
     
     def getRegex(self):
         if self.open_results:
@@ -68,12 +96,12 @@ class DessemFilePattern_CCEE2(DessemFilePattern):
         m = int(rr.group(1))
         y = int(rr.group(2))
         rv = int(rr.group(4))
-        m,y = self.realMonth(rv, d, m, y)
-        return {'ano': y, 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
+        dt = self.realDate(rv, d, m, y)
+        return {'ano': dt.year, 'mes': dt.month, 'dia': dt.day, 'rede': r, 'rv': rv}
 
 class DessemFilePattern_ONS(DessemFilePattern):
-    def __init__(self, open_results):
-        super().__init__("DS_ONS_([0-9]{2})([0-9]{4})_RV([0-9]{1})D([0-9]{2}).zip", open_results)
+    def __init__(self, open_results, pmo_date):
+        super().__init__("DS_ONS_([0-9]{2})([0-9]{4})_RV([0-9]{1})D([0-9]{2}).zip", open_results, pmo_date)
     
     def getRegex(self):
         return self.fileReExpr
@@ -84,19 +112,24 @@ class DessemFilePattern_ONS(DessemFilePattern):
         m = int(rr.group(1))
         y = int(rr.group(2))
         rv = int(rr.group(3))
-        m,y = self.realMonth(rv, d, m, y)
-        return {'ano': y, 'mes': m, 'dia': d, 'rede': r, 'rv': rv}
-        #return {'ano': int(rr.group(2)), 'mes': self.realMonth(rv,d,m), 'dia': d, 'rede': r, 'rv': rv}
+        dt = self.realDate(rv, d, m, y)
+        return {'ano': dt.year, 'mes': dt.month, 'dia': dt.day, 'rede': r, 'rv': rv}
 
 class DessemSource(object):
-    def __init__(self, fn=None, open_results=False):
+    def __init__(self, fn=None, open_results=False, pmo_date=None):
         self.dias = dict()
         self.dirname = None
         self.fhash = None
         self.sourceValid = False
+        self.pmo_date = pmo_date
         if fn:
             self.setSource(fn)
-            for fp in self.sourceFilePatternList(open_results):
+            if not self.checkSource():
+                self.fn = None
+                return
+            if not self.pmo_date:
+                self.getLogger().warn('PMO date not provided, deck dates will not be fixed')
+            for fp in self.sourceFilePatternList(open_results, pmo_date):
                 self.scanSource(fp)
                 if len(self.dias) > 0:
                     self.sourceValid = True
@@ -114,9 +147,6 @@ class DessemSource(object):
         return self.sourceValid
     
     def scanSource(self, fp):
-        if not self.checkSource():
-            return
-        
         self.fhash = str(hasher())
         fList = self.getFileNameList()
         for fn in fList:
@@ -229,21 +259,29 @@ class DessemSource(object):
     
 class DessemZipped(DessemSource):
     
-    def sourceFilePatternList(self, open_results):
-        return [DessemFilePattern_CCEE1(open_results), 
-                DessemFilePattern_CCEE2(open_results)]
+    def sourceFilePatternList(self, open_results, pmo_date):
+        return [DessemFilePattern_CCEE1(open_results, pmo_date), 
+                DessemFilePattern_CCEE2(open_results, pmo_date)]
     
     def checkSource(self):
         if zipfile.is_zipfile(self.fn):
             self.z = zipfile.ZipFile(self.fn, 'r')
             real_path = os.path.realpath(self.fn)
             self.dirname = os.path.dirname(real_path)
-            self.zipfilename = real_path.split("/")[-1]
-            self.filename = self.zipfilename.split(".")[-2]
+            self.zipfilename = os.path.basename(real_path)
+            if not self.pmo_date:
+                self.detectPmoDate()
             return True
         else:
             self.getLogger().error('%s is not a zip file', self.fn)
             return False
+    
+    def detectPmoDate(self):
+        rex = "(DES|des)_([0-9]{4})([0-9]{2}).zip"
+        mt = re.match(rex, self.zipfilename)
+        if mt:
+            self.pmo_date = date(int(mt.group(2)), int(mt.group(3)), 1)
+            self.getLogger().info('Detected PMO date: ' + self.pmo_date.isoformat())
     
     def extractDia(self, d, tmpdir):
         fname = d['filename']
@@ -262,8 +300,8 @@ class DessemZipped(DessemSource):
 
 class DessemDir(DessemSource):
     
-    def sourceFilePatternList(self, open_results):
-        return [DessemFilePattern_ONS(open_results)]
+    def sourceFilePatternList(self, open_results, pmo_date):
+        return [DessemFilePattern_ONS(open_results, pmo_date)]
     
     def checkSource(self):
         if os.path.isdir(self.fn):
