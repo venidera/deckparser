@@ -6,7 +6,7 @@ def importDADGER(data, reg=None):
         'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(),
         'IT': dict(), 'IA': dict(), 'MP': dict(), 'VE': dict(), 'VM': dict(),
         'DF': dict(), 'TI': dict(), 'MT': dict(), 'VI': dict(), 'RE': dict(),
-        'AC': dict(), 'TE': '', 'HQ': dict()
+        'AC': dict(), 'TE': '', 'HQ': dict(), 'HV': dict()
     }
 
     lineNum = 0
@@ -67,6 +67,12 @@ def importDADGER(data, reg=None):
                 importLQ(line,DADGER["HQ"],numPatamares)
             elif id == "CQ":
                 importCQ(line,DADGER["HQ"])
+            elif id == "HV":
+                importHV(line,DADGER["HV"])
+            elif id == "LV":
+                importLV(line,DADGER["HV"])
+            elif id == "CV":
+                importCV(line,DADGER["HV"])
         except ValueError as e:
             info(str(e)+" linha: "+str(lineNum))
             
@@ -396,3 +402,40 @@ def importCQ(line,HQ):
         'coef': float(line[19:29].strip()),
         'tipo': line[34:38].strip()
     }
+    
+def importHV(line,HV):
+    id = int(line[4:7].strip())
+    HV[id] = {
+        "EstagioIni": int(line[9:11].strip()),
+        "EstagioFim": int(line[14:16].strip()),
+        "LV": dict(),
+        "CV": dict()
+    }
+
+def importLV(line,HV):
+    id = int(line[4:7].strip())
+    estagio = int(line[9:11].strip())
+
+    inferior =  line[14:24].strip()
+    limite = {}
+    if inferior != "":
+        limite["Inferior"] = float(inferior)
+
+    superior = line[24:34].strip()
+    if superior != "":
+        limite["Superior"] = float(superior)
+
+    HV[id]["LV"][estagio] = limite
+    
+    
+def importCV(line,HV):
+    id = int(line[4:7].strip())
+    estagio = int(line[9:11].strip())
+
+    if estagio not in HV[id]['CV']:
+        HV[id]['CV'][estagio] = list()
+    HV[id]['CV'][estagio].append({
+        'codUhe': int(line[14:17].strip()),
+        'coef': float(line[19:29].strip()),
+        'tipo': line[34:38].strip()
+    })
