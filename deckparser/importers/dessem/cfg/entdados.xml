@@ -599,6 +599,7 @@
 		<field c="20" cf="21" name="horaFim" type="h" />
 		<field c="23" name="meiaHoraFim" type="bin" />
 		<field c="25" cf="27" name="idUsina" type="int" />
+		<field c="28" cf="29" name="idCgh" type="int" />
 		<field c="35" cf="44" default="0.0" name="fatGeracao"
 			type="real" />
 	</table>
@@ -643,8 +644,23 @@
 		<field c="17" cf="18" name="diaFim" special="F" type="d" />
 		<field c="20" cf="21" name="horaFim" type="h" />
 		<field c="23" name="meiaHoraFim" type="bin" />
-		<field c="25" cf="27" name="idContrato" type="string" />
+		<field c="25" cf="27" name="idContrato" type="int" />
 		<field c="35" cf="44" default="0.0" name="fatContrato"
+			type="real" />
+	</table>
+	<table name="FR">
+		<field c="1" cf="2" name="nomeCampo" type="string">
+			<validate value="FR" />
+		</field>
+		<field c="5" cf="9" name="idRestr" type="int" />
+		<field c="11" cf="12" name="diaIni" special="I" type="d" />
+		<field c="14" cf="15" name="horaIni" type="h" />
+		<field c="17" name="meiaHoraIni" type="bin" />
+		<field c="19" cf="20" name="diaFim" special="F" type="d" />
+		<field c="22" cf="23" name="horaFim" type="h" />
+		<field c="25" name="meiaHoraFim" type="bin" />
+		<field c="27" cf="31" name="idRenovavel" type="int" />
+		<field c="35" cf="44" default="0.0" name="fatRenovavel"
 			type="real" />
 	</table>
 	<table name="META_CJSIST">

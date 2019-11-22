@@ -40,8 +40,9 @@ class DessemFilePattern:
         
         dt_fix = self.fixDate(rv, dt)
         if dt_fix != dt:
-            self.getLogger().warn('Fixed deck date: {:s} rv {:d}'.format(dt.isoformat(), rv))
-        return dt
+            self.getLogger().warn('Fixed deck date: {:s} rv {:d} PMO {:s}, was {:s}'.format(
+                dt_fix.isoformat(), rv, self.pmo_date.strftime('%Y-%m'), dt.isoformat()))
+        return dt_fix
     
     def fixInvalidDate(self, rv, d, m, y):
         if d > 28:
@@ -54,12 +55,15 @@ class DessemFilePattern:
                 return date(y, m, d) - timedelta(months=1)
     
     def fixDate(self, rv, dt):
+        if not self.pmo_date:
+            return dt
         d = dt.day
+        dt_ref = date(self.pmo_date.year, self.pmo_date.month, d)
         if rv == 0 and d > 20:
-            return dt - timedelta(months=1)
+            return dt_ref - timedelta(months=1)
         elif rv > 3 and d < 10:
-            return dt + timedelta(months=1)
-        return dt
+            return dt_ref + timedelta(months=1)
+        return dt_ref
     
     def getLogger(self):
         return logging.getLogger(__name__)
@@ -123,6 +127,8 @@ class DessemSource(object):
             if not self.checkSource():
                 self.fn = None
                 return
+            if not self.pmo_date:
+                self.getLogger().warn('PMO date not provided, deck dates will not be fixed')
             for fp in self.sourceFilePatternList(open_results, pmo_date):
                 self.scanSource(fp)
                 if len(self.dias) > 0:
