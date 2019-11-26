@@ -5,7 +5,7 @@ Created on 2 de nov de 2018
 '''
 import zipfile, os, re, shutil
 from uuid import uuid4 as hasher
-from datetime import date, timedelta
+from datetime import date
 import logging
 
 def dessem_source(fn, open_results=False, pmo_date=None):
@@ -28,42 +28,25 @@ class DessemFilePattern:
         if m:
             return self.capture(m)
     
-    def realDate(self, rv, d, m, y):
-        dt = None
-        try:
-            dt = date(y,m,d)
-        except:
-            self.getLogger().warn('Invalid deck date: {:d}-{:d}-{:d} rv {:d}'.format(y,m,d,rv))
-            dt = self.fixInvalidDate(rv, d, m, y)
-            if not dt:
-                raise ValueError('Could not fix deck date: {:d}-{:d}-{:d} rv {:d}'.format(y,m,d,rv))
-        
-        dt_fix = self.fixDate(rv, dt)
-        if dt_fix != dt:
-            self.getLogger().warn('Fixed deck date: {:s} rv {:d} PMO {:s}, was {:s}'.format(
-                dt_fix.isoformat(), rv, self.pmo_date.strftime('%Y-%m'), dt.isoformat()))
-        return dt_fix
-    
-    def fixInvalidDate(self, rv, d, m, y):
-        if d > 28:
-            if not self.pmo_date:
-                return None
-            m,y = self.pmo_date.month, self.pmo_date.year
-            if rv > 3:
-                return date(y, m, d)
-            if rv == 0:
-                return date(y, m, d) - timedelta(months=1)
-    
-    def fixDate(self, rv, dt):
-        if not self.pmo_date:
-            return dt
-        d = dt.day
-        dt_ref = date(self.pmo_date.year, self.pmo_date.month, d)
+    def realMonth(self, rv, d, m, y):
         if rv == 0 and d > 20:
-            return dt_ref - timedelta(months=1)
+            m = m - 1
+            if m < 1:
+                m = 12
+                y = y - 1
         elif rv > 3 and d < 10:
-            return dt_ref + timedelta(months=1)
-        return dt_ref
+            m = m + 1
+            if m > 12:
+                m = 1
+                y = y + 1
+        return m,y
+    
+    def realDate(self, rv, d, m, y):
+        m,y = self.realMonth(rv, d, m, y)
+        try:
+            return date(y,m,d)
+        except:
+            raise ValueError('Invalid deck date: {:d}-{:d}-{:d} rv {:d}'.format(y,m,d,rv))
     
     def getLogger(self):
         return logging.getLogger(__name__)
