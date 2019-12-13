@@ -43,7 +43,7 @@ class ResultLoader:
                         return v
     
     def __readDessemVersion(self, ln):
-        rex = ".*VERSAO\s*([0-9]{2})(\.[0-9]{2}){0,1}.*"
+        rex = ".*VERSAO\s*([0-9]{1,2})(\.[0-9]{1,2}){0,1}.*"
         m = re.match(rex, ln)
         if m:
             v =  [int(v_.strip('.')) if v_ else 0 for v_ in m.groups()]

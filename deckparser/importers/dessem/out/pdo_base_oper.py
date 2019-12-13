@@ -73,7 +73,7 @@ class pdo_base_oper:
         mdPath = cfg_modif.__path__[0]
         ts_modif = {}
         for fn in os.listdir(mdPath):
-            rex = '([0-9]{2})_([0-9]{2})\.json'
+            rex = '([0-9]{1,2})_([0-9]{1,2})\.json'
             m = re.match(rex, fn)
             if not m:
                 continue
