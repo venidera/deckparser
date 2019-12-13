@@ -27,12 +27,16 @@ class ResultLoader:
         for fk in ['pdo_sumaoper','pdo_operacao']:
             self.resultLoaders[fk].applyModif(dessem_version)
     
+    def openFile(self, fn):
+        fp = os.path.join(self.dirDS, fn)
+        return open(fp, 'r', encoding='iso-8859-1')
+    
     def loadDessemVersion(self):
         for fk in ['pdo_sist','pdo_operacao']:
             fn = self.__get_matching_filename(fk)
             if not fn:
                 continue
-            with open(os.path.join(self.dirDS, fn)) as fp:
+            with self.openFile(fn) as fp:
                 for ln in fp:
                     v = self.__readDessemVersion(ln)
                     if v:
