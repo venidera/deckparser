@@ -3,6 +3,7 @@ from deckparser.importers.dessem.out.pdo_operacao import pdo_operacao
 from deckparser.importers.dessem.out.pdo_sumaoper import pdo_sumaoper
 import logging
 import os
+import re
 
 class ResultLoader:
     def __init__(self, dirDS=None, fileEncoding=None):
@@ -19,6 +20,30 @@ class ResultLoader:
         m['pdo_operacao'] = pdo_operacao()
         m['pdo_sumaoper'] = pdo_sumaoper()
         self.resultLoaders = m
+    
+    def prepare(self):
+        dessem_version = self.loadDessemVersion()
+        self.getLogger().info('Preparing configuration (DESSEM version {:s})'.format(str(dessem_version)))
+        for fk in ['pdo_sumaoper','pdo_operacao']:
+            self.resultLoaders[fk].applyModif(dessem_version)
+    
+    def loadDessemVersion(self):
+        for fk in ['pdo_sist','pdo_operacao']:
+            fn = self.__get_matching_filename(fk)
+            if not fn:
+                continue
+            with open(os.path.join(self.dirDS, fn)) as fp:
+                for ln in fp:
+                    v = self.__readDessemVersion(ln)
+                    if v:
+                        return v
+    
+    def __readDessemVersion(self, ln):
+        rex = ".*VERSAO\s*([0-9]{2})(\.[0-9]{2}){0,1}.*"
+        m = re.match(rex, ln)
+        if m:
+            v =  [int(v_.strip('.')) if v_ else 0 for v_ in m.groups()]
+            return tuple(v)
     
     def listFiles(self):
         return list(self.resultLoaders.keys())
@@ -44,6 +69,7 @@ class ResultLoader:
         return False
     
     def loadAll(self):
+        self.prepare()
         for f in self.resultLoaders:
             if self.filterFile(f):
                 self.load(f)

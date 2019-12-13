@@ -3,7 +3,9 @@ from deckparser.importers.dessem.out.pdo_common import parseValue
 import os
 import json
 from deckparser.importers.dessem.out import cfg
+from deckparser.importers.dessem.out.cfg import modif as cfg_modif
 import io
+import logging
 
 class ColumnDef:
     def __init__(self, f):
@@ -57,6 +59,51 @@ class pdo_base_oper:
         for tk,td in d.items():
             ts[tk] = TableDef(td['name'], td['fields'])
         return ts
+    
+    def applyModif(self, dessem_version):
+        tableModif = self.loadTableModif(dessem_version)
+        v_sorted = list(sorted(tableModif.keys()))
+        for v in v_sorted:
+            for tk,td in tableModif[v].items():
+                self.getLogger().info('Table {:s} - {:s} structure modification applied (from vesion: {:s})'.
+                                      format(tk, td.name, str(v)))
+                self.tableSet[tk] = td
+    
+    def loadTableModif(self, dessem_version):
+        mdPath = cfg_modif.__path__[0]
+        ts_modif = {}
+        for fn in os.listdir(mdPath):
+            rex = '([0-9]{2})_([0-9]{2})\.json'
+            m = re.match(rex, fn)
+            if not m:
+                continue
+            md_version = (int(m.group(1)),int(m.group(2)))
+            if self.compare_version(md_version, dessem_version) > 0:
+                continue
+            
+            fPath = os.path.join(mdPath, fn)
+            with io.open(fPath, 'r', encoding='utf8') as fp:
+                d = json.load(fp, encoding='utf8')
+            fp.close()
+            d_pdo_op = d.get(self.tableName)
+            if not d_pdo_op:
+                continue
+            ts = {}
+            for tk,td in d_pdo_op.items():
+                ts[tk] = TableDef(td['name'], td['fields'])
+            ts_modif[md_version] = ts
+        return ts_modif
+    
+    def compare_version(self, v1, v2, level=0):
+        if level >= min(len(v1),len(v2)):
+            return 0
+        lv1 = v1[level]
+        lv2 = v2[level]
+        if lv1 > lv2:
+            return 1
+        if lv1 == lv2:
+            return self.compare_version(v1, v2, level+1)
+        return -1
     
     def openFile(self, fn):
         return open(fn, 'r', encoding='iso-8859-1')
@@ -180,4 +227,7 @@ class pdo_base_oper:
         for k,b in self.blockGroup.items():
             e[k+'_data'] = b
         return e
+    
+    def getLogger(self):
+        return logging.getLogger(__name__)
     

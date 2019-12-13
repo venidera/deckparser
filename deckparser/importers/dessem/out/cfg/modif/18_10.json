@@ -1,0 +1,326 @@
+{
+	"pdo_operacao": {
+	   "8a": {
+	      "name": "balancoEnergetico",
+	      "fields": [
+	         {
+	            "name": "siglaSubsistema",
+	            "type": "string",
+	            "c": 0,
+	            "cf": 5
+	         },
+	         {
+	            "name": "demanda",
+	            "type": "real",
+	            "c": 5,
+	            "cf": 21,
+	            "unit": "MW",
+				"desc": "Demanda de Energia"
+	         },
+	         {
+	            "name": "perdas",
+	            "type": "real",
+	            "c": 21,
+	            "cf": 30,
+	            "unit": "MW",
+				"desc": "Perdas na Rede Elétrica"
+	         },
+	         {
+	            "name": "gerPeq",
+	            "type": "real",
+	            "c": 30,
+	            "cf": 39,
+	            "unit": "MW",
+				"desc": "Geração de Usinas não Simuladas"
+	         },
+	         {
+	            "name": "gerFixBar",
+	            "type": "real",
+	            "c": 39,
+	            "cf": 48,
+	            "unit": "MW",
+				"desc": "Geração FixBar"
+	         },
+	         {
+	            "name": "gerRenova",
+	            "type": "real",
+	            "c": 48,
+	            "cf": 57,
+	            "unit": "MW",
+				"desc": "Geração de Fontes Renováveis"
+	         },
+	         {
+	            "name": "gerHidr",
+	            "type": "real",
+	            "c": 57,
+	            "cf": 66,
+	            "unit": "MW",
+				"desc": "Geração Hidrelétrica"
+	         },
+	         {
+	            "name": "gerTerm",
+	            "type": "real",
+	            "c": 66,
+	            "cf": 75,
+	            "unit": "MW",
+				"desc": "Geração Termelétrica"
+	         },
+	         {
+	            "name": "consue",
+	            "type": "real",
+	            "c": 75,
+	            "cf": 84,
+				"desc": "Consumo com Bombeamento"
+	         },
+	         {
+	            "name": "importacao",
+	            "type": "real",
+	            "c": 84,
+	            "cf": 93,
+	            "unit": "MW",
+				"desc": "Importação de Energia"
+	         },
+	         {
+	            "name": "exportacao",
+	            "type": "real",
+	            "c": 93,
+	            "cf": 102,
+	            "unit": "MW",
+				"desc": "Exportação de Energia"
+	         },
+	         {
+	            "name": "deficit",
+	            "type": "real",
+	            "c": 102,
+	            "cf": 111,
+	            "unit": "MW",
+				"desc": "Déficit de Energia"
+	         },
+	         {
+	            "name": "deficitPerc",
+	            "type": "real",
+	            "c": 111,
+	            "cf": 118,
+	            "unit": "%",
+				"desc": "Déficit de Energia"
+	         },
+	         {
+	            "name": "saldo",
+	            "type": "real",
+	            "c": 118,
+	            "cf": 127,
+	            "unit": "MW",
+				"desc": "Saldo de Energia"
+	         },
+	         {
+	            "name": "observacao",
+	            "type": "string",
+	            "c": 127,
+	            "cf": 135
+	         },
+	         {
+	            "name": "gerTermMin",
+	            "type": "real",
+	            "c": 135,
+	            "cf": 143,
+	            "unit": "MW",
+				"desc": "Geração Termelétrica Mínima"
+	         },
+	         {
+	            "name": "impMin",
+	            "type": "real",
+	            "c": 143,
+	            "cf": 152,
+	            "unit": "MW",
+				"desc": "Importação Mínima"
+	         },
+	         {
+	            "name": "expMin",
+	            "type": "real",
+	            "c": 152,
+	            "cf": 161,
+	            "unit": "MW",
+				"desc": "Exportação Mínima"
+	         },
+	         {
+	            "name": "earmFinal",
+	            "type": "real",
+	            "c": 161,
+	            "cf": 172,
+	            "unit": "MWmes",
+				"desc": "Energia Armazenada Final"
+	         },
+	         {
+	            "name": "earmFinalPerc",
+	            "type": "real",
+	            "c": 172,
+	            "cf": 179,
+	            "unit": "%",
+				"desc": "Energia Armazenada Final"
+	         }
+	      ]
+	   }
+	},
+	"pdo_sumaoper": {
+	   "8a": {
+	      "name": "balancoEnergetico",
+	      "fields": [
+	         {
+	            "name": "siglaSubsistema",
+	            "type": "string",
+	            "c": 0,
+	            "cf": 5
+	         },
+	         {
+	            "name": "demanda",
+	            "type": "real",
+	            "c": 5,
+	            "cf": 21,
+	            "unit": "MW",
+				"desc": "Demanda de Energia"
+	         },
+	         {
+	            "name": "perdas",
+	            "type": "real",
+	            "c": 21,
+	            "cf": 30,
+	            "unit": "MW",
+				"desc": "Perdas na Rede Elétrica"
+	         },
+	         {
+	            "name": "gerPeq",
+	            "type": "real",
+	            "c": 30,
+	            "cf": 39,
+	            "unit": "MW",
+				"desc": "Geração de Usinas não Simuladas"
+	         },
+	         {
+	            "name": "gerFixBar",
+	            "type": "real",
+	            "c": 39,
+	            "cf": 48,
+	            "unit": "MW",
+				"desc": "Geração FixBar"
+	         },
+	         {
+	            "name": "gerRenova",
+	            "type": "real",
+	            "c": 48,
+	            "cf": 57,
+	            "unit": "MW",
+				"desc": "Geração de Fontes Renováveis"
+	         },
+	         {
+	            "name": "gerHidr",
+	            "type": "real",
+	            "c": 57,
+	            "cf": 66,
+	            "unit": "MW",
+				"desc": "Geração Hidrelétrica"
+	         },
+	         {
+	            "name": "gerTerm",
+	            "type": "real",
+	            "c": 66,
+	            "cf": 75,
+	            "unit": "MW",
+				"desc": "Geração Termelétrica"
+	         },
+	         {
+	            "name": "consue",
+	            "type": "real",
+	            "c": 75,
+	            "cf": 84,
+				"desc": "Consumo com Bombeamento"
+	         },
+	         {
+	            "name": "importacao",
+	            "type": "real",
+	            "c": 84,
+	            "cf": 93,
+	            "unit": "MW",
+				"desc": "Importação de Energia"
+	         },
+	         {
+	            "name": "exportacao",
+	            "type": "real",
+	            "c": 93,
+	            "cf": 102,
+	            "unit": "MW",
+				"desc": "Exportação de Energia"
+	         },
+	         {
+	            "name": "deficit",
+	            "type": "real",
+	            "c": 102,
+	            "cf": 111,
+	            "unit": "MW",
+				"desc": "Déficit de Energia"
+	         },
+	         {
+	            "name": "deficitPerc",
+	            "type": "real",
+	            "c": 111,
+	            "cf": 118,
+	            "unit": "%",
+				"desc": "Déficit de Energia"
+	         },
+	         {
+	            "name": "saldo",
+	            "type": "real",
+	            "c": 118,
+	            "cf": 127,
+	            "unit": "MW",
+				"desc": "Saldo de Energia"
+	         },
+	         {
+	            "name": "observacao",
+	            "type": "string",
+	            "c": 127,
+	            "cf": 135
+	         },
+	         {
+	            "name": "gerTermMin",
+	            "type": "real",
+	            "c": 135,
+	            "cf": 143,
+	            "unit": "MW",
+				"desc": "Geração Termelétrica Mínima"
+	         },
+	         {
+	            "name": "impMin",
+	            "type": "real",
+	            "c": 143,
+	            "cf": 152,
+	            "unit": "MW",
+				"desc": "Importação Mínima"
+	         },
+	         {
+	            "name": "expMin",
+	            "type": "real",
+	            "c": 152,
+	            "cf": 161,
+	            "unit": "MW",
+				"desc": "Exportação Mínima"
+	         },
+	         {
+	            "name": "earmFinal",
+	            "type": "real",
+	            "c": 161,
+	            "cf": 172,
+	            "unit": "MWmes",
+				"desc": "Energia Armazenada Final"
+	         },
+	         {
+	            "name": "earmFinalPerc",
+	            "type": "real",
+	            "c": 172,
+	            "cf": 179,
+	            "unit": "%",
+				"desc": "Energia Armazenada Final"
+	         }
+	      ]
+	   }
+	}
+}
