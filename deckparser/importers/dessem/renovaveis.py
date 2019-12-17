@@ -12,6 +12,8 @@ class renovaveis(dsFile):
             self.getTable('EOLICASUBM').parseLine(line)
         elif ln.startswith('EOLICA-GERACAO'):
             self.getTable('EOLICA-GERACAO').parseLine(line)
+        elif ln.startswith('EOLICABARRA'):
+            self.getTable('EOLICABARRA').parseLine(line)
         elif ln.startswith('EOLICA'):
             self.getTable('EOLICA').parseLine(line)
     

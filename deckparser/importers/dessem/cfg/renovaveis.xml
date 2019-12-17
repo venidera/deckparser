@@ -1,18 +1,23 @@
 <dsFile name="renovaveis">
-	<table name="EOLICA">
+	<table name="EOLICA" csv="True">
 		<field c="1" cf="6" name="nomeCampo" type="string" />
 		<field c="9" cf="13" name="idRenovavel" type="int" />
 		<field c="16" cf="27" name="nomeRenovavel" type="string" />
 		<field c="30" cf="39" name="potMax" type="real" />
 		<field c="42" cf="44" name="fatCap" type="real" />
-		<field c="47" cf="56" name="constrOff" type="bool" />
+		<field c="47" cf="56" name="constrOff" type="bin" />
 	</table>
-	<table name="EOLICASUBM">
+	<table name="EOLICASUBM" csv="True">
 		<field c="1" cf="10" name="nomeCampo" type="string" />
 		<field c="13" cf="17" name="idRenovavel" type="int" />
 		<field c="20" cf="21" name="siglaSubsistema" type="string" />
 	</table>
-	<table name="EOLICA-GERACAO">
+	<table name="EOLICABARRA" csv="True">
+		<field c="1" cf="11" name="nomeCampo" type="string" />
+		<field c="14" cf="18" name="idRenovavel" type="int" />
+		<field c="21" cf="25" name="codBarra" type="int" />
+	</table>
+	<table name="EOLICA-GERACAO" csv="True">
 		<field c="1" cf="14" name="nomeCampo" type="string" />
 		<field c="17" cf="21" name="idRenovavel" type="int" />
 		<field c="24" cf="25" name="diaIni" special="I" type="d" />

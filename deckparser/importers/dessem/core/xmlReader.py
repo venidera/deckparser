@@ -29,6 +29,7 @@ class xmlReader:
     def decodeRec(self, node):
         rec = dict()
         name = node.attrib['name']
+        rec['__csv__'] = bool(node.attrib.get('csv', False))
         
         for child in node:
             if child.tag == 'field':

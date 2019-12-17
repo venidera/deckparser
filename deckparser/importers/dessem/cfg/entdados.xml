@@ -457,6 +457,22 @@
 						<validate min="0.0" />
 					</field>
 				</case>
+				<case value="VAZEFE">
+					<field name="idConjunto" size="5" type="int">
+						<validate min="1" />
+					</field>
+					<field name="vazaoEfetiva" size="10" type="real">
+						<validate min="0.0" />
+					</field>
+				</case>
+				<case value="ALTEFE">
+					<field name="idConjunto" size="5" type="int">
+						<validate min="1" />
+					</field>
+					<field name="quedaEfetiva" size="10" type="real">
+						<validate min="0.0" />
+					</field>
+				</case>
 				<case value="PROESP">
 					<field name="prodEsp" size="10" type="real">
 						<validate min="0.0" />

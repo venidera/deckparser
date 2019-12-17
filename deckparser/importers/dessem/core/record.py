@@ -14,6 +14,7 @@ class record:
         self.exportIgnore = ['nomeCampo']
         self.data = None
         self.line = None
+        self.csvMode = recMap.pop('__csv__')
         
     def isEmpty(self):
         return self.data is None
@@ -103,6 +104,9 @@ class record:
         return ds
 
     def parse(self, line):
+        if self.csvMode:
+            return self.parseCsv(line)
+        
         m = self.recMap
         r = dict()
         
@@ -115,6 +119,27 @@ class record:
                         r[kd] = cf[kd]
                 else:
                     r[key] = self.parseField(key, f, f['range'], line)
+            except ValueError as e:
+                self.handleException(line, key, e)
+                r[key] = None
+        self.data = r
+        self.line = line
+        return r
+    
+    def parseCsv(self, line):
+        m = self.recMap
+        r = dict()
+        fieldOrder = sorted(m.items(), key = lambda kv: kv[1]['range'][0])
+        fieldSorted = [kv[0] for kv in fieldOrder]
+        values = line.strip().split(';')
+        
+        for i,key in enumerate(fieldSorted):
+            f = m[key]
+            try:
+                if f.get('composed'):
+                    raise Exception('Cannot handle composed csv record')
+                else:
+                    r[key] = self.parseValue(key, f, values[i], line)
             except ValueError as e:
                 self.handleException(line, key, e)
                 r[key] = None
@@ -135,8 +160,11 @@ class record:
         return r
     
     def parseField(self, k, f, r, line):
-        t = f['type']
         v = line[r[0]-1:r[1]]
+        return self.parseValue(k, f, v, line)
+    
+    def parseValue(self, k, f, v, line):
+        t = f['type']
         v = v.strip()
         
         if self.isBlankField(v):
