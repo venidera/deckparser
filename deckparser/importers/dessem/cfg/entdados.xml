@@ -679,6 +679,35 @@
 		<field c="35" cf="44" default="0.0" name="fatRenovavel"
 			type="real" />
 	</table>
+	<table name="FC">
+		<field c="1" cf="2" name="nomeCampo" type="string">
+			<validate value="FC" />
+		</field>
+		<field c="5" cf="9" name="idRestr" type="int" />
+		<field c="11" cf="12" name="diaIni" special="I" type="d" />
+		<field c="14" cf="15" name="horaIni" type="h" />
+		<field c="17" name="meiaHoraIni" type="bin" />
+		<field c="19" cf="20" name="diaFim" special="F" type="d" />
+		<field c="22" cf="23" name="horaFim" type="h" />
+		<field c="25" name="meiaHoraFim" type="bin" />
+		<field c="27" cf="29" name="idDemandaEsp" type="int" />
+		<field c="37" cf="46" default="0.0" name="fatDemandaEsp"
+			type="real" />
+	</table>
+	<table name="DE">
+		<field c="1" cf="2" name="nomeCampo" type="string">
+			<validate value="DE" />
+		</field>
+		<field c="5" cf="7" name="idDemandaEsp" type="int" />
+		<field c="9" cf="7" name="diaIni" special="I" type="d" />
+		<field c="12" cf="13" name="horaIni" type="h" />
+		<field c="15" name="meiaHoraIni" type="bin" />
+		<field c="17" cf="18" name="diaFim" special="F" type="d" />
+		<field c="20" cf="21" name="horaFim" type="h" />
+		<field c="23" name="meiaHoraFim" type="bin" />
+		<field c="25" cf="34" name="demanda" type="real" />
+		<field c="36" cf="45" name="descricao" type="string" />
+	</table>
 	<table name="META_CJSIST">
 		<field c="1" cf="6" name="nomeCampo1" type="string">
 			<validate value="META" />
