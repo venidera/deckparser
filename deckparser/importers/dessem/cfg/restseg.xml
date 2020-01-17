@@ -1,0 +1,60 @@
+<dsFile name="restseg">
+	<table name="INDICE">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="TABSEG" />
+		</field>
+		<field c="8" cf="13" name="nomeRegistro" type="string">
+			<validate value="INDICE" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="21" cf="120" name="descricao" type="string" />
+	</table>
+	<table name="TABELA">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="TABSEG" />
+		</field>
+		<field c="8" cf="13" name="nomeRegistro" type="string">
+			<validate value="TABELA" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="21" cf="26" name="tipoParametro" type="string">
+			<validate list="CONTR;PARAM" />
+		</field>
+		<field c="28" cf="33" name="tipoVariavel" type="string">
+			<validate list="DREF;RE;CARGA" />
+		</field>
+		<field c="35" cf="39" name="idVariavel" type="string" />
+		<field c="41" cf="45" name="percCarga" type="real" />
+	</table>
+	<table name="LIMITE">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="TABSEG" />
+		</field>
+		<field c="8" cf="13" name="nomeRegistro" type="string">
+			<validate value="LIMITE" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="21" cf="30" name="limPar1" type="real" />
+		<field c="32" cf="41" name="limPar2" type="real" />
+		<field c="43" cf="52" name="limPar3" type="real" />
+	</table>
+	<table name="CELULA">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="TABSEG" />
+		</field>
+		<field c="8" cf="13" name="nomeRegistro" type="string">
+			<validate value="CELULA" />
+		</field>
+		<field c="15" cf="19" name="idRestr" type="int" />
+		<field c="21" cf="30" name="limite" type="real" />
+		<field c="32" name="flag" type="bin" />
+		<field c="37" cf="46" name="limInfPar1" type="real" />
+		<field c="49" cf="58" name="limSupPar1" type="real" />
+		<field c="61" cf="70" name="limInfPar2" type="real" />
+		<field c="73" cf="82" name="limSupPar2" type="real" />
+		<field c="85" cf="94" name="limInfPar3" type="real" />
+		<field c="97" cf="106" name="limSupPar3" type="real" />
+		<field c="109" cf="118" name="limInfPar4" type="real" />
+		<field c="121" cf="130" name="limSupPar4" type="real" />
+	</table>
+</dsFile>

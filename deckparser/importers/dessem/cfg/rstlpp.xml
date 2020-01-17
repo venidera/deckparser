@@ -1,0 +1,69 @@
+<dsFile name="rstlpp">
+	<table name="RSTSEG">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="RSTSEG" />
+		</field>
+		<field c="8" cf="14" name="nomeRestr" type="string" />
+		<field c="16" cf="19" name="idRestr" type="int" />
+		<field c="20" name="tipoControlada" type="int" default="0">
+			<validate list="0;1" />
+		</field>
+		<field c="21" cf="24" name="idControlada" type="int" />
+		<field c="26" cf="30" name="tipoControle" type="string">
+			<validate list="DREF;RELE;CARGA" />
+		</field>
+		<field c="32" cf="36" name="idControladora" type="string" />
+		<field c="38" cf="77" name="descricao" type="string" />
+	</table>
+	<table name="ADICRS">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="ADICRS" />
+		</field>
+		<field c="8" cf="14" name="nomeRestr" type="string" />
+		<field c="16" cf="19" name="idRestr" type="int" />
+		<field c="20" name="tipoControlada" type="int" default="0">
+			<validate list="0;1" />
+		</field>
+		<field c="21" cf="24" name="idControlada" type="int" />
+		<field c="26" cf="30" name="tipoControle" type="string">
+			<validate list="DREF;RELE;CARGA" />
+		</field>
+		<field c="32" cf="36" name="idControladora" type="string" />
+		<field c="38" cf="77" name="descricao" type="string" />
+	</table>
+	<table name="PARAM">
+		<field c="1" cf="5" name="nomeCampo" type="string">
+			<validate value="PARAM" />
+		</field>
+		<field c="7" cf="10" name="idRestr" type="int" />
+		<field c="12" cf="16" name="tipoParam" type="string">
+			<validate list="CARGA;DREFC;DREFG;RELE" />
+		</field>
+		<field c="18" cf="22" name="idParam" type="string" />
+	</table>
+	<table name="VPARM">
+		<field c="1" cf="5" name="nomeCampo" type="string">
+			<validate value="VPARM" />
+		</field>
+		<field c="7" cf="10" name="idRestr" type="int" />
+		<field c="12" cf="13" name="idCurva" type="int" />
+		
+		<field c="15" cf="24" name="limInfPar1" type="real" />
+		<field c="26" cf="35" name="limSupPar1" type="real" />
+		<field c="37" cf="46" name="limInfPar2" type="real" />
+		<field c="48" cf="57" name="limSupPar2" type="real" />
+	</table>
+	<table name="RESLPP">
+		<field c="1" cf="6" name="nomeCampo" type="string">
+			<validate value="RESLPP" />
+		</field>
+		<field c="8" cf="11" name="idRestr" type="int" />
+		<field c="13" name="idCurva" type="int" />
+		<field c="15" name="idCorte" type="int" />
+		<field c="17" cf="26" name="coefAngular1" type="real" default="0.0" />
+		<field c="28" cf="37" name="coefLinear" type="real" default="0.0" />
+		<field c="39" cf="48" name="coefAngular2" type="real" default="0.0" />
+		<field c="50" cf="59" name="coefAngular3" type="real" default="0.0" />
+		<field c="61" cf="70" name="coefAngular4" type="real" default="0.0" />
+	</table>
+</dsFile>

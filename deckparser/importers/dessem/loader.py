@@ -22,6 +22,8 @@ from deckparser.importers.dessem.cotasr11 import cotasr11
 from deckparser.importers.dessem.simul import simul
 from deckparser.importers.dessem.renovaveis import renovaveis
 from deckparser.importers.dessem.v2.termdat import termdat as termdat_v2
+from deckparser.importers.dessem.restseg import restseg
+from deckparser.importers.dessem.rstlpp import rstlpp
 from datetime import datetime
 import os
 import logging
@@ -57,6 +59,8 @@ class Loader:
         m['ils_tri'] = ils_tri()
         m['cotasr11'] = cotasr11()
         m['renovaveis'] = renovaveis()
+        m['restseg'] = restseg()
+        m['rstlpp'] = rstlpp()
         
         if v == 1:
             m['termdat'] = termdat()
