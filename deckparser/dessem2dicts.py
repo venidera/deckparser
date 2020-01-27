@@ -9,8 +9,8 @@ from deckparser.dessemsource import dessem_source
 from datetime import date
 import logging
 
-def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, file_encoding=None, load_results=False):
-    return load_dessem(fn, dia, rd, file_filter, interval_list, 'dict', file_encoding, load_results)
+def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, file_encoding=None, load_results=False, deck_version=1, pmo_date=None):
+    return load_dessem(fn, dia, rd, file_filter, interval_list, 'dict', file_encoding, load_results, deck_version, pmo_date)
 
 def getLogger():
     return logging.getLogger(__name__)
