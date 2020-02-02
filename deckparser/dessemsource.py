@@ -146,7 +146,7 @@ class DessemSource(object):
                     'filename': fn,
                     'zip': None,
                     'tmpdir': None,
-                    'filelist': dict()
+                    'filelist': []
                 }
     
     def getDate(self, dia):
@@ -170,7 +170,7 @@ class DessemSource(object):
         return itm
     
     def extractAllFiles(self,dia,r):
-        fList = self.dias[dia][r]['filelist'].keys()
+        fList = self.dias[dia][r]['filelist']
         return self.extractFiles(dia, r, fList)
     
     def extractFiles(self,dia,r,fileList):
@@ -179,11 +179,11 @@ class DessemSource(object):
             if d['zip'] is None:
                 self.openDia(dia, r)
             for f in fileList:
-                f = f.upper()
-                if f in d['filelist']:
-                    fname = d['filelist'][f]
-                    z = d['zip']
-                    z.extract(fname, d['tmpdir'])
+                rf_list = self.listRealFiles(f, d['filelist'])
+                if len(rf_list):
+                    for fname in rf_list:
+                        z = d['zip']
+                        z.extract(fname, d['tmpdir'])
                 else:
                     rd = 'Com rede' if r else 'Sem rede'
                     self.getLogger().warning('Absent file %s, case: %s %s', f, str(dia), rd)
@@ -192,7 +192,15 @@ class DessemSource(object):
             rd = 'Com rede' if r else 'Sem rede'
             self.getLogger().warning('Error unziping file %s, case: %s %s', f, str(dia), rd)
             raise
-
+    
+    def listRealFiles(self, f, realFileList):
+        fList = []
+        f = f.upper()
+        for rf in realFileList:
+            if rf.upper().startswith(f):
+                fList.append(rf)
+        return fList
+    
     def openDia(self, dia, r):
         try:
             if dia not in self.dias:
@@ -214,8 +222,7 @@ class DessemSource(object):
             self.extractDia(d, tmpdir)
             
             for fn in d['zip'].namelist():
-                f = fn.split('.')[0].upper()
-                d['filelist'][f] = fn
+                d['filelist'].append(fn)
             return tmpdir
         except:
             self.getLogger().error('Error opening day: %s', str(dia))
@@ -227,7 +234,7 @@ class DessemSource(object):
             tmpdir = d['tmpdir']
             del d['zip']
             d['zip'] = None
-            d['filelist'] = dict()
+            d['filelist'] = []
             d['tmpdir'] = None
             shutil.rmtree(tmpdir)
         except:
