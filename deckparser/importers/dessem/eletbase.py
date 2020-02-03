@@ -70,6 +70,10 @@ class eletbase(dsFile):
     def newVersionDUSI(self):
         self.getTable('DUSI').setRange('idBarra', [7, 11])
     
+    def newVersionDREF(self):
+        self.getTable('DREF_comp').setRange('idBarra', [6, 10])
+        self.getTable('DREF_comp').setRange('idBarraDest', [11, 15])
+    
     def isComment(self, line):
         return line[0] == '('
     
@@ -111,6 +115,7 @@ class eletbase(dsFile):
         self.newVersionDANC()
         self.newVersionDGBT()
         self.newVersionDUSI()
+        self.newVersionDREF()
         
         with self.openDSFile(fileName) as f:
             for line in f:
