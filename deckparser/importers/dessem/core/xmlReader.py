@@ -57,10 +57,11 @@ class xmlReader:
             for setNode in node.iter('set'):
                 for caseNode in setNode:
                     val = caseNode.attrib['value']
-                    caseSet[val] = dict()
+                    caseSet[val] = []
                     for fdNode in caseNode:
                         nd, fd = self.decodeField(fdNode, cpsField=True)
-                        caseSet[val][nd] = fd
+                        fd['name'] = nd
+                        caseSet[val].append(fd)
             f['set'] = caseSet
         else:
             f['type'] = att['type']

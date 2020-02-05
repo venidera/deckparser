@@ -19,8 +19,12 @@ class ils_tri(dsFile):
             for line in f:
                 nRec = nRec + 1
                 
+                if record.isComment(line) or record.isBlankLine(line):
+                    continue
                 if record.isEOF(line):
                     break
+                if line[0:3] == 'NOR':
+                    continue
                 if nRec == 2:
                     self.getRec('Nivel').parse(line)
                 elif nRec >= 3:

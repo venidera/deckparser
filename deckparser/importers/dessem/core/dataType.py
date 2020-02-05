@@ -9,7 +9,12 @@ def parseDataType(v, t):
     if t == 'int' or t in ['h', 'd', 'ds', 'm', 'a', 'bin']:
         return int(v)
     if t == 'real':
-        return float(v)
+        try:
+            return float(v)
+        except ValueError:
+            if v == '.':
+                return 0.0
+            raise
     return v
 
 def validateDataType(v, t):

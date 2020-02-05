@@ -152,8 +152,8 @@ class record:
             self.handleException(line, refKey, ValueError('No field set defined for key: {:s}'.format(refKey)))
         fields = fSet[refKey]
         r = {}
-        for k in fields:
-            fd = fields[k]
+        for fd in fields:
+            k = fd['name']
             rd = [pos, pos + fd['size'] - 1]
             r[k] = self.parseField(k, fd, rd, line)
             pos = pos + fd['size']
