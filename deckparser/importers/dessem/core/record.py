@@ -44,7 +44,8 @@ class record:
         fields = f['set'][refKey]
         ds = {}
         for kd in fields:
-            ds[kd] = r.get(kd)
+            kd_fn = kd['name']
+            ds[kd_fn] = r.get(kd_fn)
         return ds
     
     def clear(self):
