@@ -9,6 +9,9 @@
 		<field c="6" default="0" name="codOper" type="int">
 			<validate list="0;1;2" />
 		</field>
+		<field c="7" name="flagDelisga" type="string">
+			<validate list="L;D" />
+		</field>
 		<field c="8" default="0" name="tipoBarra" type="int">
 			<validate list="0;1;2" />
 		</field>
@@ -30,7 +33,7 @@
 			<validate min="0" />
 		</field>
 		<field c="15" name="flagDelisga" type="string">
-			<validate list=" ;D" />
+			<validate list="L;D" />
 		</field>
 		<field c="16" default="F" name="refArea" type="string">
 			<validate list="F;T" />
