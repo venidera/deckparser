@@ -7,6 +7,7 @@ from deckparser.importers.dessem.core.dataType import parseDataType
 from deckparser.importers.dessem.core.record import record
 from deckparser.importers.dessem.core.table import table
 import xml.etree.ElementTree as ET
+from collections import OrderedDict
 import os
 
 class xmlReader:
@@ -27,7 +28,7 @@ class xmlReader:
                 df.addTable(name, table(rec))
         
     def decodeRec(self, node):
-        rec = dict()
+        rec = OrderedDict()
         name = node.attrib['name']
         rec['__csv__'] = bool(node.attrib.get('csv', False))
         
@@ -42,7 +43,7 @@ class xmlReader:
         return name, rec
         
     def decodeField(self, node, cpsField=False):
-        f = dict()
+        f = OrderedDict()
         att = node.attrib
         name = att['name']
         
@@ -53,7 +54,7 @@ class xmlReader:
             f['composed'] = True
             f['position'] = int(att['position'])
             f['refField'] = att['refField']
-            caseSet = dict()
+            caseSet = OrderedDict()
             for setNode in node.iter('set'):
                 for caseNode in setNode:
                     val = caseNode.attrib['value']
