@@ -35,9 +35,17 @@ def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, out
                 elif d in dz.dias and r in dz.dias[d]:
                     if d not in dd: dd[d] = {}
                     if load_results:
-                        dt = load_dessem_result(dz, d, r, file_filter, file_encoding, output_format)
+                        try:
+                            dt = load_dessem_result(dz, d, r, file_filter, file_encoding, output_format)
+                        except:
+                            getLogger().error('Failed to load results for case: %s %s', str(d), optGridToStr(r))
+                            continue
                     else:
-                        dt = load_dessem_case(dz, d, r, file_filter, interval_list, file_encoding, output_format, deck_version)
+                        try:
+                            dt = load_dessem_case(dz, d, r, file_filter, interval_list, file_encoding, output_format, deck_version)
+                        except:
+                            getLogger().error('Failed to load case data: %s %s', str(d), optGridToStr(r))
+                            continue
                     if dt:
                         dd[d][r] = dt
                 else:
