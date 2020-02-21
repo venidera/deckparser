@@ -91,10 +91,9 @@ class eletbase(dsFile):
         
     def readLine(self, line, mode):
         if mode == 'DREF':
-            nc4 = line[0:4]
-            if nc4 == 'RESP':
+            if line.startswith('RESP'):
                 self.getTable('DREF').parseLine(line)
-            elif nc4.strip() == '':
+            else:
                 self.getTable('DREF_comp').parseLine(line)
                 self.getTable('DREF_comp').setField('idRestr', self.getTable('DREF').getField('idRestr'))
         elif mode in self.records:
