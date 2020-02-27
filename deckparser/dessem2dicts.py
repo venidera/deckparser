@@ -8,6 +8,7 @@ from deckparser.importers.dessem.out.result_loader import ResultLoader
 from deckparser.dessemsource import dessem_source
 from datetime import date
 import logging
+import traceback
 
 def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, file_encoding=None, load_results=False, deck_version=1, pmo_date=None):
     return load_dessem(fn, dia, rd, file_filter, interval_list, 'dict', file_encoding, load_results, deck_version, pmo_date)
@@ -34,18 +35,19 @@ def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, out
                     getLogger().warning('Invalid grid option (use bool True/False): %s', str(r))
                 elif d in dz.dias and r in dz.dias[d]:
                     if d not in dd: dd[d] = {}
-                    if load_results:
-                        try:
+                    try:
+                        if load_results:
                             dt = load_dessem_result(dz, d, r, file_filter, file_encoding, output_format)
-                        except:
-                            getLogger().error('Failed to load results for case: %s %s', str(d), optGridToStr(r))
-                            continue
-                    else:
-                        try:
+                        else:
                             dt = load_dessem_case(dz, d, r, file_filter, interval_list, file_encoding, output_format, deck_version)
-                        except:
+                    except Exception as exc:
+                        print(traceback.format_exc())
+                        print(exc)
+                        if load_results:
+                            getLogger().error('Failed to load results for case: %s %s', str(d), optGridToStr(r))
+                        else:
                             getLogger().error('Failed to load case data: %s %s', str(d), optGridToStr(r))
-                            continue
+                        continue
                     if dt:
                         dd[d][r] = dt
                 else:
