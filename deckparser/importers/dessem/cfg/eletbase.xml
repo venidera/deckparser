@@ -101,9 +101,9 @@
 			<validate list="0;1;2" />
 		</field>
 		<field c="8" cf="11" name="idRestr" type="int" />
-		<field c="13" cf="22" default="-9999999999" name="limInf"
+		<field c="13" cf="23" default="-9999999999" name="limInf"
 			type="real" />
-		<field c="23" cf="32" default="9999999999" name="limSup"
+		<field c="24" cf="33" default="9999999999" name="limSup"
 			type="real">
 			<validate min="0.0" />
 		</field>
