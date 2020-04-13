@@ -4,6 +4,7 @@ Created on 12 de jul de 2018
 @author: Renan
 '''
 from deckparser.importers.dessem.core.xmlReader import xmlReader
+from deckparser.importers.dessem.core.file_decoder import FileDecoder
 import deckparser.importers.dessem.cfg as cfg
 
 class dsFile:
@@ -31,9 +32,7 @@ class dsFile:
         self.fileEncoding = e
     
     def openDSFile(self, fn):
-        if self.fileEncoding:
-            return open(fn, 'r', encoding=self.fileEncoding)
-        return open(fn, 'r')
+        return FileDecoder(fn, preferred_encodings=self.fileEncoding)
     
     def listRecords(self):
         r = []

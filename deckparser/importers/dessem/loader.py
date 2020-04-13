@@ -158,7 +158,7 @@ class Loader:
     def getEncoding(self):
         e = self.fileEncoding
         if not e:
-            return [None, 'latin_1']
+            return ['utf-8', 'latin_1', 'ascii']
         if isinstance(e, list):
             return e
         return [e]
@@ -173,20 +173,17 @@ class Loader:
         
         dsf = self.dsFileMap[fileType]
         fullPath = os.path.join(self.dirDS, dsFileName)
-        for enc in self.getEncoding():
-            try:
-                if fileType != 'hidr':
-                    dsf.setEncoding(enc)
-                lg.info('Loading file: %s (%s, encoding=%s)', dsFileName, fileType, (enc if enc else 'default'))
-                if self.file_filter:
-                    dsf.setRecFilter(self.file_filter[fileType])
-                dsf.clearData()
-                dsf.readDSFile(fullPath)
-                lg.info('File loaded successfully: %s', dsFileName)
-                break
-            except UnicodeDecodeError:
-                lg.info('Exception caught, retrying loading file', exc_info=True)
-        else:
+        enc = self.getEncoding()
+        try:
+            if fileType != 'hidr':
+                dsf.setEncoding(enc)
+            lg.info('Loading file: %s (%s, preferred encodings=%s)', dsFileName, fileType, str(enc))
+            if self.file_filter:
+                dsf.setRecFilter(self.file_filter[fileType])
+            dsf.clearData()
+            dsf.readDSFile(fullPath)
+            lg.info('File loaded successfully: %s', dsFileName)
+        except UnicodeDecodeError:
             lg.error('Failed loading file: %s', fileType)
     
     def loadAll(self, interval_list=None):
