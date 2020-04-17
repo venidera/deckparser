@@ -16,7 +16,7 @@ def importCAR(fdata,dger):
                     curva = [ 0 for i in range(dger['ni']) ]
                 elif fdata[line][0:4].strip() in str(dger['yph']):
                     # Lendo a geracao de pequenas usinas
-                    anoleitura = fdata[line][0:4].strip()
+                    anoleitura = int(fdata[line][0:4].strip())
                     mesini = 1
                     if anoleitura == dger['yi']:
                         mesini = dger['mi']

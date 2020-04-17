@@ -12,7 +12,7 @@ def importPATAMAR(fdata, dger, sss):
     PATCARGA = dict()
     PATINTER = list()
     if numpatamarcarga == 1:
-        PATDURA[0] = [1.0] * dger['ni'] 
+        PATDURA[0] = [1.0] * dger['ni']
     else:
         for i in range(numpatamarcarga):
             PATDURA[i] = list()
@@ -69,6 +69,8 @@ def importPATAMAR(fdata, dger, sss):
                             mesini = dger['mi']
                         PATINTER[len(PATINTER) - 1]['pat' + str(idpat + 1)] = line2list(dline=fdata[idxline][7:91], mi=mesini, ar=anopat, mf=12, bloco=7, vlista=PATINTER[len(PATINTER) - 1]['pat' + str(idpat + 1)], dger=dger)
                         idxline = idxline + 1
+        elif len(vals) == 1 and vals[0] == '9999':
+            break
         if idxline >= len(fdata):
             break
     return PATDURA, PATCARGA, PATINTER, numpatamarcarga
