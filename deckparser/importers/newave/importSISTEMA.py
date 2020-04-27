@@ -145,62 +145,37 @@ def importSISTEMA(fdata, dger):
     if strsfim['line']:
         linerefini = int(strsfim['line'] + 3)
         linereffim = len(fdata) - 1
-        if 'GERACAO DE PEQUENAS USINAS' in strsfim['value']:
-            SISTEMA['gpu'] = odict()
-            for line in range(linerefini, linereffim):
-                if fdata[line][0:2] == '  ' and fdata[line].strip() != '':
-                    SUBSIS = fdata[line].strip()
-                    pequ = list()
-                    pequ = [0 for i in range(dger['ni'])]
-                elif fdata[line].strip() == '999':
-                    break
-                elif int(fdata[line][0:4].strip()) in dger['yph']:
-                    # Lendo a geracao de pequenas usinas
-                    anoleitura = int(fdata[line][0:4].strip())
-                    mesini = 1
-                    if anoleitura == dger['yi']:
-                        mesini = dger['mi']
-                    leituras = getUpdateIndexes(
-                        mesini, anoleitura, 12, anoleitura, dger)
-                    dados = fdata[line][7:]
-                    posini = (int(mesini)-1)*8
-                    for n, value in enumerate(leituras):
-                        posfim = posini+((n+1)*8)
-                        posinimov = posfim-8
-                        pequ[value] = float(dados[posinimov:posfim].strip())
-                    SISTEMA['gpu'][SUBSIS] = pequ
-        elif 'GERACAO DE USINAS NAO SIMULADAS' in strsfim['value']:
-            SISTEMA['gpu'] = odict()
-            SISTEMA['gnsim'] = odict()
-            for line in range(linerefini, linereffim):
-                if fdata[line][0:2] == '  ' and fdata[line].strip() != '':
-                    SUBSIS = fdata[line][2:4].strip()
-                    BLOCO = fdata[line][6:8].strip()
-                    BLOCO_DESCRICAO = fdata[line][11:20].strip()
-                    ger_bloco = list()
-                    ger_bloco = [0 for i in range(dger['ni'])]
-                elif fdata[line].strip() == '999':
-                    break
-                elif int(fdata[line][0:4].strip()) in dger['yph']:
-                    # Lendo a geracao de pequenas usinas
-                    anoleitura = int(fdata[line][0:4].strip())
-                    mesini = 1
-                    if anoleitura == dger['yi']:
-                        mesini = dger['mi']
-                    leituras = getUpdateIndexes(
-                        mesini, anoleitura, 12, anoleitura, dger)
-                    dados = fdata[line][7:]
-                    posini = (int(mesini)-1)*8
-                    for n, value in enumerate(leituras):
-                        posfim = posini+((n+1)*8)
-                        posinimov = posfim-8
-                        ger_bloco[value] = \
-                            float(dados[posinimov:posfim].strip())
-                    SISTEMA['gnsim'][SUBSIS] = {
-                        'ger': ger_bloco,
-                        'bloco': BLOCO,
-                        'descricao': BLOCO_DESCRICAO
-                    }
-                    if 'PCH' in BLOCO_DESCRICAO:
-                        SISTEMA['gpu'][SUBSIS] = ger_bloco
+        SISTEMA['gpu'] = odict()
+        SISTEMA['gnsim'] = odict()
+        for line in range(linerefini, linereffim):
+            if fdata[line][0:2] == '  ' and fdata[line].strip() != '':
+                SUBSIS = fdata[line][2:4].strip()
+                BLOCO = fdata[line][6:8].strip()
+                BLOCO_DESCRICAO = fdata[line][11:20].strip()
+                ger_bloco = list()
+                ger_bloco = [0 for i in range(dger['ni'])]
+            elif fdata[line].strip() == '999':
+                break
+            elif int(fdata[line][0:4].strip()) in dger['yph']:
+                # Lendo a geracao de pequenas usinas
+                anoleitura = int(fdata[line][0:4].strip())
+                mesini = 1
+                if anoleitura == dger['yi']:
+                    mesini = dger['mi']
+                leituras = getUpdateIndexes(
+                    mesini, anoleitura, 12, anoleitura, dger)
+                dados = fdata[line][7:]
+                posini = (int(mesini)-1)*8
+                for n, value in enumerate(leituras):
+                    posfim = posini+((n+1)*8)
+                    posinimov = posfim-8
+                    ger_bloco[value] = \
+                        float(dados[posinimov:posfim].strip())
+                SISTEMA['gnsim'][SUBSIS] = {
+                    'ger': ger_bloco,
+                    'bloco': BLOCO,
+                    'descricao': BLOCO_DESCRICAO
+                }
+                if BLOCO == '' or 'PCH' in BLOCO_DESCRICAO:
+                    SISTEMA['gpu'][SUBSIS] = ger_bloco
     return SISTEMA
