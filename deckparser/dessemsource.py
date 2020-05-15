@@ -51,27 +51,32 @@ class DessemFilePattern:
     def getLogger(self):
         return logging.getLogger(__name__)
 
-class DessemFilePattern_CCEE1(DessemFilePattern):
-    def __init__(self, open_results, pmo_date):
-        super().__init__("DES_CCEE_([0-9]{4})([0-9]{2})([0-9]{2})_(Sem|Com)Rede.zip", open_results, pmo_date)
+class DessemFilePattern_CCEE(DessemFilePattern):
+    def __init__(self, *args, **kwargs):
+        self.sub_dir = kwargs.pop('sub_dir', None)
+        super().__init__(*args, **kwargs)
     
     def getRegex(self):
+        rex = self.fileReExpr
         if self.open_results:
-            return "Resultado_" + self.fileReExpr
-        return self.fileReExpr
+            rex = "Resultado_" + rex
+        if self.sub_dir:
+            rex = self.sub_dir + '/' + rex
+        return rex
+
+class DessemFilePattern_CCEE1(DessemFilePattern_CCEE):
+    def __init__(self, open_results, pmo_date, sub_dir=None):
+        super().__init__("DES_CCEE_([0-9]{4})([0-9]{2})([0-9]{2})_(Sem|Com)Rede.zip", 
+                         open_results, pmo_date, sub_dir=sub_dir)
     
     def capture(self, rr):
         r = True if rr.group(4) == 'Com' else False
         return {'ano': int(rr.group(1)), 'mes': int(rr.group(2)), 'dia': int(rr.group(3)), 'rede': r}
 
-class DessemFilePattern_CCEE2(DessemFilePattern):
-    def __init__(self, open_results, pmo_date):
-        super().__init__("DS_CCEE_([0-9]{2})([0-9]{4})_(SEM|COM)REDE_RV([0-9]{1})D([0-9]{2}).zip", open_results, pmo_date)
-    
-    def getRegex(self):
-        if self.open_results:
-            return "Resultado_" + self.fileReExpr
-        return self.fileReExpr
+class DessemFilePattern_CCEE2(DessemFilePattern_CCEE):
+    def __init__(self, open_results, pmo_date, sub_dir=None):
+        super().__init__("DS_CCEE_([0-9]{2})([0-9]{4})_(SEM|COM)REDE_RV([0-9]{1})D([0-9]{2})_?([A-Z]*).zip", 
+                         open_results, pmo_date, sub_dir=sub_dir)
     
     def capture(self, rr):
         r = True if rr.group(3) == 'COM' else False
@@ -79,8 +84,9 @@ class DessemFilePattern_CCEE2(DessemFilePattern):
         m = int(rr.group(1))
         y = int(rr.group(2))
         rv = int(rr.group(4))
+        sufix = rr.group(6)
         dt = self.realDate(rv, d, m, y)
-        return {'ano': dt.year, 'mes': dt.month, 'dia': dt.day, 'rede': r, 'rv': rv}
+        return {'ano': dt.year, 'mes': dt.month, 'dia': dt.day, 'rede': r, 'rv': rv, 'sufix': sufix}
 
 class DessemFilePattern_ONS(DessemFilePattern):
     def __init__(self, open_results, pmo_date):
@@ -105,6 +111,7 @@ class DessemSource(object):
         self.fhash = None
         self.sourceValid = False
         self.pmo_date = pmo_date
+        self.open_results = open_results
         if fn:
             self.setSource(fn)
             if not self.checkSource():
@@ -112,7 +119,7 @@ class DessemSource(object):
                 return
             if not self.pmo_date:
                 self.getLogger().warn('PMO date not provided, deck dates will not be fixed')
-            for fp in self.sourceFilePatternList(open_results, pmo_date):
+            for fp in self.sourceFilePatternList():
                 self.scanSource(fp)
                 if len(self.dias) > 0:
                     self.sourceValid = True
@@ -249,9 +256,14 @@ class DessemSource(object):
     
 class DessemZipped(DessemSource):
     
-    def sourceFilePatternList(self, open_results, pmo_date):
-        return [DessemFilePattern_CCEE1(open_results, pmo_date), 
-                DessemFilePattern_CCEE2(open_results, pmo_date)]
+    def __init__(self, *args, **kwargs):
+        self.preferred_subdir = kwargs.pop('preferred_subdir', 'Reprocessamento')
+        self.subdir = None
+        super().__init__(*args, **kwargs)
+    
+    def sourceFilePatternList(self):
+        return [DessemFilePattern_CCEE1(self.open_results, self.pmo_date, sub_dir=self.subdir), 
+                DessemFilePattern_CCEE2(self.open_results, self.pmo_date, sub_dir=self.subdir)]
     
     def checkSource(self):
         if zipfile.is_zipfile(self.fn):
@@ -259,6 +271,9 @@ class DessemZipped(DessemSource):
             real_path = os.path.realpath(self.fn)
             self.dirname = os.path.dirname(real_path)
             self.zipfilename = os.path.basename(real_path)
+            self.subdir = self.getSubdir()
+            if self.subdir:
+                self.getLogger().info('Using zip inner directory: {:s}'.format(self.subdir))
             if not self.pmo_date:
                 self.detectPmoDate()
             return True
@@ -280,6 +295,29 @@ class DessemZipped(DessemSource):
         d['zip'] = zipfile.ZipFile(fPath,'r')
         d['tmpdir'] = tmpdir
     
+    def matchAnyFilePattern(self, file_name):
+        for fp in self.sourceFilePatternList():
+            if fp.matchFileName(file_name):
+                return True
+    
+    def getSubdir(self):
+        zip_dirs = [info for info in self.z.infolist() if info.is_dir()]
+        if len(zip_dirs) == 0:
+            return None
+        
+        pref_dir = self.preferred_subdir
+        if pref_dir:
+            for d in zip_dirs:
+                dn = d.filename[:-1]
+                if dn == pref_dir:
+                    return dn
+        
+        zip_files = [info for info in self.z.infolist() if not info.is_dir()]
+        if any([self.matchAnyFilePattern(info.filename) 
+                for info in zip_files]):
+            return None
+        return zip_dirs[0].filename[:-1]
+    
     def getFileNameList(self):
         return self.z.namelist()
     
@@ -290,8 +328,8 @@ class DessemZipped(DessemSource):
 
 class DessemDir(DessemSource):
     
-    def sourceFilePatternList(self, open_results, pmo_date):
-        return [DessemFilePattern_ONS(open_results, pmo_date)]
+    def sourceFilePatternList(self):
+        return [DessemFilePattern_ONS(self.open_results, self.pmo_date)]
     
     def checkSource(self):
         if os.path.isdir(self.fn):
