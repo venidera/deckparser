@@ -197,7 +197,7 @@ def importHIDR(fn):
     if HIDRcount not in [320, 600, 601, 585, 596]:
         print("O arquivo HIDR.DAT importado é inválido.")
         return False
-    if HIDRcount == 601 or HIDRcount == 585:
+    if HIDRcount == 601 or HIDRcount == 585 or HIDRcount == 596:
         HIDRcount = 600
     HIDR = dict()
     chave = 1
