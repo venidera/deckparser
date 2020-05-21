@@ -1,6 +1,6 @@
 import re
 from logging import info,debug
- 
+
 def importRELATO(data):
     # definicoes
     ws = '\s+'
@@ -18,20 +18,20 @@ def importRELATO(data):
             val[1] = float(val[1][:-1].strip())
         except:
             val[1] = val[1][:-1].strip()
-        
+
         return {
             'value': val[0],
             'pMLT': val[1]
         }
-    
+
     def parsePerdHidr(val):
         val = val.split(' ')
-        
+
         return {
             'valor': float(val[0]),
             'unidade': val[1]
-        }        
-    
+        }
+
     tableRefs = {
         'REL_DADOS_CAD_HIDR': {
             'hexp': [ws+'Relatorio'+ws+'dos'+ws+'Dados'+ws+'do'+ws+'Cadastro'+ws+'.+'+ws+'do'+ws+'estagio:'+ws+estagioExp+ws+'\(ALTCAD\)'],
@@ -59,7 +59,7 @@ def importRELATO(data):
                       { 'name': 'Somprd65VU', 'parser': float },
                       { 'name': 'TIP'} ],
             'type': 'x_delimited'
-        },        
+        },
         'REL_OP_HIDR': {
             'hexp': ['RELATORIO'+ws+'DA'+ws+'OPERACAO',
                      ws,
@@ -168,19 +168,19 @@ def importRELATO(data):
                         estagio = int(search.group(1))
                 if found:
                     currTable = tableId
-                    
+
                     # pula linhas da definição
                     l += table['hlines']
-                    
+
                     if table['type']=='x_delimited':
                         currLimits = data[l].split('X')
                     break
             l += 1
             continue
-                
+
         # currTable != None
         # já encontrou tabela, importa linhas
-        
+
         # verifica e ajusta estrutura de retorno (relato)
         table = tableRefs[currTable]
         if 'eline' in table:
@@ -188,7 +188,7 @@ def importRELATO(data):
                 relato[currTable] = dict()
             if estagio not in relato[currTable]:
                 relato[currTable][estagio] = list()
-            
+
 
 
         # ações de leitura conforme tipo
@@ -221,7 +221,7 @@ def importRELATO(data):
             row = None
             l += 1
             continue
-                    
+
         if table['type']=='bal_ener':
             search = re.search(ws+'Subsistema'+ws+'(SE|S|NE|N|FC)',data[l])
             if search:
@@ -235,7 +235,6 @@ def importRELATO(data):
                 l += 1
                 continue
 
-            
             search = re.search(ws+'EAR_ini:'+ws+floatExp+ws+'\(Mwmes\)'+
                                ws+'ENA:'+ws+floatExp+ws+'\(Mwmed\)'+
                                ws+'EAR_fim:'+ws+floatExp+ws+'\(Mwmes\)'+ws,
@@ -252,8 +251,8 @@ def importRELATO(data):
                    ws+floatExp+ws+floatExp+
                    ws+floatExp+ws+floatExp+
                    ws+floatExp+ws+floatExp+
-                   ws+'(?:SE|S|NE|N|FC)\s?:'+
-                   ws+floatExp+'\*')
+                   ws+'(?:SE|S|NE|N|FC)\s?:\s*'+
+                   floatExp+'\*')
             if row['Subsistema']=='SE':
                 exp += ws+floatExp+ws+floatExp
             search = re.search(exp,data[l])
@@ -279,10 +278,10 @@ def importRELATO(data):
                 relato[currTable][estagio].append(row)
                 row = None
                 l += 1
-                continue                                                           
+                continue
             l += 1
             continue
-        if table['type']=='rel_oper':                
+        if table['type']=='rel_oper':
             search = re.search(ws+'Custo'+ws+'marginal'+ws+'de'+ws+'operacao'+
                                ws+'do'+ws+'subsistema'+
                                ws+'(SE|S|NE|N|FC)\s*:'+
@@ -297,8 +296,8 @@ def importRELATO(data):
                     currTable = None
             l += 1
             continue
-        
-        if table['type']=='fluxo_int':            
+
+        if table['type']=='fluxo_int':
             # primeira linha da tabela, define limites dos campos
             if currLimits == None:
                 currLimits = data[l].split('X')
@@ -330,8 +329,8 @@ def importRELATO(data):
                 currLimits = None
                 l += 1
                 continue
-                
-            
+
+
             # carrega linha
             f = 0
             ini = 0

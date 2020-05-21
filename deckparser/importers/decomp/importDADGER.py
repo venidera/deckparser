@@ -6,7 +6,7 @@ def importDADGER(data, reg=None):
         'UH': dict(), 'CT': dict(), 'UE': [], 'DP': dict(), 'PQ': dict(),
         'IT': dict(), 'IA': dict(), 'MP': dict(), 'VE': dict(), 'VM': dict(),
         'DF': dict(), 'TI': dict(), 'MT': dict(), 'VI': dict(), 'RE': dict(),
-        'AC': dict(), 'TE': '', 'HQ': dict(), 'HV': dict()
+        'AC': dict(), 'TE': '', 'HQ': dict(), 'HV': dict(), 'RI': dict()
     }
 
     lineNum = 0
@@ -21,7 +21,7 @@ def importDADGER(data, reg=None):
            (reg == "RE" and id != "LU" and \
             id != "FU" and id != 'FT' and id!='FI'):
             continue
-       
+
         try:
             if id == "TE":
                 DADGER["TE"] = line[4:84].strip()
@@ -37,6 +37,8 @@ def importDADGER(data, reg=None):
                 importPQ(line,DADGER["PQ"])
             elif id == "IT":
                 importIT(line,numPatamares,DADGER["IT"])
+            elif id == "RI":
+                importRI(line,numPatamares,DADGER["RI"])
             elif id == "IA":
                 importIA(line,numPatamares,DADGER["IA"])
             elif id == "TX":
@@ -75,7 +77,7 @@ def importDADGER(data, reg=None):
                 importCV(line,DADGER["HV"])
         except ValueError as e:
             info(str(e)+" linha: "+str(lineNum))
-            
+
     if reg != None:
         return DADGER[reg]
     else:
@@ -83,7 +85,7 @@ def importDADGER(data, reg=None):
 
 
 
-   
+
 def importUH(line, UH):
     UH[int(line[4:7].strip())] = {
         'VolIni': float(line[14:24].strip())
@@ -123,10 +125,10 @@ def importUE(line):
 def importDP(line, DP):
     estagio = int(line[4:6].strip())
     codSubsistema = int(line[9:11].strip())
-    
+
     if estagio not in DP:
         DP[estagio] = dict()
-    
+
     DP[estagio][codSubsistema] = {
         'NumPatamares': int(line[14:15].strip()),
         'Duracao': []
@@ -148,13 +150,13 @@ def importDP(line, DP):
 def importPQ(line, PQ):
     estagio = int(line[19:21].strip())
     codSubsistema = int(line[14:16].strip())
-    
+
     if estagio not in PQ:
         PQ[estagio] = dict()
 
-    if codSubsistema not in PQ[estagio]:        
+    if codSubsistema not in PQ[estagio]:
         PQ[estagio][codSubsistema] = list()
-        
+
     PQ[estagio][codSubsistema].append({
         'Nome': line[4:14].strip(),
         'Valor': [float(line[24:29].strip()),
@@ -169,12 +171,33 @@ def importIT(line,numPatamares,IT):
         'Mande': []
     }
     for patamar in range(1,numPatamares+1):
-        gerItInit = 10+patamar*10
-        mandeInit = 15+patamar*10
+        gerItInit = 9+patamar*10
+        mandeInit = 14+patamar*10
         IT[estagio]['GerIt50'].append(float(line[gerItInit:gerItInit+5].strip()))
         IT[estagio]['Mande'].append(float(line[mandeInit:mandeInit+5].strip()))
-        
-        
+
+def importRI(line,numPatamares,RI):
+    estagio = int(line[10:11].strip())
+    RI[estagio] = {
+        'Min60': [],
+        'Max60': [],
+        'Min50': [],
+        'Max50': [],
+        'Ande': []
+    }
+    for patamar in range(numPatamares):
+        min60Init = 16+patamar*35
+        max60Init = 23+patamar*35
+        min50Init = 30+patamar*35
+        max50Init = 37+patamar*35
+        andeInit = 44+patamar*35
+        RI[estagio]['Min60'].append(float(line[min60Init:min60Init+7].strip()))
+        RI[estagio]['Max60'].append(float(line[max60Init:max60Init+7].strip()))
+        RI[estagio]['Min50'].append(float(line[min50Init:min50Init+7].strip()))
+        RI[estagio]['Max50'].append(float(line[max50Init:max50Init+7].strip()))
+        RI[estagio]['Ande'].append(float(line[andeInit:andeInit+7].strip()))
+
+
 def importIA(line,numPatamares,IA):
     estagio = int(line[4:6].strip())
     if estagio not in IA:
@@ -190,12 +213,12 @@ def importIA(line,numPatamares,IA):
 
     IA[estagio][s1][s2] = list()
     IA[estagio][s2][s1] = list()
-        
+
     for patamar in range(1,numPatamares+1):
         imedInit = patamar*20-1
         IA[estagio][s1][s2].append(int(line[imedInit:imedInit+10].strip()))
         IA[estagio][s2][s1].append(int(line[imedInit+10:imedInit+20].strip()))
-        
+
     return IA
 
 def importTX(line):
@@ -219,7 +242,7 @@ def importMPVEVMDFTI(line,id,obj):
         Reg["Unidade"] = "%"
     elif id =="MP":
         Reg["Unidade"] = ""
-       
+
     i = 0;
     while True:
         Valor = line[9+i*5:9+i*5+5].strip()
@@ -242,7 +265,7 @@ def importMT(line,MT):
         valores.append(float(valor))
         i+=1
     MT[codUte] = valores
-            
+
 def importVI(line,VI):
     codUhe = int(line[4:7].strip())
     VI[codUhe] = {
@@ -284,16 +307,21 @@ def importLU(line,RE,numPatamares):
             limite["Superior"] = float(superior)
 
         LU.append(limite)
-        
+
     RE[id]["LU"][estagio] = LU
 
 def importFU(line, RE):
     id = int(line[4:8].strip())
-    RE[id]["FU"].append({
+    reg = {
         "Estagio": int(line[9:11].strip()),
         "CodUhe": int(line[14:17].strip()),
         "Valor": float(line[19:29].strip())
-    })
+    }
+    try:
+        reg['IT'] = int(line[30:32].strip())
+    except Exception as e:
+        pass
+    RE[id]["FU"].append(reg)
 
 def importFT(line, RE):
     id = int(line[4:8].strip())
@@ -323,7 +351,7 @@ def importAC(line, AC):
         reg["Estagio"] = int(line[74:75].strip())
     except Exception as e:
         pass
-    
+
     try:
         reg["Ano"] = int(line[76:80].strip())
     except Exception as e:
@@ -352,7 +380,7 @@ def importAC(line, AC):
     elif reg["Mnemonico"] == "COTVAZ":
         reg["Numero"] = int(line[19:24].strip())
         reg["Indice"] = int(line[24:29].strip())
-        reg["Valor"] = float(line[29:44].strip())        
+        reg["Valor"] = float(line[29:44].strip())
     elif reg["Mnemonico"] == "COFEVA" or reg["Mnemonico"] == "NUMMAQ" or \
          reg["Mnemonico"] == "VAZEFE":
         reg["Indice"] = int(line[19:24].strip())
@@ -390,10 +418,10 @@ def importLQ(line,HQ,numPatamares):
             limite["Superior"] = float(superior)
 
         LQ.append(limite)
-        
+
     HQ[id]["LQ"][estagio] = LQ
-    
-    
+
+
 def importCQ(line,HQ):
     id = int(line[4:7].strip())
     estagio = int(line[9:11].strip())
@@ -402,7 +430,7 @@ def importCQ(line,HQ):
         'coef': float(line[19:29].strip()),
         'tipo': line[34:38].strip()
     }
-    
+
 def importHV(line,HV):
     id = int(line[4:7].strip())
     HV[id] = {
@@ -426,8 +454,8 @@ def importLV(line,HV):
         limite["Superior"] = float(superior)
 
     HV[id]["LV"][estagio] = limite
-    
-    
+
+
 def importCV(line,HV):
     id = int(line[4:7].strip())
     estagio = int(line[9:11].strip())
