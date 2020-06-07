@@ -1,0 +1,15 @@
+<dsFile name="rampas">
+	<table name="RAMP">
+		<field c="1" cf="3" name="idUsina" type="int" />
+		<field c="5" cf="7" name="idUnidade" type="int" />
+		<field c="14" name="tipoUnidade" type="string">
+			<validate list="C;S" />
+		</field>
+		<field c="18" name="tipoTrajetoria" type="string">
+			<validate list="A;D" />
+		</field>
+		<field c="21" cf="30" name="geracao" type="real" />
+		<field c="32" cf="36" name="tempoAcumulado" type="int" />
+		<field c="38" name="meiaHora" type="bin" />
+	</table>
+</dsFile>
