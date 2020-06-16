@@ -23,7 +23,7 @@ if __name__ == '__main__':
         keywords="parser deck newave decomp dessem suishi",
         url="https://github.org/venidera/deckparser",
         packages=find_packages(),
-        install_requires=['numpy', 'unidecode'],
+        install_requires=['numpy', 'unidecode', 'chardet'],
         long_description=long_desc,
         classifiers=[
             "Development Status :: 5 - Production/Stable",

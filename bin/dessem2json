@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os,logging,json
 from argparse import ArgumentParser
 from io import UnsupportedOperation
@@ -136,8 +138,9 @@ def files_desc():
     print('Arquivos com dados das usinas hidrelétricas, rede hidráulica e restrições aplicáveis: hidr, operuh, dadvaz, curvtviag, cotasr11, ils_tri')
     print('Arquivos com dados para simulação: simul, deflant')
     print('Arquivos com dados sobre área de controle e reserva de potência: areacont, respot')
+    print('Arquivos com dados de controle das restrições de segurança: rstlpp, restseg')
     print('Arquivos com dados da rede elétrica: eletbase, eletmodif')
-    print('Arquivos com dados das usinas termelétricas: termdat, operut, ptoper')
+    print('Arquivos com dados das usinas termelétricas: termdat, operut, ptoper, rampas')
     print('Arquivos com dados outras usinas: renovaveis')
     print('Outros arquivos: infofcf, tolperd')
     print('Arquivos com resultados: pdo_operacao, pdo_sist, pdo_sumaoper')

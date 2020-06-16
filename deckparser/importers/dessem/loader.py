@@ -13,6 +13,7 @@ from deckparser.importers.dessem.eletbase import eletbase
 from deckparser.importers.dessem.termdat import termdat
 from deckparser.importers.dessem.ptoper import ptoper
 from deckparser.importers.dessem.operut import operut
+from deckparser.importers.dessem.rampas import rampas
 from deckparser.importers.dessem.deflant import deflant
 from deckparser.importers.dessem.areacont import areacont
 from deckparser.importers.dessem.respot import respot
@@ -51,6 +52,7 @@ class Loader:
         m['dadvaz'] = dadvaz()
         m['deflant'] = deflant()
         m['operut'] = operut()
+        m['rampas'] = rampas()
         m['ptoper'] = ptoper()
         m['areacont'] = areacont()
         m['respot'] = respot()

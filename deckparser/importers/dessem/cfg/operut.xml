@@ -8,6 +8,9 @@
 			<validate min="0.0" />
 		</field>
 		<field c="42" cf="46" name="tempoPerm" type="int" />
+		<field c="52" name="trajetoriaInicio" type="int">
+			<validate list="0;1;2" />
+		</field>
 	</table>
 	<table name="OPER">
 		<field c="1" cf="3" name="idUsina" type="int" />
