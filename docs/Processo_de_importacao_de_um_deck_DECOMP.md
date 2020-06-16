@@ -43,49 +43,36 @@ Para criar o ambiente virtual de execução e instalar o módulo do
 importador será necessário executar os comandos abaixo:
 
 ```
-$ python3.6 -m venv --prompt='Importador' venv-3.6 --without-pip
+$ python3.6 -m venv --prompt='Importador' venv-3.6
 $ source venv-3.6/bin/activate
-(Importador) $ wget https://bootstrap.pypa.io/get-pip.py
---2018-07-31 15:07:20--  https://bootstrap.pypa.io/get-pip.py
-Resolving bootstrap.pypa.io (bootstrap.pypa.io)... 151.101.92.175, 2a04:4e42:16::175
-Connecting to bootstrap.pypa.io (bootstrap.pypa.io)|151.101.92.175|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1642522 (1.6M) [text/x-python]
-Saving to: ‘get-pip.py’
-
-get-pip.py                             100%[====================>]   1.57M  2.05MB/s    in 0.8s
-
-2018-07-31 15:07:21 (2.05 MB/s) - ‘get-pip.py’ saved [1642522/1642522]
-(Importador) $ python get-pip.py && rm -fr get-pip.py
+(Importador) $ pip install --upgrade pip setuptools
 Collecting pip
-  Downloading https://files.pythonhosted.org/packages/5f/25/e52d3f31441505a5f3af41213346e5b6c221c9e086a166f3703d2ddaf940/pip-18.0-py2.py3-none-any.whl (1.3MB)
-    100% |████████████████████████████████| 1.3MB 2.7MB/s
+  Using cached https://files.pythonhosted.org/packages/43/84/23ed6a1796480a6f1a2d38f2802901d078266bda38388954d01d3f2e821d/pip-20.1.1-py2.py3-none-any.whl
 Collecting setuptools
-  Downloading https://files.pythonhosted.org/packages/ff/f4/385715ccc461885f3cedf57a41ae3c12b5fec3f35cce4c8706b1a112a133/setuptools-40.0.0-py2.py3-none-any.whl (567kB)
-    100% |████████████████████████████████| 573kB 4.8MB/s
-Collecting wheel
-  Downloading https://files.pythonhosted.org/packages/81/30/e935244ca6165187ae8be876b6316ae201b71485538ffac1d718843025a9/wheel-0.31.1-py2.py3-none-any.whl (41kB)
-    100% |████████████████████████████████| 51kB 4.8MB/s
-Installing collected packages: pip, setuptools, wheel
-Successfully installed pip-18.0 setuptools-40.0.0 wheel-0.31.1
-(Importador) $ pip install pip setuptools --upgrade
-Requirement already up-to-date: pip in ./venv-3.6/lib/python3.6/site-packages (18.0)
-Requirement already up-to-date: setuptools in ./venv-3.6/lib/python3.6/site-packages (40.0.0)
+  Downloading https://files.pythonhosted.org/packages/c4/f9/15ec4639c50f54043a6d385a89447f69b3ee3601f65cc7c17ab8c178f0a6/setuptools-47.3.0-py3-none-any.whl (583kB)
+    100% |████████████████████████████████| 583kB 2.2MB/s
+Installing collected packages: pip, setuptools
+  Found existing installation: pip 9.0.3
+    Uninstalling pip-9.0.3:
+      Successfully uninstalled pip-9.0.3
+  Found existing installation: setuptools 39.2.0
+    Uninstalling setuptools-39.2.0:
+      Successfully uninstalled setuptools-39.2.0
+Successfully installed pip-20.1.1 setuptools-47.3.0
 (Importador) $ pip install git+https://git@github.com/venidera/deckparser.git
-Collecting git+https://git@github.com/venidera/deckparser.git
-  Cloning https://git@github.com/venidera/deckparser.git to /tmp/pip-req-build-s31se6m8
-Collecting numpy (from deckparser==0.0.1)
-  Downloading https://files.pythonhosted.org/packages/88/29/f4c845648ed23264e986cdc5fbab5f8eace1be5e62144ef69ccc7189461d/numpy-1.15.0-cp36-cp36m-manylinux1_x86_64.whl (13.9MB)
-    100% |████████████████████████████████| 13.9MB 1.6MB/s
-Collecting unidecode (from deckparser==0.0.1)
-  Downloading https://files.pythonhosted.org/packages/59/ef/67085e30e8bbcdd76e2f0a4ad8151c13a2c5bce77c85f8cad6e1f16fb141/Unidecode-1.0.22-py2.py3-none-any.whl (235kB)
-    100% |████████████████████████████████| 235kB 6.2MB/s
-Building wheels for collected packages: deckparser
-  Running setup.py bdist_wheel for deckparser ... done
-  Stored in directory: /tmp/pip-ephem-wheel-cache-ultpz0sm/wheels/7b/dc/81/f714e8db04092b1d6ebe790dcc613ab906c88d2cf10715dc8a
-Successfully built deckparser
-Installing collected packages: numpy, unidecode, deckparser
-Successfully installed deckparser-0.0.1 numpy-1.15.0 unidecode-1.0.22
+Collecting git+https://****@github.com/venidera/deckparser.git
+  Cloning https://****@github.com/venidera/deckparser.git to /tmp/pip-req-build-am1e89ag
+  Running command git clone -q 'https://****@github.com/venidera/deckparser.git' /tmp/pip-req-build-am1e89ag
+Collecting numpy
+  Using cached numpy-1.18.5-cp36-cp36m-manylinux1_x86_64.whl (20.1 MB)
+Collecting unidecode
+  Using cached Unidecode-1.1.1-py2.py3-none-any.whl (238 kB)
+Collecting chardet
+  Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
+Using legacy setup.py install for deckparser, since package 'wheel' is not installed.
+Installing collected packages: numpy, unidecode, chardet, deckparser
+    Running setup.py install for deckparser ... done
+Successfully installed chardet-3.0.4 deckparser-1.0.1 numpy-1.18.5 unidecode-1.1.1
 ```
 
 Nesta instalação está sendo utilizado um *virtualenv* Python para
@@ -102,7 +89,7 @@ os dados utilizando o comando *decomp2json*, que possui a sintaxe
 abaixo:
 
 ```
-$ decomp2json 
+$ decomp2json
 Conversor do deck de dados do DECOMP para formato JSON
 Sintaxe: decomp2json <deck-file-path> [semana [registro]]
 Semana: Número da semana (revisões), começando por 1
@@ -174,11 +161,11 @@ realizam atividades específicas. São elas:
     planejamento, composto por blocos de dados, onde cada bloco é
     composto por registros formatados. O importador permite extrair os
     seguintes registros:
-	- UH (usinas hidrelétricas), 
-	- CT (usinas termoelétricas), 
-	- UE (estações de bombeamento), 
-	- DP (carga dos subsistemas), 
-	- PQ (geração em pequenas usinas), 
+	- UH (usinas hidrelétricas),
+	- CT (usinas termoelétricas),
+	- UE (estações de bombeamento),
+	- DP (carga dos subsistemas),
+	- PQ (geração em pequenas usinas),
 	- IT (restrição de geração de itaipu 50Hz e carga da ANDE),
 	- IA (limite de fluxo entre subsistemas)
 	- TX (taxa de desconto anual)
@@ -197,7 +184,7 @@ realizam atividades específicas. São elas:
     para cada estágio (semana) do primeiro mês, e diversos cenários
     para o segundo mês. São extraídos os dados de vazão para cada
     estágio do mês inicial.
-	  	
+
 Todo o código do importador é aberto e está disponível no endereço
 [https://github.com/venidera/deckparser](https://github.com/venidera/deckparser)
 sob licença Apache v2. Os arquivos e registros importados são os de
