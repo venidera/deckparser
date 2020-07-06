@@ -8,7 +8,7 @@
 		<field c="18" name="tipoTrajetoria" type="string">
 			<validate list="A;D" />
 		</field>
-		<field c="21" cf="30" name="geracao" type="real" />
+		<field c="21" cf="31" name="geracao" type="real" />
 		<field c="32" cf="36" name="tempoAcumulado" type="int" />
 		<field c="38" name="meiaHora" type="bin" />
 	</table>
