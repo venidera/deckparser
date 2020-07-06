@@ -5,7 +5,7 @@ from logging import info,debug
 from os.path import realpath,dirname
 
 class DecompZipped(object):
-    def __init__(self, fn=None):
+    def __init__(self, fn=None,r_fn=None):
         # arquivo zipado que sera aberto
         self.z = None
         self.sem = dict()
@@ -15,11 +15,13 @@ class DecompZipped(object):
         self.filename = None
         self.fhash = None
         self.internal_dir = None
+        self.fn = None
+        self.r_fn = None
         if fn:
-            self.setZipFile(fn)
+            self.fn = fn
+            if r_fn:
+                self.r_fn = r_fn
             self.openZip()
-        else:
-            self.fn = None
 
     def __del__(self):
         for key in self.sem:
@@ -34,8 +36,6 @@ class DecompZipped(object):
         else:
             return False
 
-    def setZipFile(self,fn):
-        self.fn = fn
 
     def openZip(self):
         self.z = zipfile.ZipFile(self.fn, 'r')
@@ -43,6 +43,14 @@ class DecompZipped(object):
         self.dirname = os.path.dirname(real_path)
         self.zipfilename = real_path.split("/")[-1]
         self.filename = self.zipfilename.split(".")[-2]
+
+        if self.r_fn:
+            self.r_z = zipfile.ZipFile(self.r_fn,'r')
+            real_path = os.path.realpath(self.r_fn)
+            self.r_dirname = os.path.dirname(real_path)
+            self.r_zipfilename = real_path.split("/")[-1]
+            self.r_filename = self.r_zipfilename.split(".")[-2]
+
         self.fhash = str(hasher())
 
         def init_sem(sem):
@@ -55,9 +63,15 @@ class DecompZipped(object):
                     'relzip': None,
                     'relfilelist': dict(),
                     'tmpdir': None,
-                }                        
-            
-        for fn in self.z.namelist():
+                }
+        namelist = self.z.namelist()
+
+        for fn in namelist:
+            if fn.lower()=='caso.dat':
+                init_sem(1)
+                self.sem[1]['zip'] = self.z
+                self.openDeckONS()
+                break
             sem = re.search(re.escape(self.filename)+"\-sem([1234]).zip",fn)
             if sem:
                 init_sem(int(sem.group(1)))
@@ -67,22 +81,37 @@ class DecompZipped(object):
                 if rel:
                     init_sem(int(rel.group(1)))
                     self.sem[int(rel.group(1))]['relfilename'] = fn
-                
+
 
     def numSemanas(self):
         return len(self.sem)
 
+    def openDeckONS(self):
+        tmpdir = self.dirname+"/"+self.fhash
+        os.mkdir(tmpdir)
+
+        for fn in self.sem[1]['zip'].namelist():
+            tag = fn.split('.')[0].upper()
+            self.sem[1]['filelist'][tag] = fn
+        if self.r_fn:
+            self.sem[1]['relzip'] = zipfile.ZipFile(self.r_fn,'r')
+            for fn in self.sem[1]['relzip'].namelist():
+                tag = fn.split('.')[0].upper()
+                self.sem[1]['relfilelist'][tag] = fn
+
+        self.sem[1]['tmpdir'] = tmpdir
+
     def openSemana(self,num_sem):
-        try:            
+        try:
             if num_sem not in self.sem:
                 raise ValueError('Deck não possui a semana especificada')
-            
+
             if self.sem[num_sem]['zip'] is not None:
                 return
 
             tmpdir = self.dirname+"/"+self.fhash+'_sem'+str(num_sem)
             os.mkdir(tmpdir)
-            
+
             fname = self.sem[num_sem]['filename']
             relfname = self.sem[num_sem]['relfilename']
             self.z.extract(fname, tmpdir)
@@ -97,12 +126,12 @@ class DecompZipped(object):
                 for fn in self.sem[num_sem]['relzip'].namelist():
                     tag = fn.split('.')[0].upper()
                     self.sem[num_sem]['relfilelist'][tag] = fn
-                
+
             self.sem[num_sem]['tmpdir'] = tmpdir
         except:
             info('Erro ao abrir semana',num_sem)
             raise
-            
+
 
     def closeSemana(self,num_sem):
         try:
@@ -119,7 +148,7 @@ class DecompZipped(object):
         except:
             info('Erro ao fechar semana ',num_sem)
             raise
-        
+
     def openFile(self,num_sem,tag):
         try:
             if self.sem[num_sem]['zip'] is None:
@@ -146,8 +175,10 @@ class DecompZipped(object):
             elif tag in self.sem[num_sem]['relfilelist']:
                 fname = self.sem[num_sem]['relfilelist'][tag]
                 z = self.sem[num_sem]['relzip']
+            else:
+                raise ValueError('Tag {} não encontrado'.format(tag))
             z.extract(fname, self.sem[num_sem]['tmpdir'])
-                
+
             filepath = self.sem[num_sem]['tmpdir']+'/'+fname
             f = open(filepath,'r',encoding='latin_1')
             data = f.readlines()
@@ -168,6 +199,8 @@ class DecompZipped(object):
             elif tag in self.sem[num_sem]['relfilelist']:
                 fname = self.sem[num_sem]['relfilelist'][tag]
                 z = self.sem[num_sem]['relzip']
+            else:
+                raise ValueError('Tag {} não encontrado'.format(tag))
             e = z.extract(fname, self.sem[num_sem]['tmpdir'])
             return self.sem[num_sem]['tmpdir']+'/'+fname
         except:

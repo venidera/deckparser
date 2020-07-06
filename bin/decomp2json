@@ -1,38 +1,49 @@
 #!/usr/bin/env python3
 
-import sys,logging,json
+import sys,logging,json,argparse
 from deckparser.decomp2dicts import decomp2dicts
 
-def usage():
-    print('Conversor do deck de dados do DECOMP para formato JSON')
-    print('Sintaxe: decomp2json <deck-file-path> [semana [registro]]')
-    print('Semana: Número da semana (revisões), começando por 1')
-    print('Registros: TE, UH, CT, UE, DP, PQ, IT, IA, TX, DT, MP, VE, VM, DF, TI, MT, VI, RE, AC, HQ, HV, RI, RELATO')
-    print('Exemplos:')
-    print('decomp2json DC201805.zip')
-    print('decomp2json DC201805.zip 2')
-    print('decomp2json DC201805.zip 1 UE')
-    print('decomp2json DC201805.zip > DC201805.json')
-
 def main():
-    logging.basicConfig(level=logging.DEBUG)
-    if len(sys.argv) == 2:
-        deck = decomp2dicts(fn=sys.argv[1])
-        print(json.dumps(deck,indent=1))
-    elif len(sys.argv) == 3:
-        sem = int(sys.argv[2])
-        print(json.dumps(deck,indent=1))
-    elif len(sys.argv) == 4:
-        sem = int(sys.argv[2])
-        deck = decomp2dicts(fn=sys.argv[1],sem=sem,reg=sys.argv[3].upper())
-        print(json.dumps(deck,indent=1))
-    else:
-        usage()
-        return False
+    parser = argparse.ArgumentParser(
+        description='Conversor do deck de dados do DECOMP para formato JSON'
+    )
+    parser.add_argument(
+        "deck",
+        help=("Arquivo do deck DECOMP (CCEE ou ONS), que pode conter "+
+              "resultados (CCEE)"),
+        type=str
+    )
+    parser.add_argument(
+        "resultados",
+        nargs='?',
+        help="Arquivo de resultados do DECOMP (ONS)",
+        type=str
+    )
+    parser.add_argument(
+        "-s",
+        help=("Especifica o número da semana (revisão) para ser utilizada, "+
+              "começando por 1. Somente para deck da CCEE"),
+        type=int
+    )
+    parser.add_argument(
+        "-r",
+        help=("Especifica o registro a ser importado. Só funciona com "+
+              "especificação da semana também nos decks da CCEE."),
+        type=str,
+        choices=['TE', 'UH', 'CT', 'UE', 'DP', 'PQ', 'IT', 'IA', 'TX',
+                 'DT', 'MP', 'VE', 'VM', 'DF', 'TI', 'MT', 'VI', 'RE',
+                 'AC', 'HQ', 'HV', 'RI', 'RELATO', 'TG', 'GS', 'NL', 'GL']
+    )
+    args = parser.parse_args()
+    # logging.basicConfig(level=logging.DEBUG)
+
+    deck = decomp2dicts(
+        fn=args.deck,
+        r_fn=args.resultados,
+        sem=args.s,
+        reg=args.r
+    )
+    print(json.dumps(deck,indent=1))
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as error:
-        usage()
-        raise(error)
+    main()
