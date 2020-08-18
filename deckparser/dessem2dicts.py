@@ -16,7 +16,7 @@ def dessem2dicts(fn, dia=None, rd=None, file_filter=None, interval_list=None, fi
 def getLogger():
     return logging.getLogger(__name__)
 
-def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None, load_results=False, deck_version=1, pmo_date=None):
+def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, output_format=None, file_encoding=None, load_results=False, deck_version=2, pmo_date=None):
     dz = dessem_source(fn, load_results, pmo_date)
     if dz.validSource():
         rd = casesRede(rd)
@@ -62,7 +62,7 @@ def load_dessem(fn, dia=None, rd=None, file_filter=None, interval_list=None, out
 def optGridToStr(r):
     return ('Com Rede' if r else 'Sem Rede')
 
-def load_dessem_case(dz, d, r, file_filter=None, interval_list=None, enc=None, fmt=None, deck_version=1):
+def load_dessem_case(dz, d, r, file_filter=None, interval_list=None, enc=None, fmt=None, deck_version=2):
     rd = optGridToStr(r)
     getLogger().info('Loading case for date %s %s', str(d), str(rd))
     try:
