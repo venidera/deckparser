@@ -140,6 +140,12 @@ def importRELATO(data):
             'hexp': ['FLUXO'+ws+'NOS'+ws+'INTERCAMBIOS'+ws+'.*'],
             'hlines': 0,
             'type': 'fluxo_int'
+        },
+        'GER_TERM': {
+            'hexp': ['GERACAO'+ws+'TERMICA'+ws+'\(MWmed\)'+ws+'PARA'+ws+'O'+ws+'PATAMAR'+ws+'([1-5])'],
+            'eline': 0,
+            'hlines': 0,
+            'type': 'ger_term'
         }
     }
 
@@ -348,6 +354,54 @@ def importRELATO(data):
                         row[rowname] = field
                 f += 1
             relato[currTable].append(row)
+            l += 1
+            continue
+
+        if table['type']=='ger_term':
+            # primeira linha da tabela, define limites dos campos
+            if currLimits == None:
+                currLimits = data[l].split('X')
+                table['rows'] = list()
+                l += 1
+                continue
+
+            # segunda linha da tabela, define nome dos campos
+            if len(table['rows'])==0:
+                ini = 0
+                for f in range(len(currLimits)-2):
+                    ini += len(currLimits[f])+1
+                    fim = ini + len(currLimits[f+1])
+                    field = data[l][ini:fim].strip()
+                    table['rows'].append(field)
+                l += 2
+                continue
+
+            # verifica se é ultima linha para finalizar
+            search = re.search(linhaTabela,data[l])
+            if search:
+                currTable = None
+                currLimits = None
+                l += 1
+                continue
+
+
+            # carrega linha
+            f = 0
+            ini = 0
+            row = dict()
+            for rowname in table['rows']:
+                ini += len(currLimits[f])+1
+                fim = ini + len(currLimits[f+1])
+                field = data[l][ini:fim].strip()
+                try:
+                    row[rowname] = int(field)
+                except:
+                    try:
+                        row[rowname] = float(field)
+                    except:
+                        row[rowname] = field
+                f += 1
+            relato[currTable][estagio].append(row)
             l += 1
             continue
     return relato
