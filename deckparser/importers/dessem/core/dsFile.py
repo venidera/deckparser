@@ -79,10 +79,10 @@ class dsFile:
         self.tables[name] = r
         
     def getRec(self, name):
-        return self.records[name]
+        return self.records.get(name)
         
     def getTable(self, name):
-        return self.tables[name]
+        return self.tables.get(name)
     
     def clearData(self):
         for n in self.records:

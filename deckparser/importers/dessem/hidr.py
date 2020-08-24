@@ -8,7 +8,7 @@ import logging
 
 class HIDR():
     def __init__(self):
-        self.keyList = []
+        self.keyList = ['idUsina']
         self.lines = []
         self.recFilter = None
 
