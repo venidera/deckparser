@@ -7,6 +7,15 @@ from deckparser.importers.dessem.core.dataType import parseDataType, validateDat
 from deckparser.importers.dessem.core.exceptions import ValidationException
 import logging
 
+def tabs_to_space(ln):
+    tab_index = ln.find('\t')
+    if tab_index < 0:
+        return ln
+    tab_size = 4
+    tab_shift = tab_index % tab_size
+    ln = ln.replace('\t', ' '*(tab_size - tab_shift), 1)
+    return tabs_to_space(ln)
+
 class record:
     
     def __init__(self, recMap):
@@ -110,7 +119,7 @@ class record:
         
         m = self.recMap
         r = dict()
-        
+        line = self.format_line(line)
         for key in m:
             f = m[key]
             try:
@@ -126,6 +135,10 @@ class record:
         self.data = r
         self.line = line
         return r
+    
+    def format_line(self, ln):
+        # Adaptações para corrigir linhas mal formatadas
+        return tabs_to_space(ln)
     
     def parseCsv(self, line):
         m = self.recMap
