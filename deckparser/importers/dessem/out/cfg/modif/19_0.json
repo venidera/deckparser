@@ -1,0 +1,115 @@
+{
+"pdo_operacao": {
+   "2": {
+      "name": "vazoes",
+      "fields": [
+         {
+            "name": "idUhe",
+            "type": "int",
+            "c": 0,
+            "cf": 4
+         },
+         {
+            "name": "nome",
+            "type": "string",
+            "c": 4,
+            "cf": 19
+         },
+         {
+            "name": "subSistema",
+            "type": "string",
+            "c": 19,
+            "cf": 22
+         },
+         {
+            "name": "vazIncr",
+            "type": "real",
+            "c": 22,
+            "cf": 30,
+            "unit": "m3/s",
+			"desc": "Vazão Afluente Incremental"
+         },
+         {
+            "name": "vazMontV",
+            "type": "real",
+            "c": 30,
+            "cf": 43,
+            "unit": "m3/s",
+			"desc": "Vazão Defluente a Montante V."
+         },
+         {
+            "name": "vazMont",
+            "type": "real",
+            "c": 43,
+            "cf": 52,
+            "unit": "m3/s",
+			"desc": "Vazão Defluente a Montante"
+         },
+         {
+            "name": "vazTurb",
+            "type": "real",
+            "c": 52,
+            "cf": 61,
+            "unit": "m3/s",
+			"desc": "Vazão Turbinada"
+         },
+         {
+            "name": "vazVert",
+            "type": "real",
+            "c": 61,
+            "cf": 71,
+            "unit": "m3/s",
+			"desc": "Vazão Vertida"
+         },
+         {
+            "name": "vazDesv",
+            "type": "real",
+            "c": 71,
+            "cf": 80,
+            "unit": "m3/s",
+			"desc": "Vazão Desviada"
+         },
+         {
+            "name": "vazDesc",
+            "type": "real",
+            "c": 80,
+            "cf": 89,
+            "unit": "m3/s",
+			"desc": "Vazão de Descarga"
+         },
+         {
+            "name": "vazAlt",
+            "type": "real",
+            "c": 89,
+            "cf": 98,
+            "unit": "m3/s",
+			"desc": "Vazão Alt"
+         },
+         {
+            "name": "vazBomb",
+            "type": "real",
+            "c": 98,
+            "cf": 107,
+            "unit": "m3/s",
+			"desc": "Vazão Bombeada"
+         },
+         {
+            "name": "defMin",
+            "type": "real",
+            "c": 107,
+            "cf": 116,
+            "unit": "m3/s",
+			"desc": "Defluência Mínima"
+         },
+         {
+            "name": "defMax",
+            "type": "real",
+            "c": 116,
+            "cf": 125,
+            "unit": "m3/s",
+			"desc": "Defluência Máxima"
+         }
+      ]
+   }
+}
+}
