@@ -35,9 +35,9 @@ def get_pmo_month(deck_date):
 def real_month(rv, d, m, y):
     m_date = date(y,m,1)
     if rv == 0 and d > 20:
-        m_date -= relativedelta(month=1)
+        m_date -= relativedelta(months=1)
     elif rv > 3 and d < 10:
-        m_date += relativedelta(month=1)
+        m_date += relativedelta(months=1)
     return m_date
 
 def real_date(rv, d, m, y):

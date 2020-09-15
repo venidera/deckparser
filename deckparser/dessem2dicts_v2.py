@@ -76,7 +76,7 @@ def load_dessem_result(dz, d, r, file_filter=None, enc=None, fmt=None):
                                result_flag=True, 
                                file_list=ld.getFileList())
     except:
-        getLogger().warning('Could not open results: %s', case_desc(d,r))
+        getLogger().exception('Could not open results: %s', case_desc(d,r))
         return None
     ld.setDirDS(dr)
     ld.loadAll()

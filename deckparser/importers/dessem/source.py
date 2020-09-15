@@ -44,11 +44,11 @@ class DessemSource:
         ed = options.get('extract_to')
         if not ed:
             ed = self.root_source.tempdir()
-            try:
-                os.makedirs(ed, exist_ok=True)
-            except:
-                # TODO usar tempdir
-                raise
+        try:
+            os.makedirs(ed, exist_ok=True)
+        except:
+            # TODO usar tempdir
+            raise
         self.extracted_dir = ed
     
     def __del__(self):
@@ -233,7 +233,12 @@ class ZippedSource:
         return name_parts[-1]
     
     def __is_subdir_file(self, zip_info):
-        return not zip_info.is_dir() and self.__is_contained(zip_info.filename)
+        return not self.__is_dir(zip_info) and self.__is_contained(zip_info.filename)
+    
+    def __is_dir(self, zip_info):
+        if hasattr(zip_info, 'is_dir'):
+            return zip_info.is_dir()
+        return not '.' in zip_info.filename
     
     def __is_contained(self, zn, level=0):
         name_parts = self.break_path(zn)
@@ -617,7 +622,7 @@ class DeckDessemSource:
             getLogger().info('Invalid deck date: {}-{}-{}'.format(y,m,d))
         
         rev = self.metadata.get('rev')
-        if rev:
+        if rev is not None:
             rd = real_date(rev, d, m, y)
             if rd is not None:
                 if rd != deck_date:
