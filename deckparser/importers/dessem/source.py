@@ -226,13 +226,13 @@ class ZippedSource:
     def list_files_name(self):
         return [self.__adapt_zip_filename(info.filename)
                 for info in self.z.infolist()
-                if self.__is_subdir_file(info)]
+                if self._is_subdir_file(info)]
     
     def __adapt_zip_filename(self, zn):
         name_parts = self.break_path(zn)
         return name_parts[-1]
     
-    def __is_subdir_file(self, zip_info):
+    def _is_subdir_file(self, zip_info):
         return not self.__is_dir(zip_info) and self.__is_contained(zip_info.filename)
     
     def __is_dir(self, zip_info):
@@ -673,15 +673,20 @@ class DeckDessemZippedSource(DeckDessemSource, ZippedSource):
         target_dir = os.path.join(base_dir, self.base_name())
         os.makedirs(target_dir, exist_ok=True)
         
-        for fn in self.z.namelist():
+        for zip_info in self.z.infolist():
+            if not self._is_subdir_file(zip_info):
+                continue
+            fn = zip_info.filename
+            base_name = self.break_path(fn)[-1]
             if file_filter:
-                fk = self.get_file_key(fn)
+                fk = self.get_file_key(base_name)
                 if fk not in file_filter:
                     continue
-            getLogger().debug('Extracting {} from {} to {}'.format(fn, self.zip_file_path, target_dir))
+            getLogger().debug('Extracting {} from {} to {}'.format(base_name, self.zip_file_path, target_dir))
             self.z.extract(fn, target_dir)
         
-        return DeckDessemDirSource.detect(target_dir)
+        source_dir = os.path.join(target_dir, *self.zip_dir)
+        return DeckDessemDirSource.detect(source_dir)
     
     def to_dict(self, detailed=False):
         d = ZippedSource.to_dict(self)
