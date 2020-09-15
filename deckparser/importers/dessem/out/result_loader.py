@@ -21,6 +21,14 @@ class ResultLoader:
         m['pdo_sumaoper'] = pdo_sumaoper()
         self.resultLoaders = m
     
+    @staticmethod
+    def required_files():
+        return ['pdo_operacao']
+    
+    @classmethod
+    def all_files(cls):
+        return cls.required_files() + ['pdo_sist','pdo_sumaoper']
+    
     def prepare(self):
         dessem_version = self.loadDessemVersion()
         self.getLogger().info('Preparing configuration (DESSEM version {:s})'.format(str(dessem_version)))

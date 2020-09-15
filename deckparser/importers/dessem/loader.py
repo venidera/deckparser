@@ -39,6 +39,20 @@ class Loader:
         if dirDS:
             self.loadIndex()
     
+    @staticmethod
+    def required_files():
+        return [
+            'hidr','dessem','entdados',
+            'operuh','dadvaz','deflant','operut'
+            ]
+    
+    @classmethod
+    def all_files(cls):
+        return cls.required_files() + [
+            'desselet','rampas','ptoper','areacont','respot','simul','curvtviag',
+            'ils_tri','cotasr11','renovaveis','restseg','rstlpp'
+            ]
+    
     ''' Inicializa as instancias dos importers e os indices de arquivos '''
     def init(self):
         self.getLogger().debug('Loading configuration files')
