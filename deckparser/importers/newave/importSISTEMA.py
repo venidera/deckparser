@@ -154,6 +154,8 @@ def importSISTEMA(fdata, dger):
                 BLOCO_DESCRICAO = fdata[line][11:20].strip()
                 ger_bloco = list()
                 ger_bloco = [0 for i in range(dger['ni'])]
+                if not SUBSIS in SISTEMA['gnsim']:
+                    SISTEMA['gnsim'][SUBSIS] = dict()
             elif fdata[line].strip() == '999':
                 break
             elif int(fdata[line][0:4].strip()) in dger['yph']:
@@ -171,7 +173,7 @@ def importSISTEMA(fdata, dger):
                     posinimov = posfim-8
                     ger_bloco[value] = \
                         float(dados[posinimov:posfim].strip())
-                SISTEMA['gnsim'][SUBSIS] = {
+                SISTEMA['gnsim'][SUBSIS][BLOCO] = {
                     'ger': ger_bloco,
                     'bloco': BLOCO,
                     'descricao': BLOCO_DESCRICAO
