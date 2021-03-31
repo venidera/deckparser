@@ -35,7 +35,7 @@ def newave2dicts(fn):
         dd.DGER = importDGER(dz.openFile(fnp='dger'))
         dd.SISTEMA = importSISTEMA(dz.openFileExtData(fnp='sistema'), dd.DGER)
         dd.process_ss()
-        dd.PATDURA, dd.PATCARGA, dd.PATINTER, dd.np = \
+        dd.PATDURA, dd.PATCARGA, dd.PATINTER, dd.PATNSIM, dd.np = \
             importPATAMAR(dz.openFileExtData(fnp='patamar'), dd.DGER, dd.sss)
         dd.CAR = importCAR(dz.openFileExtData(fnp='curva'), dd.DGER)
         dd.CADIC = importCADIC(dz.openFileExtData(fnp='c_adic'), dd.DGER)

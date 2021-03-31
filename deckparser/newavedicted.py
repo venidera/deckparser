@@ -32,6 +32,7 @@ class NewaveDicted(object):
         self.PATDURA = None
         self.PATCARGA = None
         self.PATINTER = None
+        self.PATNSIM = None
 
         # Dados do parque termelétrico
         self.TERM = None

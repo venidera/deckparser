@@ -149,6 +149,7 @@ def importSISTEMA(fdata, dger):
         SISTEMA['gnsim'] = odict()
         for line in range(linerefini, linereffim):
             if fdata[line][0:2] == '  ' and fdata[line].strip() != '':
+            # if fdata[line][0:1] == ' ' and fdata[line].strip() != '':
                 SUBSIS = fdata[line][2:4].strip()
                 BLOCO = fdata[line][6:8].strip()
                 BLOCO_DESCRICAO = fdata[line][11:20].strip()
