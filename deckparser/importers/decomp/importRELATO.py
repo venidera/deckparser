@@ -5,7 +5,7 @@ def importRELATO(data):
     # definicoes
     ws = '\s+'
     estagioExp = '([0-9])'
-    floatExp = '([-+]?[0-9]*\.?[0-9]*)'
+    floatExp = '([-+]?[0-9]+\.?[0-9]*)'
     linhaTabela = ws+'[X\-]+'+ws
 
     def parseQnat(val):
@@ -75,6 +75,36 @@ def importRELATO(data):
             'hlines': 11,
             'rows': [ { 'name': 'No', 'parser': int },
                       { 'name': 'Usina', 'parser': lambda val: val[:-5].strip() },
+                      { 'name': 'VolIni', 'parser': float },
+                      { 'name': 'VolFin', 'parser': float },
+                      { 'name': 'VolEsp', 'parser': float },
+                      { 'name': 'Qnat', 'parser': parseQnat },
+                      { 'name': 'Qafl', 'parser': float },
+                      { 'name': 'Qdef', 'parser': float },
+                      { 'name': 'GER_1', 'parser': float },
+                      { 'name': 'GER_2', 'parser': float },
+                      { 'name': 'GER_3', 'parser': float },
+                      { 'name': 'Media', 'parser': float },
+                      { 'name': 'VT', 'parser': float },
+                      { 'name': 'VNT', 'parser': float },
+                      { 'name': 'Ponta', 'parser': float },
+                      { 'name': 'FPCGC', 'parser': float } ],
+            'type': 'x_delimited'
+        },
+        'REL_OP_HIDR_OLD': {
+            'hexp': ['RELATORIO'+ws+'DA'+ws+'OPERACAO',
+                     ws,
+                     '.+'+ws+'\/'+ws+'SEMANA'+ws+'[0-9]'+ws+'\-'+ws+'ESTAGIO'+ws+estagioExp+ws+'\/'+ws+'.*',
+                     ws,
+                     re.escape('# Aproveitamento(s) com evaporacao'),
+                     re.escape('* Aproveitamento(s) com tempo de viagem da afluencia'),
+                     re.escape('@ Aproveitamento(s) com cota abaixo da crista do vert.'),
+                     re.escape('$ Aproveitamento(s) de cabeceira : def.minima = zero'),
+                     linhaTabela,
+                     'Usina'+ws+'Volume'+ws+'\(\% V\.U\.\)'+ws+'Vazoes'+ws+'\(M3\/S\)'+ws+'Energia'+ws+'\(MWmed\)'+ws+'\-'+ws+'CGC'+ws+'Pdisp'],
+            'eline': 2,
+            'hlines': 11,
+            'rows': [ { 'name': 'Usina', 'parser': lambda val: val[:-5].strip() },
                       { 'name': 'VolIni', 'parser': float },
                       { 'name': 'VolFin', 'parser': float },
                       { 'name': 'VolEsp', 'parser': float },
@@ -262,25 +292,52 @@ def importRELATO(data):
             if row['Subsistema']=='SE':
                 exp += ws+floatExp+ws+floatExp
             search = re.search(exp,data[l])
+            gerAT = True
+            if not search:
+                # teste versão antiga que não possui gerAT
+                exp = (ws+'Medio'+
+                       ws+floatExp+ws+floatExp+
+                       ws+floatExp+ws+floatExp+
+                       ws+floatExp+ws+floatExp+
+                       ws+floatExp+ws+floatExp+
+                       ws+'(?:SE|S|NE|N|FC)\s?:\s*'+
+                       floatExp+'\*')
+                if row['Subsistema']=='SE':
+                    exp += ws+floatExp+ws+floatExp
+                search = re.search(exp,data[l])
+                gerAT = False
+
             if search:
                 if row['Subsistema']=='FC':
                     currTable = None
                     l += 1
                     continue
-
-                row['Mercado'] = float(search.group(1))
-                row['Bacia'] = float(search.group(2))
-                row['Cbomba'] = float(search.group(3))
-                row['Ghid'] = float(search.group(4))
-                row['Gter'] = float(search.group(5))
-                row['GterAT'] = float(search.group(6))
-                row['Deficit'] = float(search.group(7))
-                row['Compra'] = float(search.group(8))
-                row['Venda'] = float(search.group(9))
-                row['Interligacao'] = float(search.group(10))
+                gid = 1
+                row['Mercado'] = float(search.group(gid))
+                gid +=1
+                row['Bacia'] = float(search.group(gid))
+                gid +=1
+                row['Cbomba'] = float(search.group(gid))
+                gid +=1
+                row['Ghid'] = float(search.group(gid))
+                gid +=1
+                row['Gter'] = float(search.group(gid))
+                gid +=1
+                if gerAT:
+                    row['GterAT'] = float(search.group(gid))
+                    gid +=1
+                row['Deficit'] = float(search.group(gid))
+                gid +=1
+                row['Compra'] = float(search.group(gid))
+                gid +=1
+                row['Venda'] = float(search.group(gid))
+                gid +=1
+                row['Interligacao'] = float(search.group(gid))
                 if row['Subsistema']=='SE':
-                    row['Itaipu50'] = float(search.group(11))
-                    row['Itaipu60'] = float(search.group(12))
+                    gid +=1
+                    row['Itaipu50'] = float(search.group(gid))
+                    gid +=1
+                    row['Itaipu60'] = float(search.group(gid))
                 relato[currTable][estagio].append(row)
                 row = None
                 l += 1
@@ -404,4 +461,7 @@ def importRELATO(data):
             relato[currTable][estagio].append(row)
             l += 1
             continue
+
+    if 'REL_OP_HIDR_OLD' in relato:
+        relato['REL_OP_HIDR'] = relato.pop('REL_OP_HIDR_OLD')
     return relato
