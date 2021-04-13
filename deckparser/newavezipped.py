@@ -119,7 +119,10 @@ class NewaveZipped(object):
         try:
             fname = self.fns_set[fnp.upper()]
             self.z.extract(fname, self.dirname)
-            destfile = self.dirname + "/" + self.fhash + '_' + fname
+            if self.internal_dir:
+                destfile = self.dirname + '/' + self.internal_dir + '/' + self.fhash + '_' + fname.split('/')[-1]
+            else:
+                destfile = self.dirname + "/" + self.fhash + '_' + fname
             os.rename(self.dirname + "/" + fname, destfile)
             return destfile
         except Exception:
