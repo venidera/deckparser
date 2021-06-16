@@ -148,16 +148,18 @@ def importSISTEMA(fdata, dger):
         SISTEMA['gpu'] = odict()
         SISTEMA['gnsim'] = odict()
         for line in range(linerefini, linereffim):
-            if fdata[line][0:1] == ' ' and fdata[line].strip() != '':
+            if fdata[line].strip() == '999':
+                break
+            elif fdata[line][0:1] == ' ' and fdata[line].strip() != '':
                 SUBSIS = fdata[line][2:4].strip()
-                BLOCO = fdata[line][6:8].strip()
+                BLOCO = fdata[line][6:9].strip()
+                if len(BLOCO) == 1:
+                    BLOCO = '0' + BLOCO
                 BLOCO_DESCRICAO = fdata[line][11:20].strip()
                 ger_bloco = list()
                 ger_bloco = [0 for i in range(dger['ni'])]
                 if not SUBSIS in SISTEMA['gnsim']:
                     SISTEMA['gnsim'][SUBSIS] = dict()
-            elif fdata[line].strip() == '999':
-                break
             elif int(fdata[line][0:4].strip()) in dger['yph']:
                 # Lendo a geracao de pequenas usinas
                 anoleitura = int(fdata[line][0:4].strip())

@@ -92,6 +92,9 @@ def importPATAMAR(fdata, dger, sss):
 
     idx = searchInList(fdata,
         'BLOCO DE USINAS NAO SIMULADAS (P.U. ENERGIA MEDIA)')
+    if idx == {}:
+        idx = searchInList(fdata,
+            'BLOCO DE USINAS NAO SIMULADAS (P.U. MONTANTE MED.)')
 
     idxline = idx['line'] + 2 if idx else None
     for idss in sss:
