@@ -55,7 +55,12 @@ class pdo_base:
     def loadTableDef(self):
         fPath = os.path.join(cfg.__path__[0], self.tableName+'.json')
         with io.open(fPath, 'r', encoding='utf8') as fp:
-            d = json.load(fp, encoding='utf8')
+            try:
+                d = json.load(fp, encoding='utf8')
+            except:
+                with open(fPath, encoding='utf-8') as fh:
+                    d = json.load(fh)
+
         fp.close()
         return TableDef(d[self.tableName])
     

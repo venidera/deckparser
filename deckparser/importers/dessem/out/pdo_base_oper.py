@@ -51,7 +51,13 @@ class pdo_base_oper:
     def loadTableSet(self):
         fPath = os.path.join(cfg.__path__[0], self.tableName+'.json')
         with io.open(fPath, 'r', encoding='utf8') as fp:
-            d = json.load(fp, encoding='utf8')
+            try:
+                d = json.load(fp, encoding='utf8')
+            except:
+                # editado pela thayze
+                with open(fPath, encoding='utf8') as f:
+                    d = json.load(f)
+        
         #with open(os.path.join(cfg.__path__[0], self.tableName+'.json'), 'r') as fp:
         #    d = json.load(fp, encoding='utf-8')
         fp.close()
@@ -80,10 +86,16 @@ class pdo_base_oper:
             md_version = (int(m.group(1)),int(m.group(2)))
             if self.compare_version(md_version, dessem_version) > 0:
                 continue
-            
+
             fPath = os.path.join(mdPath, fn)
             with io.open(fPath, 'r', encoding='utf8') as fp:
-                d = json.load(fp, encoding='utf8')
+                try:
+                    d = json.load(fp, encoding='utf8')
+                except:
+                    # editado pela thayze
+                    with open(fPath, encoding='utf8') as fptemp:
+                        d = json.load(fptemp)
+
             fp.close()
             d_pdo_op = d.get(self.tableName)
             if not d_pdo_op:

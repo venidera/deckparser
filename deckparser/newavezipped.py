@@ -106,11 +106,18 @@ class NewaveZipped(object):
             else:
                 destfile = self.dirname + "/" + self.fhash + '_' + fname
             os.rename(self.dirname + "/" + fname, destfile)
-            f = open(destfile, 'r')
-            data = f.readlines()
-            f.close()
-            os.remove(destfile)
-            return data
+            try:
+                f = open(destfile, 'r')
+                data = f.readlines()
+                f.close()
+                os.remove(destfile)
+                return data
+            except:
+                f = open(destfile, 'r', encoding='iso8859-1')
+                data = f.readlines()
+                f.close()
+                os.remove(destfile)
+                return data
         except Exception:
             info('Fail to extract ', fnp)
             return False
