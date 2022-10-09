@@ -174,7 +174,7 @@ class Loader:
     def getEncoding(self):
         e = self.fileEncoding
         if not e:
-            return ['utf-8', 'latin_1', 'ascii']
+            return ['utf-8', 'latin_1', 'ascii', 'iso8859-1']
         if isinstance(e, list):
             return e
         return [e]

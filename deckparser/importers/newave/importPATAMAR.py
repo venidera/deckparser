@@ -106,7 +106,11 @@ def importPATAMAR(fdata, dger, sss):
                 'bloco03': [],
                 'bloco04': [],
                 'bloco05': [],
-                'bloco06': []
+                'bloco06': [],
+                'bloco07': [],
+                'bloco08': [],
+                'bloco09': [],
+                'bloco10': []
                 }
 
     if idxline:

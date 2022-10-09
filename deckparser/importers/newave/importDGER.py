@@ -1,4 +1,5 @@
 from unidecode import unidecode
+import re
 
 def importDGER(fobj):
     DGER = dict()
@@ -27,7 +28,10 @@ def importDGER(fobj):
         elif line.rfind('No. DE ANOS POS') != -1:
             DGER['nypos'] = int(line[21:26].strip())
         elif line.rfind('MES INICIO DO ESTUDO') != -1:
-            DGER['mi'] = int(line[21:26].strip())
+            # DGER['mi'] = int(line[21:26].strip())
+            temp = re.findall(r'-?\d+\.?\d*', line)
+            DGER['mi'] = int(temp[0])
+            
         elif line.rfind('ANO INICIO DO ESTUDO') != -1:
             DGER['yi'] = int(line[21:26].strip())
         elif line.rfind('No DE SERIES SINT.') != -1:
@@ -64,11 +68,25 @@ def importDGER(fobj):
         elif line.rfind('CONSIDERA GHMIN') != -1:
             DGER['ghmin'] = int(line[22:26].strip())
         elif line.rfind('SAR') != -1:
-            DGER['sar'] = int(line[22:26].strip())
+            try:
+                DGER['sar'] = int(line[22:26].strip())
+            except:
+                temp = re.findall(r'-?\d+\.?\d*', line)
+                DGER['sar'] = int(temp[0])
+            
         elif line.rfind('CVAR') != -1:
-            DGER['cvar'] = int(line[22:26].strip())
+            try:
+                DGER['cvar'] = int(line[22:26].strip())
+            except:
+                temp = re.findall(r'-?\d+\.?\d*', line)
+                DGER['cvar'] = int(temp[0])
+            
         elif line.rfind('TAXA DE DESCONTO') != -1:
-            DGER['txdesc'] = float(line[20:26].strip())
+            try:
+                DGER['txdesc'] = float(line[20:26].strip())
+            except:
+                DGER['txdesc'] = float(line[:10].strip())
+                
 
     DGER['ni'] = (12 - int(DGER['mi'])+1) + (int(DGER['nyears']) - 1) * 12
     anosplan = list()

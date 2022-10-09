@@ -194,7 +194,7 @@ def importHIDR(fn):
     bdhtipo = dtype(lsttipo)
     bdhdata = fromfile(fn, dtype=bdhtipo, sep="")
     HIDRcount = len(bdhdata)
-    if HIDRcount not in [320, 600, 601, 528, 585, 596]:
+    if HIDRcount not in [320, 600, 601, 528, 585, 596, 592]:
         print("O arquivo HIDR.DAT importado é inválido.")
         return False
     if HIDRcount == 601 or HIDRcount == 528 or HIDRcount == 585 or HIDRcount == 596:
