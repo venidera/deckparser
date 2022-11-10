@@ -23,7 +23,11 @@ class curvtviag(dsFile):
                     break
                 if record.isComment(line) or record.isBlankLine(line):
                     continue
-                
-                self.getTable('LN').parseLine(line)
+                tab = self.getTable('LN')
+                if tab is not None:
+                    self.getTable('LN').parseLine(line)
+                else:
+                    tab = self.getTable('CURVTV')
+                    self.getTable('CURVTV').parseLine(line)
         f.close()
     
