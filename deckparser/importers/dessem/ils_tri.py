@@ -15,6 +15,7 @@ class ils_tri(dsFile):
     
     def readDSFile(self, fileName):
         nRec = 0
+        nivel_line_read = False
         with self.openDSFile(fileName) as f:
             for line in f:
                 nRec = nRec + 1
@@ -25,9 +26,10 @@ class ils_tri(dsFile):
                     break
                 if line[0:3] == 'NOR':
                     continue
-                if nRec == 2:
+                if line.startswith('NIV'):
                     self.getRec('Nivel').parse(line)
-                elif nRec >= 3:
+                    nivel_line_read = True
+                elif nivel_line_read:
                     if len(line) > 3 and line[:3] == 'MAX':
                         self.getRec('VazoesMax').parse(line)
                     else:

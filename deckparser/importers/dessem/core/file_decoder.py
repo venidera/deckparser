@@ -29,6 +29,8 @@ class FileDecoder:
             raise StopIteration()
         cd = chardet.detect(line)
         enc = cd['encoding']
+        if enc is None:
+            enc = 'utf-8'
         cf = cd['confidence']
         if not self.detector.done:
             self.detector.feed(line)
