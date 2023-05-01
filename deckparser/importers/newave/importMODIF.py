@@ -18,12 +18,14 @@ def importMODIF(fobj):
             elif tipo in ['VOLMAX', 'VOLMIN']:
                 modif = cols[1].strip()
                 indice = cols[2].strip()
-            elif tipo in ['VAZMIN', 'NUMCNJ', 'PRODESP', 'TEIF', 'IP', 'PERDHIDR', 'NUMBAS']:
+            elif tipo in ['VAZMIN', 'NUMCNJ', 'PRODESP', 'TEIF', 'IP',
+                          'PERDHIDR', 'NUMBAS']:
                 modif = cols[1]
             elif tipo in ['COEFEVAP']:
                 modif = cols[1]
                 mes = cols[2]
-            elif tipo in ['VMAXT', 'VMINT', 'CFUGA', 'VMINP', 'VAZMINT']:
+            elif tipo in ['VMAXT', 'VMINT', 'CFUGA', 'VMINP', 'VAZMINT',
+                          'CMONT']:
                 mes = cols[1].strip()
                 ano = cols[2].strip()
                 modif = cols[3].strip()
@@ -34,5 +36,9 @@ def importMODIF(fobj):
                 modif = ' '.join([x.strip() for x in cols[1:]])
             if CodUHE not in MODIF:
                 MODIF[CodUHE] = list()
-            MODIF[CodUHE].append({'tipo': tipo, 'modif': modif, 'mes': mes, 'ano': ano, 'indice': indice})
+            MODIF[CodUHE].append({'tipo': tipo,
+                                  'modif': modif, 
+                                  'mes': mes,
+                                  'ano': ano,
+                                  'indice': indice})
     return MODIF
