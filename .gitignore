@@ -63,3 +63,5 @@ target/
 .vagrant
 
 *~
+.project
+.pydevproject

@@ -61,9 +61,13 @@ def newave2dicts(fn):
                     dd.MODIF = importMODIF(fobj=fobj)
             except Exception as e:
                 info('File {} not found. {}'.format(modiff, e))
+        if 'DECK DO PMO' in dz.fns_set:
+            decktype = 'pmo'
+        else:
+            decktype = False
         dd.DSVAGUA = importDSVAGUA(
             dz.openFileExtData(fnp='dsvagua'), uhes=dd.CONFHD.keys(),
-            dger=dd.DGER)
+            dger=dd.DGER, decktype=decktype)
         dd.VAZOES, dd.VAZcount, dd.vaz = importVAZOES(
             fn=dz.extractFile(fnp='vazoes'), hcount=dd.HIDRcount,
             dger=dd.DGER)

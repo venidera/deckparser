@@ -67,7 +67,7 @@
 			<validate value="VAR" />
 		</field>
 		<field c="15" cf="19" name="idRestr" type="int" />
-		<field c="20" cf="21" name="diaIni" special="I" type="d" />
+		<field c="20" cf="22" name="diaIni" special="I" type="d" />
 		<field c="23" cf="24" name="horaIni" type="h" />
 		<field c="26" name="meiaHoraIni" type="bin" />
 		<field c="28" cf="29" name="diaFim" special="F" type="d" />
