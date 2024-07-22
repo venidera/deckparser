@@ -59,7 +59,7 @@ class NewaveZipped(object):
                     key = evfn
                 self.fns_set[key] = fn
             # Check if it is a deck
-            deckfiles = ['dger', 'sistema', 'confh']
+            deckfiles = ['dger', 'sistema', 'confh', 'confhd']
             zipfiles = list(self.fns_set.keys())
             if not all([fd.upper() in str(zipfiles) for fd in deckfiles]):
                 # if not set([fd.lower() for fd in deckfiles]).issubset(set([fz.lower() for fz in zipfiles])):
@@ -95,6 +95,7 @@ class NewaveZipped(object):
             return f
         except Exception:
             info('Fail to open ', fnp)
+            print('Fail to open ', fnp)
             return False
 
     def openFileExtData(self, fnp):

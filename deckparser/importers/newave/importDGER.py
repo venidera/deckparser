@@ -12,7 +12,7 @@ def importDGER(fobj):
         if not DGER['info']:
             DGER['info'] = unidecode(str(line)).strip().replace("b'",'').replace('\\xe3','a').replace("\\r\\n'",'')
         elif line.rfind('TIPO DE EXECUCAO') != -1:
-            DGER['tipoexec'] = int(line[21:26].strip())
+            DGER['tipoexec'] = int(line[21:25].strip())
         elif line.rfind('DURACAO DO PERIODO') != -1:
             DGER['durper'] = int(line[21:26].strip())
         elif line.rfind('No. DE ANOS DO EST') != -1:
